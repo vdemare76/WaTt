@@ -1,0 +1,67 @@
+version: "3.3"
+services:
+    db:
+        container_name: watt_db
+        image: mysql:8.0.17
+        command: --default-authentication-plugin=mysql_native_password
+        ports:
+            - "3306:3306"
+        security_opt:
+            - seccomp:unconfined
+        environment:
+            MYSQL_ROOT_PASSWORD: leondb
+            MYSQL_DATABASE: wattdb
+            MYSQL_USER: watt
+            MYSQL_PASSWORD: wwaatttt
+        volumes:
+            - ./mysql/data:/var/lib/mysql
+        networks:
+            watt_net:
+                ipv4_address: 172.100.0.2
+    ldap:
+        container_name: watt_ldap
+        image: osixia/openldap
+        ports:
+            - "389:389"
+        environment:
+            - LDAP_ORGANISATION="Uniparthenope"
+            - LDAP_DOMAIN=uniparthenope.it
+            - LDAP_BASE_DN=dc=uniparthenope,dc=it
+            - LDAP_SERVERNAME=ldapserv
+            - LDAP_DOMAIN_BASE=uniparthenope.it
+            - LDAP_ADMIN_PASSWORD=wattpw01
+            - LDAP_CONFIG_PASSWORD=wattpw02
+            - LDAP_TLS=false
+            - LDAP_REPLICATION=false
+        volumes:
+            - ./ldap/data:/var/lib/ldap
+            - ./ldap/slapd.d:/etc/ldap/slapd.d
+            - ./ldap/ldif/data.ldif:/container/service/slapd/assets/config/bootstrap/ldif/custom/data.ldif
+            - ./ldap/ldif/custom.schema:/container/service/slapd/assets/config/bootstrap/schema/custom.schema
+        command: "--copy-service"
+        networks:
+            watt_net:
+                ipv4_address: 172.100.0.3
+    app:
+        container_name: watt_app
+        build:
+            context: .
+            dockerfile: docker-app
+        depends_on:
+            - ldap
+            - db
+        ports:
+            - "5000:5000"
+        restart: always
+        networks:
+            watt_net:
+                ipv4_address: 172.100.0.4
+networks:
+    watt_net:
+        ipam:
+            driver: default
+            config:
+                - subnet: 172.100.0.0/16
+#volumes:
+#    app:
+
