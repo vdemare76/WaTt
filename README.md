@@ -1,3 +1,5 @@
+WATT - WebApp TimeTable
+
 This project concerns the creation of a web application aimed at generating a university timetable.
 
 The application will allows you to create and modify the timetable and then publish it as a pdf page, web, rest api and iCAL. 
