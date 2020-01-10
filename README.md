@@ -3,12 +3,12 @@ WATT - WebApp TimeTable
 This project concerns the creation of a web application aimed at generating a university timetable.
 
 The application will allows you to create and modify the timetable and then publish it as a pdf page, web, rest api and iCAL. 
-The timetable will be determined by applying constraints deriving from the training offer and from the teachers
+The timetable will be determined by applying the constraints deriving from the training offer and directly from the needs expressed by the professors.
 
 Project actors and their main tasks
 
 - Administrative Staff for the insertion of data concerning the educational offer of a specific academic year.
-- Teachers for the insertion of requirements and preferences to be managed as useful constraints for the generation of the timetable.
+- Professors for the insertion of requirements and preferences to be managed as useful constraints for the generation of the timetable.
 
 The system is created using Docker technology and is currently made up of three containers
 
