@@ -29,7 +29,7 @@ Test users (Username/Password)
 	1) tam102001/pw102001
 	2) tam102002/pw102002
 
-- Teachers profile
+- Professors profile
 	1) doc101001/pw101001
 	2) doc101002/pw101002
 	3) doc101003/pw101003
