@@ -23,8 +23,6 @@ To run the application
 3) Execute from this folder the command : docker-compose up -—build
 4) At the end of the container installation and startup procedure, you can access the application by typing the web address: localhost: 5000
 
-
-
 Test users (Username/Password)
 
 - Administrative staff profile
@@ -35,3 +33,8 @@ Test users (Username/Password)
 	1) doc101001/pw101001
 	2) doc101002/pw101002
 	3) doc101003/pw101003
+	
+To explore the system structure, the connection parameters to the database and the openldap server are shown below
+- db : watt/wwaatttt (localhost - port 3306)
+- openldap : cn=admin,dc=uniparthenope,dc=it/wattpw01 (localhost - port:389)
+
