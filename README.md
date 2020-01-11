@@ -7,8 +7,8 @@ The timetable will be determined by applying the constraints deriving from the t
 
 Project actors and their main tasks
 
-- Administrative Staff for the insertion of data concerning the educational offer of a specific academic year.
-- Professors for the insertion of requirements and preferences to be managed as useful constraints for the generation of the timetable.
+<ul><li><u>Administrative</u></li> Staff for the insertion of data concerning the educational offer of a specific academic year.
+<li><u>Professors</u></li> for the insertion of requirements and preferences to be managed as useful constraints for the generation of the timetable.</ul>
 
 The system is created using Docker technology and is currently made up of three containers
 
@@ -19,9 +19,11 @@ The system is created using Docker technology and is currently made up of three 
 To run the application
 
 1) Download and install docker desktop (latest stable version)
-2) Download Watt-master branch and extract the contents of the .zip file to a folder on your filesystem.
-3) Execute this docker command : docker-compose up -—build
+2) Download master branch of WATT and extract the contents of the .zip file to a folder on your filesystem.
+3) Execute from this folder the command : docker-compose up -—build
 4) At the end of the container installation and startup procedure, you can access the application by typing the web address: localhost: 5000
+
+
 
 Test users (Username/Password)
 
