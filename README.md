@@ -14,7 +14,7 @@ The system is created using Docker technology and is currently made up of three 
 
 <ul>
 <li>Mysql database in which all the information supporting the system is stored.</li>
-<li>OpenLdap server on which suitably profWebiled test users are defined.</li>
+<li>OpenLdap server on which suitably profiled test users are defined.</li>
 <li>Flask Python web app framework with SQLAlchemy extension for data persistence.</li>
 </ul>
 
