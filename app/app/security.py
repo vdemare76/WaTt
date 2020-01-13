@@ -1,4 +1,4 @@
-__author__ = "dpgaspar"
+__author__ = "vdem"
 
 from flask import redirect
 from flask_appbuilder.actions import action
