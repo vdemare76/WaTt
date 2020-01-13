@@ -1,5 +1,3 @@
-__author__ = "vdem"
-
 from flask import redirect
 from flask_appbuilder.actions import action
 from flask_appbuilder.security.sqla.manager import SecurityManager
