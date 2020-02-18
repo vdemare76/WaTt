@@ -319,6 +319,10 @@ class BaseSecurityManager(AbstractSecurityManager):
     @property
     def auth_type(self):
         return self.appbuilder.get_app.config["AUTH_TYPE"]
+    
+    @property
+    def auth_username_ci(self):
+        return self.appbuilder.get_app.config.get("AUTH_USERNAME_CI", False)
 
     @property
     def auth_role_admin(self):
