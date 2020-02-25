@@ -30,14 +30,14 @@ Test users (Username/Password)
 - Superuser admin
 	1) adm101001/pw101001
 
-- Administrative staff profile
-	1) tam202001/pw202001
-	2) tam202002/pw202002
-
 - Professors profile
 	1) doc201001/pw201001
 	2) doc201002/pw201002
 	3) doc201003/pw201003
+
+- Administrative staff profile
+	1) tam202001/pw202001
+	2) tam202002/pw202002
 	
 To explore the system structure, the connection parameters to the database and the openldap server are shown below
 - db : watt/wwaatttt (localhost - port 3306)
