@@ -54,24 +54,24 @@ FAB_ROLES = {
 
         ["AuleView", "can_list"],
         ["AuleView", "can_show"],
-	    ["Aule", "menu_access"],
+	["Aule", "menu_access"],
 
         ["DocentiView", "can_list"],
         ["DocentiView", "can_show"],
-	    ["Docenti", "menu_access"],
+	["Docenti", "menu_access"],
 
         ["OffertaDidatticaView", "can_list"],
         ["OffertaDidatticaView", "can_show"],
-	    ["Offerta Didattica", "menu_access"],
+	["Offerta Didattica", "menu_access"],
 
         ["LogisticaDocentiView", "can_list"],
         ["LogisticaDocentiView", "can_show"],
-	    ["LogisticaDocentiView", "can_get"],
-	    ["LogisticaDocentiView", "can_info"],
+	["LogisticaDocentiView", "can_get"],
+	["LogisticaDocentiView", "can_info"],
         ["LogisticaDocentiView", "can_add"],
         ["LogisticaDocentiView", "can_edit"],
-	    ["LogisticaDocentiView", "can_delete"],
-	    ["Logistica docenti", "menu_access"]
+	["LogisticaDocentiView", "can_delete"],
+	["Logistica docenti", "menu_access"]
     ],
 
     # Profilo PERSONALE TECNICO AMMINISTRATIVO
@@ -151,9 +151,9 @@ FAB_ROLES = {
     "admin_watt" : [
         [".*", "can_list"],
         [".*", "can_show"],
-	    [".*", "menu_access"],
-	    [".*", "can_get"],
-	    [".*", "can_info"]
+	[".*", "menu_access"],
+	[".*", "can_get"],
+	[".*", "can_info"]
     ]
 
 }
