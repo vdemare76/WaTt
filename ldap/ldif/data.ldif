@@ -1,3 +1,8 @@
+dn: ou=Amministratori,dc=uniparthenope,dc=it
+changetype: add
+objectclass: organizationalUnit
+ou: Amministratori
+
 dn: ou=ScienzeTecnologie,dc=uniparthenope,dc=it
 changetype: add
 objectclass: organizationalUnit
@@ -18,79 +23,100 @@ changetype: add
 objectclass: organizationalUnit
 ou: Economia
 
-dn: cn=Docenti,ou=ScienzeTecnologie,dc=uniparthenope,dc=it
+dn: cn=admin,ou=Amministratori,dc=uniparthenope,dc=it
 changetype: add
 objectClass: top
 objectClass: posixGroup
 gidNumber: 101
 
-dn: cn=PersonaleTA,ou=ScienzeTecnologie,dc=uniparthenope,dc=it
-changetype: add
-objectClass: top
-objectClass: posixGroup
-gidNumber: 102
-
-dn: cn=Studenti,ou=ScienzeTecnologie,dc=uniparthenope,dc=it
-changetype: add
-objectClass: top
-objectClass: posixGroup
-gidNumber: 103
-
-dn: cn=Docenti,ou=Ingegneria,dc=uniparthenope,dc=it
+dn: cn=Docenti,ou=ScienzeTecnologie,dc=uniparthenope,dc=it
 changetype: add
 objectClass: top
 objectClass: posixGroup
 gidNumber: 201
 
-dn: cn=PersonaleTA,ou=Ingegneria,dc=uniparthenope,dc=it
+dn: cn=PersonaleTA,ou=ScienzeTecnologie,dc=uniparthenope,dc=it
 changetype: add
 objectClass: top
 objectClass: posixGroup
 gidNumber: 202
 
-dn: cn=Studenti,ou=Ingegneria,dc=uniparthenope,dc=it
+dn: cn=Studenti,ou=ScienzeTecnologie,dc=uniparthenope,dc=it
 changetype: add
 objectClass: top
 objectClass: posixGroup
 gidNumber: 203
 
-dn: cn=Docenti,ou=Giurisprudenza,dc=uniparthenope,dc=it
+dn: cn=Docenti,ou=Ingegneria,dc=uniparthenope,dc=it
 changetype: add
 objectClass: top
 objectClass: posixGroup
 gidNumber: 301
+
+dn: cn=PersonaleTA,ou=Ingegneria,dc=uniparthenope,dc=it
+changetype: add
+objectClass: top
+objectClass: posixGroup
+gidNumber: 302
+
+dn: cn=Studenti,ou=Ingegneria,dc=uniparthenope,dc=it
+changetype: add
+objectClass: top
+objectClass: posixGroup
+gidNumber: 303
+
+dn: cn=Docenti,ou=Giurisprudenza,dc=uniparthenope,dc=it
+changetype: add
+objectClass: top
+objectClass: posixGroup
+gidNumber: 401
 
 dn: cn=PersonaleTA,ou=Giurisprudenza,dc=uniparthenope,dc=it
 changetype: add
 objectClass: top
 objectClass: posixGroup
-gidNumber: 302
+gidNumber: 402
 
 dn: cn=Studenti,ou=Giurisprudenza,dc=uniparthenope,dc=it
 changetype: add
 objectClass: top
 objectClass: posixGroup
-gidNumber: 303
+gidNumber: 403
 
 dn: cn=Docenti,ou=Economia,dc=uniparthenope,dc=it
 changetype: add
 objectClass: top
 objectClass: posixGroup
-gidNumber: 301
+gidNumber: 501
 
 dn: cn=PersonaleTA,ou=Economia,dc=uniparthenope,dc=it
 changetype: add
 objectClass: top
 objectClass: posixGroup
-gidNumber: 302
+gidNumber: 502
 
 dn: cn=Studenti,ou=Economia,dc=uniparthenope,dc=it
 changetype: add
 objectClass: top
 objectClass: posixGroup
-gidNumber: 303
+gidNumber: 503
 
-dn: uid=doc101001,cn=Docenti,ou=ScienzeTecnologie,dc=uniparthenope,dc=it
+dn: uid=adm101001,ou=Amministratori,dc=uniparthenope,dc=it
+changetype: add
+objectClass: top
+objectClass: person
+objectClass: posixAccount
+objectClass: watt
+cn: nomadm001
+sn: cogadm001
+gidNumber: 101
+homeDirectory: /
+uid: adm101001
+uidNumber: 101001
+userPassword: pw101001
+role: wattAdmin
+
+dn: uid=doc201001,cn=Docenti,ou=ScienzeTecnologie,dc=uniparthenope,dc=it
 changetype: add
 objectClass: top
 objectClass: person
@@ -98,14 +124,14 @@ objectClass: posixAccount
 objectClass: watt
 cn: nomdoc001
 sn: cogdoc001
-gidNumber: 101
+gidNumber: 201
 homeDirectory: /
-uid: doc101001
-uidNumber: 101001
-userPassword: pw101001
+uid: doc201001
+uidNumber: 201001
+userPassword: pw201001
 role: wattDoce
 
-dn: uid=doc101002,cn=Docenti,ou=ScienzeTecnologie,dc=uniparthenope,dc=it
+dn: uid=doc201002,cn=Docenti,ou=ScienzeTecnologie,dc=uniparthenope,dc=it
 changetype: add
 objectClass: top
 objectClass: person
@@ -113,14 +139,14 @@ objectClass: posixAccount
 objectClass: watt
 cn: nomdoc002
 sn: cogdoc002
-gidNumber: 101
+gidNumber: 201
 homeDirectory: /
-uid: doc101002
-uidNumber: 101002
-userPassword: pw101002
+uid: doc201002
+uidNumber: 201002
+userPassword: pw201002
 role: wattDoce
 
-dn: uid=doc101003,cn=Docenti,ou=ScienzeTecnologie,dc=uniparthenope,dc=it
+dn: uid=doc201003,cn=Docenti,ou=ScienzeTecnologie,dc=uniparthenope,dc=it
 changetype: add
 objectClass: top
 objectClass: person
@@ -128,14 +154,14 @@ objectClass: posixAccount
 objectClass: watt
 cn: nomdoc003
 sn: cogdoc003
-gidNumber: 101
+gidNumber: 201
 homeDirectory: /
-uid: doc101003
-uidNumber: 101003
-userPassword: pw101003
+uid: doc201003
+uidNumber: 201003
+userPassword: pw201003
 role: wattDoce
 
-dn: uid=tam102001,cn=PersonaleTA,ou=ScienzeTecnologie,dc=uniparthenope,dc=it
+dn: uid=tam202001,cn=PersonaleTA,ou=ScienzeTecnologie,dc=uniparthenope,dc=it
 changetype: add
 objectClass: top
 objectClass: person
@@ -143,14 +169,14 @@ objectClass: posixAccount
 objectClass: watt
 cn: nomtam001
 sn: cogtam001
-gidNumber: 102
+gidNumber: 202
 homeDirectory: /
-uid: tam102001
-uidNumber: 102001
-userPassword: pw102001
+uid: tam202001
+uidNumber: 202001
+userPassword: pw202001
 role: wattTamm
 
-dn: uid=tam102002,cn=PersonaleTA,ou=ScienzeTecnologie,dc=uniparthenope,dc=it
+dn: uid=tam202002,cn=PersonaleTA,ou=ScienzeTecnologie,dc=uniparthenope,dc=it
 changetype: add
 objectClass: top
 objectClass: person
@@ -158,14 +184,14 @@ objectClass: posixAccount
 objectClass: watt
 cn: nomtam002
 sn: cogtam002
-gidNumber: 102
+gidNumber: 202
 homeDirectory: /
-uid: tam102002
-uidNumber: 102002
-userPassword: pw102002
+uid: tam202002
+uidNumber: 202002
+userPassword: pw202002
 role: wattTamm
 
-dn: uid=stu103001,cn=Studenti,ou=ScienzeTecnologie,dc=uniparthenope,dc=it
+dn: uid=stu203001,cn=Studenti,ou=ScienzeTecnologie,dc=uniparthenope,dc=it
 changetype: add
 objectClass: top
 objectClass: person
@@ -173,9 +199,9 @@ objectClass: posixAccount
 objectClass: watt
 cn: nomtam002
 sn: cogtam002
-gidNumber: 103
+gidNumber: 203
 homeDirectory: /
-uid: stu103001
-uidNumber: 103001
-userPassword: pw103001
+uid: stu203001
+uidNumber: 203001
+userPassword: pw203001
 role: wattStud
