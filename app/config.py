@@ -38,8 +38,7 @@ AUTH_LDAP_BIND_PASSWORD = "wattpw01"
 AUTH_LDAP_UID_FIELD = "uid"
 
 FAB_ROLES = {
-
-    # Profilo DOCENTE
+# Profilo DOCENTE
     "doce_watt" : [
         ["AnniAccademiciView", "can_list"],
         ["AnniAccademiciView", "can_show"],
@@ -156,4 +155,28 @@ FAB_ROLES = {
 	    [".*", "can_get"],
 	    [".*", "can_info"]
     ]
+
 }
+
+AUTH_USER_REGISTRATION = True
+AUTH_USER_REGISTRATION_ROLE = "Admin"
+
+AUTH_ROLE_ADMIN = "Admin"
+AUTH_ROLE_PUBLIC = "Public"
+
+APP_NAME = "WaTt - Webapp Timetable"
+APP_THEME = ""  # default
+
+
+
+# APP_THEME = "cerulean.css"      # COOL
+# APP_THEME = "amelia.css"
+# APP_THEME = "cosmo.css"
+# APP_THEME = "cyborg.css"       # COOL
+# APP_THEME = "flatly.css"
+# APP_THEME = "journal.css"
+# APP_THEME = "readable.css"
+# APP_THEME = "simplex.css"
+# APP_THEME = "slate.css"          # COOL
+# APP_THEME = "spacelab.css"      # NICE
+# APP_THEME = "united.css"
