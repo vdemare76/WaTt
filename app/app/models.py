@@ -75,3 +75,14 @@ class OffertaDidattica(Model):
 
     def __repr__(self):
         return self.name
+
+class LogisticaDocenti(Model):
+    __tablename__ = 'logistica_docenti'
+    id = Column(Integer, primary_key=True)
+    id_offerta = Column(Integer, ForeignKey('offerta_didattica.id'), nullable=False)
+    durata_sessioni = Column(Integer)
+    numero_sessioni = Column(Integer)
+    offerta = relationship("OffertaDidattica")
+
+    def __repr__(self):
+        return self.name
