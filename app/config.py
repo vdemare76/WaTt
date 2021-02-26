@@ -40,122 +40,115 @@ AUTH_LDAP_UID_FIELD = "uid"
 FAB_ROLES = {
 # Profilo DOCENTE
     "doce_watt" : [
-        ["AnniAccademiciView", "can_list"],
-        ["AnniAccademiciView", "can_show"],
-	    ["Anni accademici", "menu_access"],
-
-        ["CorsiDiStudioView", "can_list"],
-        ["CorsiDiStudioView", "can_show"],
-	    ["Corsi di studio", "menu_access"],
-
-        ["AttivitaDidatticheView", "can_list"],
-        ["AttivitaDidatticheView", "can_show"],
-	    ["Attività didattiche", "menu_access"],
-
-        ["AuleView", "can_list"],
-        ["AuleView", "can_show"],
-	["Aule", "menu_access"],
-
-        ["DocentiView", "can_list"],
-        ["DocentiView", "can_show"],
-	["Docenti", "menu_access"],
-
-        ["OffertaDidatticaView", "can_list"],
-        ["OffertaDidatticaView", "can_show"],
-	["Offerta Didattica", "menu_access"],
-
-        ["LogisticaDocentiView", "can_list"],
-        ["LogisticaDocentiView", "can_show"],
-	["LogisticaDocentiView", "can_get"],
-	["LogisticaDocentiView", "can_info"],
-        ["LogisticaDocentiView", "can_add"],
-        ["LogisticaDocentiView", "can_edit"],
-	["LogisticaDocentiView", "can_delete"],
-	["Logistica docenti", "menu_access"]
+        ["Tabelle di base", "menu_access"],
+        ["Didattica", "menu_access"],
+        ["Offerta didattica", "menu_access"],
+        ["Admin", "menu_access"],
+       
+        ["SlotView", "can_list"],["SlotView", "can_show"],["SlotView", "can_download"],
+        ["Slot", "menu_access"],
+        
+        ["GiorniView", "can_list"],["GiorniView", "can_show"],["GiorniView", "can_download"],
+        ["Giorni", "menu_access"],
+               
+        ["AnniAccademiciView", "can_list"],["AnniAccademiciView", "can_show"],["AnniAccademiciView", "can_download"],
+        ["Anni Accademici", "menu_access"],
+        
+        ["AuleView", "can_list"],["AuleView", "can_show"],["AuleView", "can_download"],
+        ["Aule", "menu_access"],
+     
+        ["CorsidistudioView", "can_list"],["CorsidistudioView", "can_show"],["CorsidistudioView", "can_download"],
+        ["Corsi di studio", "menu_access"],
+        
+        ["DocentiView", "can_list"],["DocentiView", "can_show"],["DocentiView", "can_download"],
+        ["Docenti", "menu_access"],
+           
+        ["AttivitaDidatticheView", "can_list"],["AttivitaDidatticheView", "can_show"],["AttivitaDidatticheView", "can_download"],
+        ["Attività didattiche", "menu_access"], 
+        
+        ["OffertaView", "can_list"],["OffertaView", "can_show"],["OffertaView", "can_download"],
+        ["Offerta", "menu_access"],
+        
+        ["ModuliView", "can_list"],["ModuliView", "can_show"],["ModuliView", "can_download"],
+        ["Moduli", "menu_access"],
+        
+        ["LogisticaDocentiView", "can_list"],["LogisticaDocentiView", "can_show"],["LogisticaDocentiView", "can_add"],
+        ["LogisticaDocentiView", "can_edit"],["LogisticaDocentiView", "can_delete"],["LogisticaDocentiView", "can_download"],
+        ["Logistica docenti", "menu_access"],
+        
+        ["Calendario orario", "menu_access"],
+        ["CalendarioView", "can_cld_home"]
     ],
 
     # Profilo PERSONALE TECNICO AMMINISTRATIVO
     "tamm_watt" : [
-        ["AnniAccademiciView", "can_list"],
-        ["AnniAccademiciView", "can_show"],
-        ["AnniAccademiciView", "can_get"],
-        ["AnniAccademiciView", "can_info"],
-        ["AnniAccademiciView", "can_add"],
-        ["AnniAccademiciView", "can_edit"],
-        ["AnniAccademiciView", "can_delete"],
-        ["Anni accademici", "menu_access"],
-
-        ["CorsiDiStudioView", "can_list"],
-        ["CorsiDiStudioView", "can_show"],
-        ["CorsiDiStudioView", "can_get"],
-        ["CorsiDiStudioView", "can_info"],
-        ["CorsiDiStudioView", "can_add"],
-        ["CorsiDiStudioView", "can_edit"],
-        ["CorsiDiStudioView", "can_delete"],
-        ["Corsi di studio", "menu_access"],
-
-        ["AttivitaDidatticheView", "can_list"],
-        ["AttivitaDidatticheView", "can_show"],
-        ["AttivitaDidatticheView", "can_get"],
-        ["AttivitaDidatticheView", "can_info"],
-        ["AttivitaDidatticheView", "can_add"],
-        ["AttivitaDidatticheView", "can_edit"],
-        ["AttivitaDidatticheView", "can_delete"],
-        ["Attività didattiche", "menu_access"],
-
-        ["AuleView", "can_list"],
-        ["AuleView", "can_show"],
-        ["AuleView", "can_get"],
-        ["AuleView", "can_info"],
-        ["AuleView", "can_add"],
-        ["AuleView", "can_edit"],
-        ["AuleView", "can_delete"],
+        ["Tabelle di base", "menu_access"],
+        ["Didattica", "menu_access"],
+        ["Offerta didattica", "menu_access"],
+        ["Admin", "menu_access"],
+       
+        ["SlotView", "can_list"],["SlotView", "can_show"],["SlotView", "can_add"],
+        ["SlotView", "can_edit"],["SlotView", "can_delete"],["SlotView", "can_download"],
+        ["Slot", "menu_access"],
+        
+        ["GiorniView", "can_list"],["GiorniView", "can_show"],["GiorniView", "can_add"],
+        ["GiorniView", "can_edit"],["GiorniView", "can_delete"],["GiorniView", "can_download"],
+        ["Giorni", "menu_access"],
+               
+        ["AnniAccademiciView", "can_list"],["AnniAccademiciView", "can_show"],["AnniAccademiciView", "can_add"],
+        ["AnniAccademiciView", "can_edit"],["AnniAccademiciView", "can_delete"],["AnniAccademiciView", "can_download"],
+        ["Anni Accademici", "menu_access"],
+        
+        ["AuleView", "can_list"],["AuleView", "can_show"],["AuleView", "can_add"],
+        ["AuleView", "can_edit"],["AuleView", "can_delete"],["AuleView", "can_download"],
         ["Aule", "menu_access"],
-
-        ["DocentiView", "can_list"],
-        ["DocentiView", "can_show"],
-        ["DocentiView", "can_get"],
-        ["DocentiView", "can_info"],
-        ["DocentiView", "can_add"],
-        ["DocentiView", "can_edit"],
-        ["DocentiView", "can_delete"],
+     
+        ["CorsiDiStudioView", "can_list"],["CorsiDiStudioView", "can_show"],["CorsiDiStudioView", "can_add"],
+        ["CorsiDiStudioView", "can_edit"],["CorsiDiStudioView", "can_delete"],["CorsiDiStudioView", "can_download"],
+        ["Corsi di Studio", "menu_access"],
+        
+        ["DocentiView", "can_list"],["DocentiView", "can_show"],["DocentiView", "can_add"],
+        ["DocentiView", "can_edit"],["DocentiView", "can_delete"],["DocentiView", "can_download"],
         ["Docenti", "menu_access"],
-
-        ["OffertaDidatticaView", "can_list"],
-        ["OffertaDidatticaView", "can_show"],
-        ["OffertaDidatticaView", "can_get"],
-        ["OffertaDidatticaView", "can_info"],
-        ["OffertaDidatticaView", "can_add"],
-        ["OffertaDidatticaView", "can_edit"],
-        ["OffertaDidatticaView", "can_edit"],
-        ["Offerta Didattica", "menu_access"],
-
-        ["LogisticaDocentiView", "can_list"],
-        ["LogisticaDocentiView", "can_show"],
-        ["LogisticaDocentiView", "can_get"],
-        ["LogisticaDocentiView", "can_info"],
-        ["LogisticaDocentiView", "can_add"],
-        ["LogisticaDocentiView", "can_edit"],
-        ["LogisticaDocentiView", "can_delete"],
-        ["Logistica docenti", "menu_access"]
+           
+        ["AttivitaDidatticheView", "can_list"],["AttivitaDidatticheView", "can_show"],["AttivitaDidatticheView", "can_add"],
+        ["AttivitaDidatticheView", "can_edit"],["AttivitaDidatticheView", "can_delete"],["AttivitaDidatticheView", "can_download"],
+        ["Attività didattiche", "menu_access"], 
+        
+        ["OffertaView", "can_list"],["OffertaView", "can_show"],["OffertaView", "can_add"],
+        ["OffertaView", "can_edit"],["OffertaView", "can_delete"],["OffertaView", "can_download"],
+        ["Offerta", "menu_access"],
+        
+        ["ModuliView", "can_list"],["ModuliView", "can_show"],["ModuliView", "can_add"],
+        ["ModuliView", "can_edit"],["ModuliView", "can_delete"],["ModuliView", "can_download"],
+        ["Moduli", "menu_access"],
+        
+        ["LogisticaDocentiView", "can_list"],["LogisticaDocentiView", "can_show"],["LogisticaDocentiView", "can_add"],
+        ["LogisticaDocentiView", "can_edit"],["LogisticaDocentiView", "can_delete"],["LogisticaDocentiView", "can_download"],
+        ["Logistica docenti", "menu_access"],
+        
+        ["Funzioni utilità", "menu_access"],
+        ["UtilitaView", "can_srv_home"],["UtilitaView", "can_srv_util"],
+        ["Elaborazione orario", "menu_access"],   
+        ["PreferenzeView", "can_prf_home"],["PreferenzeView", "can_prf_calc"],
+        ["Calendario orario", "menu_access"],
+        ["CalendarioView", "can_cld_home"]
     ],
 
     # Profilo STUDENTE
-    "stud_watt" : [
-        ["OffertaDidatticaView", "can_list"],
-        ["OffertaDidatticaView", "can_show"],
-        ["Offerta Didattica", "menu_access"]
+    "stud_watt" : [        
+        ["Calendario orario", "menu_access"],
+        ["CalendarioView", "can_cld_home"]
     ],
 
     # Profilo AMMINISTRATORE
     "admin_watt" : [
         [".*", "can_list"],
         [".*", "can_show"],
-	[".*", "menu_access"],
-	[".*", "can_get"],
-	[".*", "can_info"]
+        [".*", "menu_access"],
+        [".*", "can_get"],
+        [".*", "can_info"]
     ]
-
 }
 
 AUTH_USER_REGISTRATION = True
@@ -166,17 +159,3 @@ AUTH_ROLE_PUBLIC = "Public"
 
 APP_NAME = "WaTt - Webapp Timetable"
 APP_THEME = ""  # default
-
-
-
-# APP_THEME = "cerulean.css"      # COOL
-# APP_THEME = "amelia.css"
-# APP_THEME = "cosmo.css"
-# APP_THEME = "cyborg.css"       # COOL
-# APP_THEME = "flatly.css"
-# APP_THEME = "journal.css"
-# APP_THEME = "readable.css"
-# APP_THEME = "simplex.css"
-# APP_THEME = "slate.css"          # COOL
-# APP_THEME = "spacelab.css"      # NICE
-# APP_THEME = "united.css"
