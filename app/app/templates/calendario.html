@@ -1,0 +1,113 @@
+{% extends "appbuilder/base.html" %}
+
+{% block content %}	
+	{% include "confirm_msg.html" %}	
+
+{% block head_css %}
+    {{ super() }}
+    <link rel="stylesheet" href="{{url_for('static',filename='fullcalendar/lib/main.css')}}"></link>
+{% endblock %}
+
+{% block head_js %}
+    {{ super() }}
+    <script src="{{url_for('static',filename='fullcalendar/lib/main.js')}}"></script>
+{% endblock %}
+	
+<html>
+	<head>
+  		<meta charset='utf-8' />	
+	   	   <div style="overflow-x:auto;">
+	  		 <table class="table">
+			  <thead>
+			    <tr>
+			      <th scope="col">Slot orario</th>
+			      <th scope="col">Lunedì</th>
+			      <th scope="col">Martedì</th>
+			      <th scope="col">Mercoledì</th>
+			      <th scope="col">Giovedì</th>
+			      <th scope="col">Venerdì</th>
+			    </tr>
+			  </thead>
+			  <tbody>
+			    {% for s in slot %}	       		 
+	            <tr>
+			      <th scope="row">{{s.descrizione}}</th>
+			      	<td>
+				      {% for o in orario %}
+				      	{% if o.giorno == "Lunedì" %}
+				      	  {% if o.slot_id == s.id %}
+				      	    <div>
+				            	<b>{{o.codice_attivita}}-{{o.descrizione_modulo}}</b><br>
+				            	({{o.nome_docente}} {{o.cognome_docente}})<br>
+				            	<b>{{o.aula}}</b><br>
+				            	<span>------------</span>
+				            </div>
+				          {% endif %}
+				        {% endif %}
+				      {% endfor %}
+				    </td>
+				    <td>
+				      {% for o in orario %}
+				      	{% if o.giorno == "Martedì" %}
+				      	  {% if o.slot_id == s.id %}
+				      	    <div>
+				            	<b>{{o.codice_attivita}}-{{o.descrizione_modulo}}</b><br>
+				            	({{o.nome_docente}} {{o.cognome_docente}})<br>
+				            	<b>{{o.aula}}</b><br>
+				            	<span>------------</span>
+				            </div>
+				          {% endif %}
+				        {% endif %}
+				      {% endfor %}
+				    </td>
+				    <td>
+				      {% for o in orario %}
+				      	{% if o.giorno == "Mercoledì" %}
+				      	  {% if o.slot_id == s.id %}
+				      	    <div>
+				            	<b>{{o.codice_attivita}}-{{o.descrizione_modulo}}</b><br>
+				            	({{o.nome_docente}} {{o.cognome_docente}})<br>
+				            	<b>{{o.aula}}</b><br>
+				            	<span>------------</span>
+				            </div>
+				          {% endif %}
+				        {% endif %}
+				      {% endfor %}
+				    </td>
+				    <td>
+				      {% for o in orario %}
+				      	{% if o.giorno == "Giovedì" %}
+				      	  {% if o.slot_id == s.id %}
+				      	    <div>
+				            	<b>{{o.codice_attivita}}-{{o.descrizione_modulo}}</b><br>
+				            	({{o.nome_docente}} {{o.cognome_docente}})<br>
+				            	<b>{{o.aula}}</b><br>
+				            	<span>------------</span>
+				            </div>
+				          {% endif %}
+				        {% endif %}
+				      {% endfor %}
+				    </td>
+				    <td>
+				      {% for o in orario %}
+				      	{% if o.giorno == "Venerdì" %}
+				      	  {% if o.slot_id == s.id %}
+				      	    <div>
+				            	<b>{{o.codice_attivita}}-{{o.descrizione_modulo}}</b><br>
+				            	({{o.nome_docente}} {{o.cognome_docente}})<br>
+				            	<b>{{o.aula}}</b><br>
+				            	<span>------------</span>
+				            </div>
+				          {% endif %}
+				        {% endif %}
+				      {% endfor %}
+				    </td>
+			    </tr>
+			    {% endfor %}
+			  </tbody>
+			</table>
+		  </div>
+	</head>
+</html>
+	
+{% endblock %}

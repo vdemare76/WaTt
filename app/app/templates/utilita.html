@@ -1,0 +1,30 @@
+{% extends "appbuilder/base.html" %}
+
+{% block content %}	
+	{% include "confirm_msg.html" %}	
+
+	<div class="container">
+	  <h2>Impostazioni</h2>
+		<form method="post">
+			<div>
+				<p>Procedura che svuota l'attuale contenuto del database e ripristina i dati di test precaricati nel sistema</p>	
+	      		<button type="button" onclick="init_db()">
+	      			Inizializza il database con dati di test
+	      		</button>  	  	  	  		  
+			</div>
+		</form>
+	</div>
+	
+	<script>	
+	function init_db() {
+		$('#title').html('Richiesta di conferma');
+		$('#msg').html('Si intende realmente inizializzare il database con i dati di test?');
+		$(document).on("click", "#modal-confirm-ok", function () {
+			window.location.href="{{ url_for('UtilitaView.srv_util', target='initdb')}}";
+        });
+		$('#modal-confirm-w').modal('show');
+	}	
+	</script>
+	
+{% endblock %}
+
