@@ -12,6 +12,7 @@ RUN pip install mysql-connector-python
 RUN pip install flask-appbuilder
 RUN pip install python-ldap
 RUN pip install --upgrade werkzeug==0.16.1
+RUN pip install pulp
 
 COPY app/ ./
 COPY app/custom/manager.py /usr/local/lib/python3.6/site-packages/flask_appbuilder/security/
