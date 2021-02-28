@@ -4,15 +4,7 @@ from flask import flash
 from sqlalchemy import engine, MetaData, select
 from sqlalchemy.exc import SQLAlchemyError
 from .solver_models import ModuloTt, AulaTt, CorsoDiStudioTt, SlotTt
-
-colori = {
-    1:"#FF0000",
-    2:"#4169E1",
-    3:"#228B22",
-    4:"#FFD800",
-    5:"#993300"
-}
-   
+                  
 def __svuotaTabelle(): 
     db.session.query(LogisticaDocente).delete()
     db.session.query(Modulo).delete()
@@ -57,22 +49,22 @@ def __caricaDatiIniziali():
     ]
     
     attivita_didattiche = [ 
-        ['MAT1','Matematica 1',9],
-        ['ARCL','Architettura dei calcolatori e Laboratorio',12],
-        ['PG1L','Programmazione 1 e Laboratorio',12],
-        ['MAT2','Matematica 2',6],
-        ['ECOA','Economia ed organizzazione aziendale',6],
-        ['ASDL','Algoritmi e strutture dati e Laboratorio',12],
-        ['PG3L','Programmazione 3 e Laboratorio',9],
-        ['RETL','Reti di calcolatori e Laboratorio',9],
-        ['GISL','Sistemi informativi geografici e Laboratorio',6],
-        ['SCCP','Scientific computer',6],
-        ['PHQU','Physic and Quantum',6],
-        ['MACL','Machine Learning',6],
-        ['CPGR','Computer Graphics',6],
-        ['HPCP','High Performance Computing',6],
-        ['MMLE','Multimodal Machine Learning',6],
-        ['IOTH','Internet of Things',6]
+        ['MAT1-1','Matematica 1',9],
+        ['ARCL-1','Architettura dei calcolatori e Laboratorio',12],
+        ['PG1L-1','Programmazione 1 e Laboratorio',12],
+        ['MAT2-2','Matematica 2',6],
+        ['ECOA-2','Economia ed organizzazione aziendale',6],
+        ['ASDL-2','Algoritmi e strutture dati e Laboratorio',12],
+        ['PG3L-3','Programmazione 3 e Laboratorio',9],
+        ['RETL-3','Reti di calcolatori e Laboratorio',9],
+        ['GISL-3','Sistemi informativi geografici e Laboratorio',6],
+        ['SCCP-1','Scientific computer',6],
+        ['PHQU-1','Physic and Quantum',6],
+        ['MACL-1','Machine Learning',6],
+        ['CPGR-1','Computer Graphics',6],
+        ['HPCP-2','High Performance Computing',6],
+        ['MMLE-2','Multimodal Machine Learning',6],
+        ['IOTH-2','Internet of Things',6]
     ]
 
     aule = [
@@ -83,9 +75,9 @@ def __caricaDatiIniziali():
         ['AN5','Aula 5',30,'N'],
         ['AN6','Aula 6',30,'N'],
         ['AN7','Aula 7',150,'N'],
-        ['AL1','Aula LAB1',50,'L'],
-        ['AL2','Aula LAB2',40,'L'],
-        ['AL3','Aula LAB3',30,'L']
+        ['AL1','Aula L1',50,'L'],
+        ['AL2','Aula L2',40,'L'],
+        ['AL3','Aula L3',30,'L']
     ]   
     
     docenti = [
@@ -147,7 +139,7 @@ def __caricaDatiIniziali():
         ['MU','Teoria',15,8,'N',2,2,0],
         ['MU','Teoria',16,14,'N',2,2,0]
     ]    
-                    
+          
     for g in giorni:
         row = Giorno(descrizione=g)
         db.session.add(row)
@@ -275,6 +267,3 @@ def caricaDatiDalDb():
         return -1    
     
     return corsi_tt, giorni_tt, slot_tt, aule_tt, moduli_tt, logistica_tt
-
-def getColori():
-    return colori

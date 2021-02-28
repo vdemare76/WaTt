@@ -2,7 +2,7 @@ import pulp as pl
 from pulp.pulp import LpVariable, lpSum
 from abc import ABC, abstractmethod
 from flask import flash, request
-from .util import caricaDatiDalDb, getColori
+from .util import caricaDatiDalDb
 from .solver_models import ModuloTt, AulaTt, CorsoDiStudioTt, SlotTt
 from amply.amply import ParamDefStmt
 from .import db
@@ -331,19 +331,15 @@ class AlgoritmoCompleto(TemplateCalcoloOrario):
                                 for a in dati.get_aule():
                                     if skd[(c,m,a,g,s)].varValue>0:
                                         row = Orario(giorno=g, 
-                                                     id_corso=m.get_corso_id(),
                                                      codice_corso=m.get_cod_corso(),
-                                                     colore_corso=getColori()[m.get_corso_id()],
                                                      codice_attivita=m.get_cod_attivita(),
                                                      descrizione_modulo=m.get_descrizione(),
-                                                     numerosita_modulo=m.get_max_studenti(),
                                                      slot_id=s.get_id(),
                                                      descrizione_slot=s.get_descrizione(),
                                                      nome_docente=m.get_nome_doc(),
                                                      cognome_docente=m.get_cognome_doc(),
                                                      anno_corso=m.get_anno_corso(),
-                                                     aula=a.get_descrizione(),
-                                                     capienza_aula=a.get_capienza())  
+                                                     aula=a.get_descrizione())  
                                         db.session.add(row)
                 db.session.commit()
                 flash('L''orario generato è stato correttamente registrato nel db','success')
