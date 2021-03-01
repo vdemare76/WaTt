@@ -67,7 +67,8 @@ def __impostaDatiIniziali():
     
     corsi_di_studio_i = [
         ['A08','INFORMATICA',180,3],
-        ['A09','INFORMATICA APPLICATA',120,2]
+        ['A09','INFORMATICA APPLICATA',120,2],
+        ['A10','SCIENZE BIOLOGICHE',180,3]
     ]
     corsi_di_studio.extend(corsi_di_studio_i)
     
@@ -106,7 +107,17 @@ def __impostaDatiIniziali():
         ['MACL-2S','Machine Learning PII',12],
         ['DSTC','Data Science Technology',12],
         ['CLCP','Cloud Computing',12],
-        ['IOTH-2S','Internet of Things PII',12]
+        ['IOTH-2S','Internet of Things PII',12],
+        # SECONDO SEMESTRE SCIENZE BIOLOGICHE
+        ['BIOA','Biologia animale',3],
+        ['BFVE','Biologia e Fisiologia vegetale',9],
+        ['CHOR','Chimica organica e laboratorio',12],
+        ['FISC','Fisica e laboratorio',6],
+        ['MICB','Microbiologia e laboratorio',9],
+        ['INDB','Indicatori biologici',12],
+        ['BFAN','Biologia e fisiologia animale',6],
+        ['ACVI','Analisi ciclo di vita',9],
+        ['','Farmacologia e tossicologia',6]
     ]
     attivita_didattiche.extend(attivita_didattiche_i)
     
@@ -145,7 +156,15 @@ def __impostaDatiIniziali():
         ['CSTNLL76D11F839P','DOC017','Castiglione','Aniello'],
         ['STNNTN76D11F839P','DOC018','Staiano','Antonino'],
         ['DMRMLI76D11F839P','DOC019','Di Martino','Emilia'],
-        ['FRNLSS76D11F839P','DOC020','Ferone','Alessio']
+        ['FRNLSS76D11F839P','DOC020','Ferone','Alessio'],
+        ['MRCLVA76D11F839P','DOC021','Sandulli','Roberto'],
+        ['DCPMHL76D11F839P','DOC022','Casoria','Paolo'],    
+        ['RIZMRS76D11F839P','DOC023','Chianese','Elena'],
+        ['MRTNTN76D11F839P','DOC024','Riccio','Angelo'],
+        ['CSTNLL76D11F839P','DOC025','Pasquale','Vincenzo'],
+        ['STNNTN76D11F839P','DOC026','Dumoulet','Stefano'],
+        ['DMRMLI76D11F839P','DOC027','Franzese','Pier Paolo'],
+        ['FRNLSS76D11F839P','DOC028','Mazzeo','Giovanni']
     ]
     docenti.extend(docenti_i)
     
@@ -184,7 +203,17 @@ def __impostaDatiIniziali():
         [4, 2, 27, 5, 1, 2, 70],
         [4, 2, 29, 16, 1, 2, 70],
         [4, 2, 30, 2, 2, 2, 35],
-        [4, 2, 31, 20, 2, 2, 35]
+        [4, 2, 31, 20, 2, 2, 35],
+        # SECONDO SEMESTRE SCIENZE BIOLOGICHE
+        [4, 3, 32, 21, 1, 2, 100],
+        [4, 3, 33, 22, 1, 2, 100],
+        [4, 3, 34, 23, 1, 2, 100],
+        [4, 3, 35, 24, 1, 2, 100],
+        [4, 3, 36, 25, 2, 2, 50],
+        [4, 3, 37, 26, 2, 2, 50],
+        [4, 3, 38, 21, 2, 2, 50],
+        [4, 3, 39, 27, 3, 2, 40],
+        [4, 3, 40, 28, 3, 2, 40],
     ]
     offerta.extend(offerta_i)
         
@@ -231,8 +260,17 @@ def __impostaDatiIniziali():
         ['MU','Teoria',28,5,'N',2,2,0],
         ['MU','Teoria',29,16,'N',2,2,0],
         ['MU','Teoria',30,2,'N',2,2,0],
-        ['MU','Teoria',31,20,'N',2,2,0]
-
+        ['MU','Teoria',31,20,'N',2,2,0],
+        # SECONDO SEMESTRE SCIENZE BIOLOGICHE
+        ['MU','Teoria',32,21,'N',2,2,0],
+        ['MU','Teoria',33,22,'N',2,2,0],
+        ['MU','Teoria',34,23,'N',2,2,0],
+        ['MU','Teoria',35,24,'N',2,2,0],
+        ['MU','Teoria',36,25,'N',2,2,0],
+        ['MU','Teoria',37,26,'N',2,2,0],
+        ['MU','Teoria',38,21,'N',2,2,0],
+        ['MU','Teoria',39,27,'N',2,2,0],
+        ['MU','Teoria',40,28,'N',2,2,0]
     ]    
     moduli.extend(moduli_i)
     
