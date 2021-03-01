@@ -4,11 +4,18 @@
 	{% include "confirm_msg.html" %}	
 
 	<div class="container">
-	  <h2>Impostazioni</h2>
+	  <h2>Funzioni di utilità</h2>
 		<form method="post">
 			<div>
-				<p>Procedura che svuota l'attuale contenuto del database e ripristina i dati di test precaricati nel sistema</p>	
-	      		<button type="button" onclick="init_db()">
+				<p>Svuota il database</p>	
+	      		<button type="button" class="btn btn-primary" onclick="empty_db()">
+	      			Svuota DB
+	      		</button>  	  	  	  		  
+			</div>
+			<br>
+			<div>
+				<p>Svuota il database e carica i dati di test</p>	
+	      		<button type="button" class="btn btn-primary" onclick="init_db()">
 	      			Inizializza il database con dati di test
 	      		</button>  	  	  	  		  
 			</div>
@@ -21,6 +28,15 @@
 		$('#msg').html('Si intende realmente inizializzare il database con i dati di test?');
 		$(document).on("click", "#modal-confirm-ok", function () {
 			window.location.href="{{ url_for('UtilitaView.srv_util', target='initdb')}}";
+        });
+		$('#modal-confirm-w').modal('show');
+	}	
+	
+	function empty_db() {
+		$('#title').html('Richiesta di conferma');
+		$('#msg').html('Si intende realmente svuotare il database?');
+		$(document).on("click", "#modal-confirm-ok", function () {
+			window.location.href="{{ url_for('UtilitaView.srv_util', target='emptydb')}}";
         });
 		$('#modal-confirm-w').modal('show');
 	}	

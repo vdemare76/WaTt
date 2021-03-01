@@ -4,27 +4,35 @@
 	{% include "confirm_msg.html" %}	
 
 	<div class="container">
-	  <h2>Preferenze per la creazione dell'orario</h2>
+	  <h2>Preferenze di calcolo</h2>
 		<form method="POST" action="/preferenzeview/prf_calc/genera_orario">
 			<div>
-				<p>Selezionare l'anno accademico dell'offerta formativa</p>
-			</div>
-			<div>
-				<p>Di seguito sono elencati i vincoli applicati per la creazione dell'orario</p>
 				<br>
-				
-				<p>VINCOLI OBBLIGATORI</p>	
+				<div>
+					Selezionare l'anno accademico dell'offerta formativa
+					<select name="aa" id="aa_select">
+					{% for a in anni_accademici %}
+						<option value={{a.anno}}>{{a.anno_esteso}}</option>
+					{% endfor %}
+					</select><br><br>
+					Selezionare il semestre per cui si vuole calcolare l'orario settimanale
+					<select name="semestre" id="semestri_select">
+					{% for s in semestri %}
+						<option value={{s.semestre}}>{{s.semestre}}</option>
+					{% endfor %}
+					</select>
+				</div><br>
+				<p class="bg-primary">VINCOLI PER IL CALCOLO DELLO SCHEMA ORARIO</p><br>
+				<p class="bg-info">VINCOLI OBBLIGATORI</p><br>
 				<label>
 					<ul>
-						<li>Non ci possono essere moduli insegnati dagli stessi docenti sovrapposti negli stessi slot orari
-						<li>Non ci possono essere moduli dello stesso anno di corso sovrapposti negli stessi slot orari
-						<li>L'aula assegnata al corso deve avere una capienza compatibile con il numero massimo di studenti per un dato anno di corso
-						<li>L'aula assegnata al corso deve essere compatibile con il tipo di aula associata al modulo
+						<li>Non ci possono essere moduli insegnati dagli stessi docenti sovrapposti negli stessi slot orari</li>
+						<li>Non ci possono essere moduli dello stesso anno di corso sovrapposti negli stessi slot orari</li>
+						<li>L'aula assegnata al corso deve avere una capienza compatibile con il numero massimo di studenti per un dato anno di corso</li>
+						<li>L'aula assegnata al corso deve essere compatibile con il tipo di aula associata al modulo</li>
 					</ul>
 				</label>
-				
-				<p>VINCOLI FACOLTATIVI</p>
-				
+				<div class="bg-info">VINCOLI FACOLTATIVI</div><br>
 				<input type="checkbox" name="chk_sessione_unica" id="sessione_unica" value="1">	
 				<label for = "unica_sessione_giorno">
 					Non devono essere consentite due sessioni dello stesso modulo nella stessa giornata
@@ -50,8 +58,8 @@
 				<label for = "preferenza_docenti">
 					Devono essere considerate le indicazioni dei docenti
 				</label>  	  		 
-			</div>
-      		<button type="submit" onclick="calcola_orario()" name="calc_orario">Calcola l'orario</button>  	  	
+			</div><br>
+	 		<button type="submit" onclick="calcola_orario()" name="calc_orario" class="btn btn-primary">Calcola schema orario</button>  	  	
 		</form>
 	</div>
 	
@@ -60,6 +68,7 @@
 			window.location.href="{{url_for('PreferenzeView.prf_calc', target='genera_orario')}}";
 		}
 	</script>
+	
 {% endblock %}
 
 

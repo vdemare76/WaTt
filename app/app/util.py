@@ -1,10 +1,29 @@
 from .models import AnnoAccademico, CorsoDiStudio, AttivitaDidattica, Docente, Aula, Offerta, LogisticaDocente, Modulo, Giorno, Slot
 from .import appbuilder, db
-from flask import flash
+from flask import flash, request
 from sqlalchemy import engine, MetaData, select
 from sqlalchemy.exc import SQLAlchemyError
 from .solver_models import ModuloTt, AulaTt, CorsoDiStudioTt, SlotTt
-                  
+
+colori = {
+    1:"#FF0000",
+    2:"#4169E1",
+    3:"#228B22",
+    4:"#FFD800",
+    5:"#993300"
+}
+
+giorni = []
+slot = []
+anni_accademici = []
+corsi_di_studio = []
+attivita_didattiche = []
+aule = []
+docenti = []
+offerta = [] 
+moduli = [] 
+logistica_docenti = []
+   
 def __svuotaTabelle(): 
     db.session.query(LogisticaDocente).delete()
     db.session.query(Modulo).delete()
@@ -30,57 +49,83 @@ def __svuotaTabelle():
 
     db.session.commit()
     
-def __caricaDatiIniziali():
-    giorni = ['Lunedì','Martedì','Mercoledì','Giovedì','Venerdì']
+def __impostaDatiIniziali():
+    giorni_i = ['Lunedì','Martedì','Mercoledì','Giovedì','Venerdì']
+    giorni.extend(giorni_i)
     
-    slot = ['09:00-10:00','10:00-11:00','11:00-12:00','12:00-13:00',
+    slot_i = ['09:00-10:00','10:00-11:00','11:00-12:00','12:00-13:00',
             '14:00-15:00','15:00-16:00','16:00-17:00','17:00-18:00']
-
-    anni_accademici = [
+    slot.extend(slot_i)
+    
+    anni_accademici_i = [
         [2018,'2018-19'],
         [2019,'2019-20'],
         [2020,'2020-21'],
         [2021,'2021-22']
     ]
+    anni_accademici.extend(anni_accademici_i)
     
-    corsi_di_studio = [
+    corsi_di_studio_i = [
         ['A08','INFORMATICA',180,3],
         ['A09','INFORMATICA APPLICATA',120,2]
     ]
+    corsi_di_studio.extend(corsi_di_studio_i)
     
-    attivita_didattiche = [ 
-        ['MAT1-1','Matematica 1',9],
-        ['ARCL-1','Architettura dei calcolatori e Laboratorio',12],
-        ['PG1L-1','Programmazione 1 e Laboratorio',12],
-        ['MAT2-2','Matematica 2',6],
-        ['ECOA-2','Economia ed organizzazione aziendale',6],
-        ['ASDL-2','Algoritmi e strutture dati e Laboratorio',12],
-        ['PG3L-3','Programmazione 3 e Laboratorio',9],
-        ['RETL-3','Reti di calcolatori e Laboratorio',9],
-        ['GISL-3','Sistemi informativi geografici e Laboratorio',6],
-        ['SCCP-1','Scientific computer',6],
-        ['PHQU-1','Physic and Quantum',6],
-        ['MACL-1','Machine Learning',6],
-        ['CPGR-1','Computer Graphics',6],
-        ['HPCP-2','High Performance Computing',6],
-        ['MMLE-2','Multimodal Machine Learning',6],
-        ['IOTH-2','Internet of Things',6]
+    attivita_didattiche_i = [ 
+        # PRIMO SEMESTRE INFORMATICA
+        ['MAT1-1S','Matematica 1',9],
+        ['ARCL','Architettura dei calcolatori e Laboratorio',12],
+        ['PG1L','Programmazione 1 e Laboratorio',12],
+        ['MAT2','Matematica 2',6],
+        ['ECOA','Economia ed organizzazione aziendale',6],
+        ['ASDL','Algoritmi e strutture dati e Laboratorio',12],
+        ['PG3L','Programmazione 3 e Laboratorio',9],
+        ['RETL','Reti di calcolatori e Laboratorio',9],
+        ['GISL','Sistemi informativi geografici e Laboratorio',6],
+        # PRIMO SEMESTRE INFORMATICA APPLICATA
+        ['SCCP-1S','Scientific computer',6],
+        ['PHQU','Physic and Quantum',6],
+        ['MACL-1S','Machine Learning',6],
+        ['CPGR','Computer Graphics',6],
+        ['HPCP','High Performance Computing',6],
+        ['MMLE','Multimodal Machine Learning',6],
+        ['IOTH-1S','Internet of Things',6],
+        # SECONDO SEMESTRE INFORMATICA
+        ['LING','Lingua Inglese',3],
+        ['MAT1-2S','Matematica 1',9],
+        ['PG2L','Programmazione 2 e Laboratorio',12],
+        ['FISI','Fisica',6],
+        ['BASD','Base di dati e Laboratorio',9],
+        ['SISO','Sistemi operativi e Laboratorio',12],
+        ['CNUM','Calcolo numerico',6],
+        ['CPAR','Calcolo parallelo',9],
+        ['ELAB','Elaborazione delle immagini',6],
+        # SECONDO SEMESTRE INFORMATICA APPLICATA
+        ['SCCP-2S','Scientific Computing PII',12],
+        ['ITSP','Intelligent Signal Processing',12],
+        ['MACL-2S','Machine Learning PII',12],
+        ['DSTC','Data Science Technology',12],
+        ['CLCP','Cloud Computing',12],
+        ['IOTH-2S','Internet of Things PII',12]
     ]
+    attivita_didattiche.extend(attivita_didattiche_i)
+    
 
-    aule = [
+    aule_i = [
         ['AN1','Aula 1',150,'N'],
         ['AN2','Aula 2',100,'N'],
         ['AN3','Aula 3',70,'N'],
         ['AN4','Aula 4',50,'N'],
-        ['AN5','Aula 5',30,'N'],
-        ['AN6','Aula 6',30,'N'],
+        ['AN5','Aula 5',35,'N'],
+        ['AN6','Aula 6',35,'N'],
         ['AN7','Aula 7',150,'N'],
-        ['AL1','Aula L1',50,'L'],
-        ['AL2','Aula L2',40,'L'],
-        ['AL3','Aula L3',30,'L']
+        ['AL1','Aula LAB1',50,'L'],
+        ['AL2','Aula LAB2',40,'L'],
+        ['AL3','Aula LAB3',35,'L']
     ]   
+    aule.extend(aule_i)
     
-    docenti = [
+    docenti_i = [
         ['DNFLGU76D11F839P','DOC001','D\'Onofrio','Luigi'],
         ['MNTRFL76D11F839P','DOC002','Montella','Raffaele'],
         ['SLVGPP76D11F839P','DOC003','Salvi','Giuseppe'],
@@ -94,10 +139,18 @@ def __caricaDatiIniziali():
         ['RTNLSS76D11F839P','DOC011','Rotundi','Alessandra'],
         ['DNNMRZ76D11F839P','DOC012','De Nino','Maurizio'],
         ['MRCLVA76D11F839P','DOC013','Marcellino','Livia'],
-        ['DCPMHL76D11F839P','DOC014','Di Capua','Michele']
+        ['DCPMHL76D11F839P','DOC014','Di Capua','Michele'],    
+        ['RIZMRS76D11F839P','DOC015','Rizzardi','MariaRosaria'],
+        ['MRTNTN76D11F839P','DOC016','Maratea','Antonio'],
+        ['CSTNLL76D11F839P','DOC017','Castiglione','Aniello'],
+        ['STNNTN76D11F839P','DOC018','Staiano','Antonino'],
+        ['DMRMLI76D11F839P','DOC019','Di Martino','Emilia'],
+        ['FRNLSS76D11F839P','DOC020','Ferone','Alessio']
     ]
- 
-    offerta = [
+    docenti.extend(docenti_i)
+    
+    offerta_i = [
+        # PRIMO SEMESTRE INFORMATICA
         [4, 1, 1, 1, 1, 1, 130],
         [4, 1, 2, 2, 1, 1, 130],
         [4, 1, 3, 4, 1, 1, 130],
@@ -107,6 +160,7 @@ def __caricaDatiIniziali():
         [4, 1, 7, 5, 3, 1, 60],
         [4, 1, 8, 9, 3, 1, 60],
         [4, 1, 9, 10, 3, 1, 60],
+        # PRIMO SEMESTRE INFORMATICA APPLICATA
         [4, 2, 10, 4, 1, 1, 70],
         [4, 2, 11, 11, 1, 1, 70],
         [4, 2, 12, 8, 1, 1, 70],
@@ -114,9 +168,28 @@ def __caricaDatiIniziali():
         [4, 2, 14, 13, 2, 1, 35],
         [4, 2, 15, 8, 2, 1, 35],
         [4, 2, 16, 14, 2, 1, 35],
+        # SECONDO SEMESTRE INFORMATICA
+        [4, 1, 17, 19, 1, 2, 130],
+        [4, 1, 18, 1, 1, 2, 130],
+        [4, 1, 19, 15, 1, 2, 130],
+        [4, 1, 20, 11, 2, 2, 90],
+        [4, 1, 21, 16, 2, 2, 90],
+        [4, 1, 22, 17, 2, 2, 90],
+        [4, 1, 23, 4, 3, 2, 60],
+        [4, 1, 24, 13, 3, 2, 60],
+        [4, 1, 25, 18, 3, 2, 60],
+        # SECONDO SEMESTRE INFORMATICA APPLICATA
+        [4, 2, 26, 15, 1, 2, 70],
+        [4, 2, 28, 5, 1, 2, 70],
+        [4, 2, 27, 5, 1, 2, 70],
+        [4, 2, 29, 16, 1, 2, 70],
+        [4, 2, 30, 2, 2, 2, 35],
+        [4, 2, 31, 20, 2, 2, 35]
     ]
-    
-    moduli = [
+    offerta.extend(offerta_i)
+        
+    moduli_i = [
+        # PRIMO SEMESTRE INFORMATICA
         ['MU','Teoria',1,1,'N',4,3,0],
         ['MT','Teoria',2,2,'N',2,2,0],
         ['ML','Laboratorio',2,3,'L',2,2,50],
@@ -131,15 +204,42 @@ def __caricaDatiIniziali():
         ['MU','Teoria',8,9,'N',3,2,0],
         ['MU','Teoria',9,10,'N',2,2,0],
         ['ML','Laboratorio',9,10,'L',1,2,35],      
+        # PRIMO SEMESTRE INFORMATICA APPLICATA
         ['MU','Teoria',10,4,'N',2,2,0],
         ['MU','Teoria',11,11,'N',2,2,0],
         ['MU','Teoria',12,8,'N',2,2,0],
         ['MU','Teoria',13,12,'N',2,2,0],
         ['MU','Teoria',14,13,'N',2,2,0],
         ['MU','Teoria',15,8,'N',2,2,0],
-        ['MU','Teoria',16,14,'N',2,2,0]
+        ['MU','Teoria',16,14,'N',2,2,0],
+        # SECONDO SEMESTRE INFORMATICA
+        ['MU','Teoria',17,19,'N',2,2,0],
+        ['MU','Teoria',18,18,'N',2,2,0],
+        ['MU','Teoria',19,15,'N',1,2,0],        
+        ['ML','Laboratorio',19,15,'L',2,2,50],
+        ['MU','Teoria',20,11,'N',2,2,0],
+        ['MU','Teoria',21,16,'N',1,2,0],        
+        ['ML','Laboratorio',21,16,'L',2,2,50],
+        ['MU','Teoria',22,17,'N',1,2,0],
+        ['ML','Laboratorio',22,18,'L',2,2,50],
+        ['MU','Teoria',23,4,'N',2,2,0],       
+        ['MU','Teoria',24,13,'N',2,2,0],
+        ['MU','Teoria',25,18,'N',2,2,0],
+        # SECONDO SEMESTRE INFORMATICA APPLICATA
+        ['MU','Teoria',26,15,'N',2,2,0],
+        ['MU','Teoria',27,5,'N',2,2,0],
+        ['MU','Teoria',28,5,'N',2,2,0],
+        ['MU','Teoria',29,16,'N',2,2,0],
+        ['MU','Teoria',30,2,'N',2,2,0],
+        ['MU','Teoria',31,20,'N',2,2,0]
+
     ]    
-          
+    moduli.extend(moduli_i)
+    
+    logistica_docenti_i=[]
+    logistica_docenti.extend(logistica_docenti_i)
+                   
+def __registraDatiInDb():
     for g in giorni:
         row = Giorno(descrizione=g)
         db.session.add(row)
@@ -187,15 +287,24 @@ def __caricaDatiIniziali():
         db.session.add(row)
     db.session.commit()
     
-    #for l in logistica_docenti:
-    #    row = LogisticaDocente(offerta_id=l[0], modulo_id=l[1], slot_id=l[2], giorno_id=l[3])
-    #    db.session.add(row)
-    #db.session.commit()       
+    for l in logistica_docenti:
+        row = LogisticaDocente(offerta_id=l[0], modulo_id=l[1], slot_id=l[2], giorno_id=l[3])
+        db.session.add(row)
+    db.session.commit()   
+      
                 
 def inizializzaDb():
     try:
         __svuotaTabelle()
-        __caricaDatiIniziali()
+        __impostaDatiIniziali()
+        __registraDatiInDb()
+        return 0
+    except SQLAlchemyError:
+        return -1
+
+def svuotaDb():
+    try:
+        __svuotaTabelle()
         return 0
     except SQLAlchemyError:
         return -1
@@ -239,6 +348,8 @@ def caricaDatiDalDb():
         
     try:
         moduli_tt=[]
+        aa=int(request.form.get('aa'))
+        semestre=int(request.form.get('semestre'))
         # Recupero delle informazioni dal DB per la formazione degli oggetti Modulo da collocare nell'orario
         moduli=db.session.query(Modulo, Offerta, AttivitaDidattica, AnnoAccademico, CorsoDiStudio, Docente)\
         .join(Offerta, Modulo.offerta_id==Offerta.id)\
@@ -246,7 +357,8 @@ def caricaDatiDalDb():
         .join(CorsoDiStudio, Offerta.corso_di_studio_id==CorsoDiStudio.id)\
         .join(AnnoAccademico, Offerta.anno_accademico_id==AnnoAccademico.id)\
         .join(Docente, Offerta.docente_id==Docente.id)\
-        .filter(AnnoAccademico.anno==2021).all()   
+        .filter(AnnoAccademico.anno==aa)\
+        .filter(Offerta.semestre==semestre).all()   
         for m in moduli:
             moduli_tt.append(ModuloTt(m.Modulo.id,m.Modulo.codice,m.Modulo.descrizione,m.AttivitaDidattica.codice,m.AttivitaDidattica.descrizione,\
                                       m.CorsoDiStudio.id,m.CorsoDiStudio.codice,m.CorsoDiStudio.descrizione,m.Docente.matricola,m.Docente.cognome,m.Docente.nome,\
@@ -267,3 +379,6 @@ def caricaDatiDalDb():
         return -1    
     
     return corsi_tt, giorni_tt, slot_tt, aule_tt, moduli_tt, logistica_tt
+
+def getColori():
+    return colori

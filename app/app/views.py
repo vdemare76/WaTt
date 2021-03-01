@@ -11,7 +11,7 @@ from wtforms import validators
 from .import appbuilder, db
 from .models import AnnoAccademico, CorsoDiStudio, AttivitaDidattica, Docente, Aula, Offerta, LogisticaDocente, Modulo, Giorno, Slot, Orario
 from flask.templating import render_template
-from .util import inizializzaDb
+from .util import inizializzaDb, svuotaDb
 from .solver import AlgoritmoCompleto
 
 class AnniAccademiciView(ModelView):
@@ -178,7 +178,11 @@ class UtilitaView(BaseView):
                 flash('Inizializzazione del db effettuata correttamente!','success')
             else:    
                 flash('Si è verificato un errore nell\'inizializzazione del db.','error')
-            return redirect(url_for('UtilitaView.srv_home'));    
+        elif target=="emptydb":
+            if svuotaDb()==0:
+                flash('Db svuotato correttamente!','success')
+            else:    
+                flash('Si è verificato un errore nell\'operazione di svuotamente del db.','error')
         return redirect(url_for('UtilitaView.srv_home'));
 
 class PreferenzeView(BaseView):
@@ -187,7 +191,14 @@ class PreferenzeView(BaseView):
     @expose('/prf_home/', methods=['GET','POST'])
     @has_access
     def prf_home(self, name=None):
-        return render_template("preferenze.html", base_template=appbuilder.base_template, appbuilder=appbuilder)
+        anni_accademici=db.session.query(AnnoAccademico.anno, AnnoAccademico.anno_esteso)\
+        .join(Offerta, Offerta.anno_accademico_id==AnnoAccademico.id).distinct()
+        semestri=db.session.query(Offerta.semestre).distinct()
+        return render_template("preferenze.html", 
+                                base_template=appbuilder.base_template, 
+                                appbuilder=appbuilder, 
+                                anni_accademici=anni_accademici, 
+                                semestri=semestri)
     
     @expose('/prf_calc/<target>', methods=['GET','POST'])
     @has_access
