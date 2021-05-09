@@ -1,4 +1,4 @@
-<B>WATT - WebApp TimeTable</B>
+<B>WATT2 - WebApp TimeTable</B>
 
 This project concerns the creation of a web application aimed at generating a university timetable.
 
