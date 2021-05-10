@@ -1,6 +1,6 @@
 from flask import url_for
 from flask_appbuilder import Model
-from sqlalchemy import Column, ForeignKey, Integer, String, Table, Text
+from sqlalchemy import Column, ForeignKey, Integer, String, Table, Text, DateTime
 from sqlalchemy.orm import relationship
         
 class AnnoAccademico(Model):
