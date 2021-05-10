@@ -31,7 +31,7 @@ class CorsoDiStudio(Model):
     descrizione = Column(String(150))
     cfu = Column(Integer)
     durata_legale = Column(Integer)
-    offerta = relationship("Offerta", back_populates="corso_di_studio")
+    #offerta = relationship("Offerta", back_populates="corso_di_studio")
 
     def __repr__(self):
         return self.codice + ' ' + self.descrizione

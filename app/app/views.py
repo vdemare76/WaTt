@@ -1,4 +1,4 @@
-from flask import flash, render_template, redirect, url_for
+from flask import flash, render_template, redirect, url_for, request
 from flask_appbuilder import ModelView, BaseView, expose, has_access, action
 from flask_appbuilder.fieldwidgets import Select2Widget
 from flask_appbuilder.models.sqla.interface import SQLAInterface
@@ -177,12 +177,12 @@ class UtilitaView(BaseView):
             if inizializzaDb()==0:
                 flash('Inizializzazione del db effettuata correttamente!','success')
             else:    
-                flash('Si è verificato un errore nell\'inizializzazione del db.','error')
+                flash('Errore nella fase di inizializzazione del db.','error')
         elif target=="emptydb":
             if svuotaDb()==0:
                 flash('Db svuotato correttamente!','success')
             else:    
-                flash('Si è verificato un errore nell\'operazione di svuotamente del db.','error')
+                flash('Errore nella fase di svuotamento del db.','error')
         return redirect(url_for('UtilitaView.srv_home'));
 
 class PreferenzeView(BaseView):
@@ -205,7 +205,7 @@ class PreferenzeView(BaseView):
     def prf_calc(self, target=None):
         if target=="genera_orario" : 
             a=AlgoritmoCompleto()
-            a.calcolo_orario()
+            a.genera_orario(int(request.form.get('aa')),int(request.form.get('semestre')))
         return redirect(url_for('PreferenzeView.prf_home'));  
     
 class CalendarioView(BaseView):
@@ -221,8 +221,19 @@ class CalendarioView(BaseView):
                                appbuilder=appbuilder, 
                                slot=slot,
                                orario=orario)
+
+class SchemaSettimanaleView(BaseView):
+    default_view = 'wsk_home'
+
+    @expose('/wsk_home/')
+    @has_access
+    def wsk_home(self, name=None):
+        return render_template("week_model.html", 
+                               base_template=appbuilder.base_template, 
+                               appbuilder=appbuilder)
           
 db.create_all()
+
 
 appbuilder.add_view(SlotView, "Slot", icon="fa-clock-o", category="Tabelle di base")
 
@@ -251,4 +262,6 @@ appbuilder.add_view(UtilitaView, "Funzioni utilità",  icon="fa-cogs", category=
 appbuilder.add_view(PreferenzeView, "Elaborazione orario",  icon="fa-cogs", category="Admin")
 
 appbuilder.add_view(CalendarioView, "Calendario orario",  icon="fa-cogs", category="Admin")
+
+appbuilder.add_view(SchemaSettimanaleView, "Schema settimanale",  icon="fa-cogs", category="Admin")
 

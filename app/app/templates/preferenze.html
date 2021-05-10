@@ -1,12 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="/static/watt.css"">
+</head>
+
 {% extends "appbuilder/base.html" %}
 
 {% block content %}	
 	{% include "confirm_msg.html" %}	
+	{% include "info_msg.html" %}	
 
 	<div class="container">
 	  <h2>Preferenze di calcolo</h2>
-		<form method="POST" action="/preferenzeview/prf_calc/genera_orario">
+		<form id="form_post" method="post" action="{{url_for('PreferenzeView.prf_calc', target='genera_orario')}}">
 			<div>
+				<div id="loader" class="loader" style="display:none"></div>
 				<br>
 				<div>
 					Selezionare l'anno accademico dell'offerta formativa
@@ -59,13 +68,26 @@
 					Devono essere considerate le indicazioni dei docenti
 				</label>  	  		 
 			</div><br>
-	 		<button type="submit" onclick="calcola_orario()" name="calc_orario" class="btn btn-primary">Calcola schema orario</button>  	  	
+			<label for="txt_desc_orario">Descrizione orario:</label>
+  			<input type="text" id="txt_desc_orario" name="text_desc_orario" size="80"><br><br>
+			<button type="button" id="form_post" name="form_post" onclick="calcola_orario()" class="btn btn-primary">Calcola schema orario </button>  	  	
 		</form>
 	</div>
 	
 	<script>
 		function calcola_orario() {
-			window.location.href="{{url_for('PreferenzeView.prf_calc', target='genera_orario')}}";
+			if ($('#txt_desc_orario').val().length > 0) {
+				$('#loader').css({'display':'block'});
+				$('#form_post').submit();				
+			}
+			else {
+				$('#info-title').html('Completare i dati');
+				$('#info-msg').html('E\' necessario specificare una descrizione per lo schema orario che si intende creare');
+				$(document).on('click', '#modal-info-ok', function () {
+					
+				});
+				$('#modal-info-w').modal('show');
+			}
 		}
 	</script>
 	

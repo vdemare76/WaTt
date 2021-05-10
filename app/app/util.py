@@ -1,7 +1,6 @@
 from .models import AnnoAccademico, CorsoDiStudio, AttivitaDidattica, Docente, Aula, Offerta, LogisticaDocente, Modulo, Giorno, Slot
 from .import appbuilder, db
-from flask import flash, request
-from sqlalchemy import engine, MetaData, select
+from flask import flash
 from sqlalchemy.exc import SQLAlchemyError
 from .solver_models import ModuloTt, AulaTt, CorsoDiStudioTt, SlotTt
 
@@ -347,7 +346,7 @@ def svuotaDb():
     except SQLAlchemyError:
         return -1
 
-def caricaDatiDalDb():
+def caricaDatiDalDb(aa, semestre):
     try:
         corsi_tt=[]
         corsi=db.session.query(CorsoDiStudio).all()
@@ -386,8 +385,6 @@ def caricaDatiDalDb():
         
     try:
         moduli_tt=[]
-        aa=int(request.form.get('aa'))
-        semestre=int(request.form.get('semestre'))
         # Recupero delle informazioni dal DB per la formazione degli oggetti Modulo da collocare nell'orario
         moduli=db.session.query(Modulo, Offerta, AttivitaDidattica, AnnoAccademico, CorsoDiStudio, Docente)\
         .join(Offerta, Modulo.offerta_id==Offerta.id)\

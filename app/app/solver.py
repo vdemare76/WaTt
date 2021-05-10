@@ -62,12 +62,12 @@ class StruttureAusiliarie(object):
 
 class TemplateCalcoloOrario(ABC):
     
-    def calcolo_orario(self):
+    def genera_orario(self, aa, semestre):
         # Modello risolutivo di calcolo del timetable
         
         # Step 1
         # CARICAMENTO DEI DATI su cui viene effettuato il calcolo dell'orario
-        dati = self.carica_dati()
+        dati = self.carica_dati(aa, semestre)
         
         # Step 2
         # GENERA LE STRUTTURE DATI DI SUPPORTO AL CALCOLO dell'orario
@@ -89,10 +89,10 @@ class TemplateCalcoloOrario(ABC):
         self.calcola_orario(model, dati, strutture_ausiliarie)
         
         # Step 7 - abstract
-        self.invia_risultato(model, dati, strutture_ausiliarie)
+        self.registra_orario(model, dati, strutture_ausiliarie)
         
-    def carica_dati(self):
-        corsi, giorni, slot, aule, moduli, logistica = caricaDatiDalDb()
+    def carica_dati(self, aa, semestre):
+        corsi, giorni, slot, aule, moduli, logistica = caricaDatiDalDb(aa, semestre)
         return DatiDiBase(corsi, giorni, slot, aule, moduli, logistica)
         
     def genera_strutture_ausiliarie(self, dati) -> None:
@@ -190,16 +190,16 @@ class TemplateCalcoloOrario(ABC):
     def calcola_orario(self, model, dati, str_aux):
         skd=str_aux.get_schedulazione()
         
-        # Funzione obiettivo
+         # Funzione obiettivo
         model+=lpSum(skd[(c,m,a,g,s)] for c in dati.get_corsi() for m in dati.get_moduli() for a in dati.get_aule() 
                                       for g in dati.get_giorni() for s in dati.get_slot()) 
         
         model.solve()
-        
+
         if (pl.LpStatus[model.status]) == 'Optimal':
-            flash ('L\'orario è stato correttamente generato sulla base dei vincoli impostati','success')
+            flash ('Orario correttamente generato sulla base dei vincoli impostati','success')
         else:
-            flash ('L\'orario non può essere generato nel rispetto dei vincoli impostati','danger')
+            flash ('Orario non generabile nel rispetto dei vincoli impostati','danger')
            
     @abstractmethod
     def imposta_vincoli_facoltativi(self, model, dati, str_aux):
@@ -210,7 +210,7 @@ class TemplateCalcoloOrario(ABC):
         pass
     
     @abstractmethod
-    def invia_risultato(self, model, dati, str_aux):
+    def registra_orario(self, model, dati, str_aux):
         pass
     
     
@@ -317,7 +317,7 @@ class AlgoritmoCompleto(TemplateCalcoloOrario):
                 g=dati.get_giorni()
                 model+=lpSum(skd[(c,m,a,g[l[3]-1],dati.get_slot()[s-1])] for a in dati.get_aule())==1
              
-    def invia_risultato(self, model, dati, str_aux):        
+    def registra_orario(self, model, dati, str_aux):        
         skd=str_aux.get_schedulazione()  
         if (pl.LpStatus[model.status]) == 'Optimal':
             try:
@@ -345,8 +345,10 @@ class AlgoritmoCompleto(TemplateCalcoloOrario):
                                                      aula=a.get_descrizione(),
                                                      capienza_aula=a.get_capienza())  
                                         db.session.add(row)
+
+                #row=orario_testata(None, )
                 db.session.commit()
-                flash('L''orario generato è stato correttamente registrato nel db','success')
+                flash('Orario correttamente registrato nel db','success')
             except SQLAlchemyError:
                 flash('Errore di registrazione dell''orario generato nel db','danger')
         

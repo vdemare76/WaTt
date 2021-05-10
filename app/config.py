@@ -9,6 +9,7 @@ from flask_appbuilder.security.manager import (
 )
 
 basedir = os.path.abspath(os.path.dirname(__file__))
+FAB_STATIC_FOLDER = basedir + "/app/static/"
 
 CSRF_ENABLED = True
 SECRET_KEY = "\2\1thisismyscretkey\1\2\e\y\y\h"
@@ -132,7 +133,9 @@ FAB_ROLES = {
         ["Elaborazione orario", "menu_access"],   
         ["PreferenzeView", "can_prf_home"],["PreferenzeView", "can_prf_calc"],
         ["Calendario orario", "menu_access"],
-        ["CalendarioView", "can_cld_home"]
+        ["CalendarioView", "can_cld_home"],
+        ["Schema settimanale", "menu_access"],
+        ["SchemaSettimanaleView", "can_wsk_home"]
     ],
 
     # Profilo STUDENTE
