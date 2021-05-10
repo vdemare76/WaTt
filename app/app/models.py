@@ -113,7 +113,32 @@ class LogisticaDocente(Model):
     
     def __repr__(self):
         return self.offerta_id
-    
+
+class OrarioTestata(Model):
+    id = Column(Integer, primary_key=True)
+    descrizione = Column(String(100))
+    anno_accademico_id = Column(Integer, ForeignKey('anno_accademico.id'))
+    semestre = Column(Integer)
+    data_creazione = Column(DateTime)
+
+    def __repr__(self):
+        return self.descrizione
+
+class OrarioDettaglio(Model):
+    id = Column(Integer, primary_key=True)
+    testata_id = Column(Integer, ForeignKey('orario_testata.id'), nullable=False)
+    modulo_id = Column(Integer, ForeignKey('modulo.id'), nullable=False)
+    modulo = relationship("Modulo")
+    slot_id = Column(Integer, ForeignKey('slot.id'), nullable=False)
+    slot = relationship("Slot")
+    giorno_id = Column(Integer, ForeignKey('giorno.id'), nullable=False)
+    giorno = relationship("Giorno")
+    aula_id = Column(Integer, ForeignKey('aula.id'), nullable=False)
+    aula = relationship("Aula")
+
+    def __repr__(self):
+        return self.descrizione
+
 class Orario(Model):
     id = Column(Integer, primary_key=True)
     giorno = Column(String(10))

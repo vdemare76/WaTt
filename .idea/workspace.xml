@@ -2,9 +2,117 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="4bd4ca69-5fab-4bca-9aae-55bf4e9525ff" name="Default Changelist" comment="Update">
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/app/static/fullcalendar-5.6.0/LICENSE.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/app/static/fullcalendar-5.6.0/README.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/app/static/fullcalendar-5.6.0/examples/background-events.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/app/static/fullcalendar-5.6.0/examples/daygrid-views.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/app/static/fullcalendar-5.6.0/examples/external-dragging-2cals.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/app/static/fullcalendar-5.6.0/examples/external-dragging-builtin.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/app/static/fullcalendar-5.6.0/examples/full-height.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/app/static/fullcalendar-5.6.0/examples/google-calendar.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/app/static/fullcalendar-5.6.0/examples/icalendar.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/app/static/fullcalendar-5.6.0/examples/js/theme-chooser.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/app/static/fullcalendar-5.6.0/examples/json.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/app/static/fullcalendar-5.6.0/examples/json/events.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/app/static/fullcalendar-5.6.0/examples/list-sticky-header.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/app/static/fullcalendar-5.6.0/examples/list-views.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/app/static/fullcalendar-5.6.0/examples/locales.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/app/static/fullcalendar-5.6.0/examples/month-view.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/app/static/fullcalendar-5.6.0/examples/natural-height.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/app/static/fullcalendar-5.6.0/examples/php/get-events.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/app/static/fullcalendar-5.6.0/examples/php/get-time-zones.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/app/static/fullcalendar-5.6.0/examples/php/utils.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/app/static/fullcalendar-5.6.0/examples/selectable.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/app/static/fullcalendar-5.6.0/examples/theming.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/app/static/fullcalendar-5.6.0/examples/time-zones.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/app/static/fullcalendar-5.6.0/examples/timegrid-sticky-header.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/app/static/fullcalendar-5.6.0/examples/timegrid-views-hscroll.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/app/static/fullcalendar-5.6.0/examples/timegrid-views.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/app/static/fullcalendar-5.6.0/examples/week-numbers.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/app/static/fullcalendar-5.6.0/lib/locales-all.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/app/static/fullcalendar-5.6.0/lib/locales-all.min.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/app/static/fullcalendar-5.6.0/lib/locales/af.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/app/static/fullcalendar-5.6.0/lib/locales/ar-dz.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/app/static/fullcalendar-5.6.0/lib/locales/ar-kw.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/app/static/fullcalendar-5.6.0/lib/locales/ar-ly.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/app/static/fullcalendar-5.6.0/lib/locales/ar-ma.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/app/static/fullcalendar-5.6.0/lib/locales/ar-sa.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/app/static/fullcalendar-5.6.0/lib/locales/ar-tn.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/app/static/fullcalendar-5.6.0/lib/locales/ar.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/app/static/fullcalendar-5.6.0/lib/locales/az.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/app/static/fullcalendar-5.6.0/lib/locales/bg.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/app/static/fullcalendar-5.6.0/lib/locales/bn.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/app/static/fullcalendar-5.6.0/lib/locales/bs.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/app/static/fullcalendar-5.6.0/lib/locales/ca.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/app/static/fullcalendar-5.6.0/lib/locales/cs.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/app/static/fullcalendar-5.6.0/lib/locales/cy.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/app/static/fullcalendar-5.6.0/lib/locales/da.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/app/static/fullcalendar-5.6.0/lib/locales/de-at.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/app/static/fullcalendar-5.6.0/lib/locales/de.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/app/static/fullcalendar-5.6.0/lib/locales/el.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/app/static/fullcalendar-5.6.0/lib/locales/en-au.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/app/static/fullcalendar-5.6.0/lib/locales/en-gb.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/app/static/fullcalendar-5.6.0/lib/locales/en-nz.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/app/static/fullcalendar-5.6.0/lib/locales/eo.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/app/static/fullcalendar-5.6.0/lib/locales/es-us.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/app/static/fullcalendar-5.6.0/lib/locales/es.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/app/static/fullcalendar-5.6.0/lib/locales/et.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/app/static/fullcalendar-5.6.0/lib/locales/eu.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/app/static/fullcalendar-5.6.0/lib/locales/fa.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/app/static/fullcalendar-5.6.0/lib/locales/fi.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/app/static/fullcalendar-5.6.0/lib/locales/fr-ca.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/app/static/fullcalendar-5.6.0/lib/locales/fr-ch.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/app/static/fullcalendar-5.6.0/lib/locales/fr.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/app/static/fullcalendar-5.6.0/lib/locales/gl.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/app/static/fullcalendar-5.6.0/lib/locales/he.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/app/static/fullcalendar-5.6.0/lib/locales/hi.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/app/static/fullcalendar-5.6.0/lib/locales/hr.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/app/static/fullcalendar-5.6.0/lib/locales/hu.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/app/static/fullcalendar-5.6.0/lib/locales/hy-am.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/app/static/fullcalendar-5.6.0/lib/locales/id.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/app/static/fullcalendar-5.6.0/lib/locales/is.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/app/static/fullcalendar-5.6.0/lib/locales/it.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/app/static/fullcalendar-5.6.0/lib/locales/ja.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/app/static/fullcalendar-5.6.0/lib/locales/ka.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/app/static/fullcalendar-5.6.0/lib/locales/kk.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/app/static/fullcalendar-5.6.0/lib/locales/ko.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/app/static/fullcalendar-5.6.0/lib/locales/lb.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/app/static/fullcalendar-5.6.0/lib/locales/lt.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/app/static/fullcalendar-5.6.0/lib/locales/lv.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/app/static/fullcalendar-5.6.0/lib/locales/mk.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/app/static/fullcalendar-5.6.0/lib/locales/ms.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/app/static/fullcalendar-5.6.0/lib/locales/nb.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/app/static/fullcalendar-5.6.0/lib/locales/ne.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/app/static/fullcalendar-5.6.0/lib/locales/nl.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/app/static/fullcalendar-5.6.0/lib/locales/nn.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/app/static/fullcalendar-5.6.0/lib/locales/pl.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/app/static/fullcalendar-5.6.0/lib/locales/pt-br.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/app/static/fullcalendar-5.6.0/lib/locales/pt.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/app/static/fullcalendar-5.6.0/lib/locales/ro.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/app/static/fullcalendar-5.6.0/lib/locales/ru.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/app/static/fullcalendar-5.6.0/lib/locales/sk.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/app/static/fullcalendar-5.6.0/lib/locales/sl.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/app/static/fullcalendar-5.6.0/lib/locales/sq.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/app/static/fullcalendar-5.6.0/lib/locales/sr-cyrl.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/app/static/fullcalendar-5.6.0/lib/locales/sr.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/app/static/fullcalendar-5.6.0/lib/locales/sv.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/app/static/fullcalendar-5.6.0/lib/locales/ta-in.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/app/static/fullcalendar-5.6.0/lib/locales/th.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/app/static/fullcalendar-5.6.0/lib/locales/tr.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/app/static/fullcalendar-5.6.0/lib/locales/ug.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/app/static/fullcalendar-5.6.0/lib/locales/uk.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/app/static/fullcalendar-5.6.0/lib/locales/uz.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/app/static/fullcalendar-5.6.0/lib/locales/vi.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/app/static/fullcalendar-5.6.0/lib/locales/zh-cn.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/app/static/fullcalendar-5.6.0/lib/locales/zh-tw.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/app/static/fullcalendar-5.6.0/lib/main.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/app/static/fullcalendar-5.6.0/lib/main.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/app/static/fullcalendar-5.6.0/lib/main.min.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/app/static/fullcalendar-5.6.0/lib/main.min.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/app/static/watt.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/app/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/app/models.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -15,6 +123,7 @@
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="ProjectId" id="1sJZSTXAIfmgX1wUSnklhV1xqdw" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
@@ -23,6 +132,12 @@
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/app/app" />
+  </component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\enzo\PyCharmProjects\Watt\app\app" />
+    </key>
   </component>
   <component name="RunManager">
     <configuration name="main" type="PythonConfigurationType" factoryName="Python" nameIsGenerated="true">
@@ -63,7 +178,14 @@
       <option name="project" value="LOCAL" />
       <updated>1620594033349</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="Update">
+      <created>1620594146044</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1620594146044</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -76,6 +198,7 @@
         </entry>
       </map>
     </option>
+    <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Update" />
