@@ -9,7 +9,7 @@ from flask_appbuilder.security.manager import (
 )
 
 basedir = os.path.abspath(os.path.dirname(__file__))
-FAB_STATIC_FOLDER = basedir + "/app/static/"
+#FAB_STATIC_FOLDER = basedir + "/app/static/"
 
 CSRF_ENABLED = True
 SECRET_KEY = "\2\1thisismyscretkey\1\2\e\y\y\h"
