@@ -1,4 +1,6 @@
 import pulp as pl
+import datetime
+from sqlalchemy.exc import SQLAlchemyError
 from pulp.pulp import LpVariable, lpSum
 from abc import ABC, abstractmethod
 from flask import flash, request
@@ -6,8 +8,10 @@ from .util import caricaDatiDalDb, getColori
 from .solver_models import ModuloTt, AulaTt, CorsoDiStudioTt, SlotTt
 from amply.amply import ParamDefStmt
 from .import db
-from .models import Orario
-   
+import pytz
+
+from .models import Orario, OrarioTestata, OrarioDettaglio
+
 class DatiDiBase(object):
 
     def __init__(self, corsi, giorni, slot, aule, moduli, logistica):
@@ -62,7 +66,7 @@ class StruttureAusiliarie(object):
 
 class TemplateCalcoloOrario(ABC):
     
-    def genera_orario(self, aa, semestre):
+    def genera_orario(self, aa, semestre, desc_orario):
         # Modello risolutivo di calcolo del timetable
         
         # Step 1
@@ -89,7 +93,7 @@ class TemplateCalcoloOrario(ABC):
         self.calcola_orario(model, dati, strutture_ausiliarie)
         
         # Step 7 - abstract
-        self.registra_orario(model, dati, strutture_ausiliarie)
+        self.registra_orario(model, dati, strutture_ausiliarie, aa, semestre, desc_orario)
         
     def carica_dati(self, aa, semestre):
         corsi, giorni, slot, aule, moduli, logistica = caricaDatiDalDb(aa, semestre)
@@ -210,7 +214,7 @@ class TemplateCalcoloOrario(ABC):
         pass
     
     @abstractmethod
-    def registra_orario(self, model, dati, str_aux):
+    def registra_orario(self, model, dati, str_aux, aa, desc_orario):
         pass
     
     
@@ -317,7 +321,7 @@ class AlgoritmoCompleto(TemplateCalcoloOrario):
                 g=dati.get_giorni()
                 model+=lpSum(skd[(c,m,a,g[l[3]-1],dati.get_slot()[s-1])] for a in dati.get_aule())==1
              
-    def registra_orario(self, model, dati, str_aux):        
+    def registra_orario(self, model, dati, str_aux, aa, semestre, desc_orario):
         skd=str_aux.get_schedulazione()  
         if (pl.LpStatus[model.status]) == 'Optimal':
             try:
@@ -346,11 +350,18 @@ class AlgoritmoCompleto(TemplateCalcoloOrario):
                                                      capienza_aula=a.get_capienza())  
                                         db.session.add(row)
 
-                #row=orario_testata(None, )
+                tz = pytz.timezone('Europe/Rome')
+                row = OrarioTestata(descrizione=desc_orario,
+                                    anno_accademico_id=aa,
+                                    semestre=semestre,
+                                    data_creazione=datetime.datetime.now(tz))
+                db.session.add(row)
+
                 db.session.commit()
                 flash('Orario correttamente registrato nel db','success')
             except SQLAlchemyError:
-                flash('Errore di registrazione dell''orario generato nel db','danger')
+                flash('Errore di registrazione dell\'orario generato nel db','danger')
+                flash(aa)
         
     
     

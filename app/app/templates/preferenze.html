@@ -21,7 +21,7 @@
 					Selezionare l'anno accademico dell'offerta formativa
 					<select name="aa" id="aa_select">
 					{% for a in anni_accademici %}
-						<option value={{a.anno}}>{{a.anno_esteso}}</option>
+						<option value={{a.id}}>{{a.anno_esteso}}</option>
 					{% endfor %}
 					</select><br><br>
 					Selezionare il semestre per cui si vuole calcolare l'orario settimanale

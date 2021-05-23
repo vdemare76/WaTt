@@ -191,7 +191,7 @@ class PreferenzeView(BaseView):
     @expose('/prf_home/', methods=['GET','POST'])
     @has_access
     def prf_home(self, name=None):
-        anni_accademici=db.session.query(AnnoAccademico.anno, AnnoAccademico.anno_esteso)\
+        anni_accademici=db.session.query(AnnoAccademico.id, AnnoAccademico.anno_esteso)\
         .join(Offerta, Offerta.anno_accademico_id==AnnoAccademico.id).distinct()
         semestri=db.session.query(Offerta.semestre).distinct()
         return render_template("preferenze.html", 
@@ -205,7 +205,7 @@ class PreferenzeView(BaseView):
     def prf_calc(self, target=None):
         if target=="genera_orario" : 
             a=AlgoritmoCompleto()
-            a.genera_orario(int(request.form.get('aa')),int(request.form.get('semestre')))
+            a.genera_orario(request.form.get('aa'),int(request.form.get('semestre')),request.form.get('txt_desc_orario'))
         return redirect(url_for('PreferenzeView.prf_home'));  
     
 class CalendarioView(BaseView):
