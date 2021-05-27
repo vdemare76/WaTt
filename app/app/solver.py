@@ -5,7 +5,7 @@ from pulp.pulp import LpVariable, lpSum
 from abc import ABC, abstractmethod
 from flask import flash, request
 from .util import caricaDatiDalDb, getColori
-from .solver_models import ModuloTt, AulaTt, CorsoDiStudioTt, SlotTt
+from .solver_models import ModuloTt, AulaTt, CorsoDiStudioTt, SlotTt, GiornoTt
 from amply.amply import ParamDefStmt
 from .import db
 import pytz
@@ -98,7 +98,7 @@ class TemplateCalcoloOrario(ABC):
     def carica_dati(self, aa, semestre):
         corsi, giorni, slot, aule, moduli, logistica = caricaDatiDalDb(aa, semestre)
         return DatiDiBase(corsi, giorni, slot, aule, moduli, logistica)
-        
+
     def genera_strutture_ausiliarie(self, dati) -> None:
         
         model = pl.LpProblem("CalcolaOrario", pl.LpMaximize)
@@ -331,32 +331,50 @@ class AlgoritmoCompleto(TemplateCalcoloOrario):
                             for s in dati.get_slot():
                                 for a in dati.get_aule():
                                     if skd[(c,m,a,g,s)].varValue>0:
-                                        row = Orario(giorno=g, 
-                                                     id_corso=m.get_corso_id(),
-                                                     codice_corso=m.get_cod_corso(),
-                                                     colore_corso=getColori()[m.get_corso_id()],
-                                                     codice_attivita=m.get_cod_attivita(),
-                                                     descrizione_modulo=m.get_descrizione(),
-                                                     numerosita_modulo=m.get_max_studenti(),
-                                                     slot_id=s.get_id(),
-                                                     descrizione_slot=s.get_descrizione(),
-                                                     nome_docente=m.get_nome_doc(),
-                                                     cognome_docente=m.get_cognome_doc(),
-                                                     anno_corso=m.get_anno_corso(),
-                                                     aula=a.get_descrizione(),
-                                                     capienza_aula=a.get_capienza())  
+                                        row = Orario(giorno = g.get_descrizione(),
+                                                     id_corso = m.get_corso_id(),
+                                                     codice_corso = m.get_cod_corso(),
+                                                     colore_corso = getColori()[m.get_corso_id()],
+                                                     codice_attivita = m.get_cod_attivita(),
+                                                     descrizione_modulo = m.get_descrizione(),
+                                                     numerosita_modulo = m.get_max_studenti(),
+                                                     slot_id = s.get_id(),
+                                                     descrizione_slot = s.get_descrizione(),
+                                                     nome_docente = m.get_nome_doc(),
+                                                     cognome_docente = m.get_cognome_doc(),
+                                                     anno_corso = m.get_anno_corso(),
+                                                     aula = a.get_descrizione(),
+                                                     capienza_aula = a.get_capienza())
                                         db.session.add(row)
 
                 tz = pytz.timezone('Europe/Rome')
-                row = OrarioTestata(descrizione=desc_orario,
-                                    anno_accademico_id=aa,
-                                    semestre=semestre,
-                                    data_creazione=datetime.datetime.now(tz))
-                db.session.add(row)
+                row_test = OrarioTestata(descrizione = desc_orario,
+                                         anno_accademico_id = aa,
+                                         semestre = semestre,
+                                         data_creazione = datetime.datetime.now(tz))
+                db.session.add(row_test)
+                db.session.flush()
+
+                id_testata = row_test.id
+
+                for c in dati.get_corsi():
+                    for g in dati.get_giorni():
+                        for m in dati.get_moduli():
+                            for s in dati.get_slot():
+                                for a in dati.get_aule():
+                                    if skd[(c,m,a,g,s)].varValue>0:
+                                        row_dett = OrarioDettaglio(testata_id = id_testata,
+                                                                   corso_di_studio_id = c.get_id(),
+                                                                   modulo_id = m.get_id(),
+                                                                   slot_id = s.get_id(),
+                                                                   giorno_id = g.get_id(),
+                                                                   aula_id = a.get_id())
+                                        db.session.add(row_dett)
 
                 db.session.commit()
                 flash('Orario correttamente registrato nel db','success')
             except SQLAlchemyError:
+                db.session.rollback()
                 flash('Errore di registrazione dell\'orario generato nel db','danger')
         
     

@@ -1,3 +1,14 @@
+class GiornoTt(object):
+    def __init__(self, id, descrizione):
+        self.__id = id
+        self.__descrizione = descrizione
+
+    def get_id(self):
+        return self.__id
+
+    def get_descrizione(self):
+        return self.__descrizione
+
 class CorsoDiStudioTt(object):
     def __init__(self, id, codice, descrizione, cfu, durata_legale):
         self.__id = id

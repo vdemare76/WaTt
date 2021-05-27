@@ -3,7 +3,7 @@ from .models import AnnoAccademico, CorsoDiStudio, AttivitaDidattica, Docente, \
 from .import appbuilder, db
 from flask import flash
 from sqlalchemy.exc import SQLAlchemyError
-from .solver_models import ModuloTt, AulaTt, CorsoDiStudioTt, SlotTt
+from .solver_models import ModuloTt, AulaTt, CorsoDiStudioTt, SlotTt, GiornoTt
 
 colori = {
     1:"#FF0000",
@@ -25,6 +25,7 @@ moduli = []
 logistica_docenti = []
    
 def __svuotaTabelle():
+    db.session.query(OrarioDettaglio).delete()
     db.session.query(OrarioTestata).delete()
     db.session.query(LogisticaDocente).delete()
     db.session.query(Modulo).delete()
@@ -48,6 +49,7 @@ def __svuotaTabelle():
     db.session.execute('ALTER TABLE aula AUTO_INCREMENT = 1')
     db.session.execute('ALTER TABLE logistica_docente AUTO_INCREMENT = 1')
     db.session.execute('ALTER TABLE orario_testata AUTO_INCREMENT = 1')
+    db.session.execute('ALTER TABLE orario_dettaglio AUTO_INCREMENT = 1')
 
     db.session.commit()
     
@@ -291,44 +293,70 @@ def __registraDatiInDb():
     db.session.commit()    
             
     for a in anni_accademici:
-        row = AnnoAccademico(anno=a[0], anno_esteso=a[1])
+        row = AnnoAccademico(anno = a[0],
+                             anno_esteso = a[1])
         db.session.add(row)
     db.session.commit()
     
     for c in corsi_di_studio:
-        row = CorsoDiStudio(codice=c[0], descrizione=c[1], cfu=c[2], durata_legale=c[3])
+        row = CorsoDiStudio(codice = c[0],
+                            descrizione = c[1],
+                            cfu = c[2],
+                            durata_legale = c[3])
         db.session.add(row)
     db.session.commit()    
     
     for a in attivita_didattiche:
-        row = AttivitaDidattica(codice=a[0], descrizione=a[1], cfu=a[2])
+        row = AttivitaDidattica(codice = a[0],
+                                descrizione = a[1],
+                                cfu = a[2])
         db.session.add(row)
     db.session.commit()
         
     for a in aule:
-        row = Aula(codice=a[0], descrizione=a[1], capienza=a[2], tipo_aula=a[3])
+        row = Aula(codice = a[0],
+                   descrizione = a[1],
+                   capienza = [2],
+                   tipo_aula = a[3])
         db.session.add(row)
     db.session.commit()    
     
     for d in docenti:
-        row = Docente(codice_fiscale=d[0], matricola=d[1], cognome = d[2], nome=d[3])
+        row = Docente(codice_fiscale = d[0],
+                      matricola = d[1],
+                      cognome = d[2],
+                      nome = d[3])
         db.session.add(row)
     db.session.commit()
     
     for o in offerta:
-        row = Offerta(anno_accademico_id=o[0], corso_di_studio_id=o[1], attivita_didattica_id=o[2],
-                    docente_id=o[3], anno_di_corso=o[4], semestre=o[5], max_studenti=o[6])
+        row = Offerta(anno_accademico_id = o[0],
+                      corso_di_studio_id = o[1],
+                      attivita_didattica_id = o[2],
+                      docente_id = o[3],
+                      anno_di_corso = o[4],
+                      semestre = o[5],
+                      max_studenti = o[6])
         db.session.add(row)
     db.session.commit()
                
     for m in moduli:
-        row = Modulo(codice=m[0], descrizione=m[1], offerta_id=m[2], docente_id=m[3],
-                    tipo_aula=m[4], numero_sessioni=m[5], durata_sessioni=m[6], max_studenti=m[7])
+        row = Modulo(codice = m[0],
+                     descrizione = m[1],
+                     offerta_id = m[2],
+                     docente_id = m[3],
+                     tipo_aula = m[4],
+                     numero_sessioni = m[5],
+                     durata_sessioni = m[6],
+                     max_studenti = m[7])
         db.session.add(row)
     db.session.commit()
     
     for l in logistica_docenti:
-        row = LogisticaDocente(offerta_id=l[0], modulo_id=l[1], slot_id=l[2], giorno_id=l[3])
+        row = LogisticaDocente(offerta_id = l[0],
+                               modulo_id = l[1],
+                               slot_id = l[2],
+                               giorno_id = l[3])
         db.session.add(row)
     db.session.commit()   
       
@@ -354,7 +382,7 @@ def caricaDatiDalDb(aa, semestre):
         corsi_tt=[]
         corsi=db.session.query(CorsoDiStudio).all()
         for c in corsi:
-            corsi_tt.append(CorsoDiStudioTt(c.id,c.codice,c.descrizione,c.cfu,c.durata_legale))            
+            corsi_tt.append(CorsoDiStudioTt(c.id, c.codice, c.descrizione, c.cfu, c.durata_legale))
     except SQLAlchemyError:
         flash("Errore di caricamento dati LP -> Corsi di studio")
         return -1   
@@ -363,7 +391,7 @@ def caricaDatiDalDb(aa, semestre):
         giorni_tt=[]
         giorni=db.session.query(Giorno).all()
         for g in giorni:
-            giorni_tt.append(g.descrizione)
+            giorni_tt.append(GiornoTt(g.id, g.descrizione))
     except SQLAlchemyError:
         flash("Errore di caricamento dati LP -> Giorni")
         return -1    
@@ -372,7 +400,7 @@ def caricaDatiDalDb(aa, semestre):
         slot_tt=[]
         slot=db.session.query(Slot).all()    
         for s in slot:
-            slot_tt.append(SlotTt(s.id,s.descrizione))
+            slot_tt.append(SlotTt(s.id, s.descrizione))
     except SQLAlchemyError:
         flash("Errore di caricamento dati LP -> Slot")
         return -1    
@@ -381,7 +409,7 @@ def caricaDatiDalDb(aa, semestre):
         aule_tt=[]
         aule=db.session.query(Aula).all()
         for a in aule:
-            aule_tt.append(AulaTt(a.id,a.codice,a.descrizione,a.capienza,a.tipo_aula))
+            aule_tt.append(AulaTt(a.id, a.codice, a.descrizione, a.capienza, a.tipo_aula))
     except SQLAlchemyError:
         flash("Errore di caricamento dati LP -> Aule")
         return -1    
