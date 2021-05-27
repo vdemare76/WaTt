@@ -1,4 +1,5 @@
-from .models import AnnoAccademico, CorsoDiStudio, AttivitaDidattica, Docente, Aula, Offerta, LogisticaDocente, Modulo, Giorno, Slot
+from .models import AnnoAccademico, CorsoDiStudio, AttivitaDidattica, Docente, \
+                    Aula, Offerta, LogisticaDocente, Modulo, Giorno, Slot, OrarioTestata, OrarioDettaglio
 from .import appbuilder, db
 from flask import flash
 from sqlalchemy.exc import SQLAlchemyError
@@ -23,7 +24,8 @@ offerta = []
 moduli = [] 
 logistica_docenti = []
    
-def __svuotaTabelle(): 
+def __svuotaTabelle():
+    db.session.query(OrarioTestata).delete()
     db.session.query(LogisticaDocente).delete()
     db.session.query(Modulo).delete()
     db.session.query(Offerta).delete()
@@ -45,6 +47,7 @@ def __svuotaTabelle():
     db.session.execute('ALTER TABLE slot AUTO_INCREMENT = 1')
     db.session.execute('ALTER TABLE aula AUTO_INCREMENT = 1')
     db.session.execute('ALTER TABLE logistica_docente AUTO_INCREMENT = 1')
+    db.session.execute('ALTER TABLE orario_testata AUTO_INCREMENT = 1')
 
     db.session.commit()
     
@@ -392,7 +395,7 @@ def caricaDatiDalDb(aa, semestre):
         .join(CorsoDiStudio, Offerta.corso_di_studio_id==CorsoDiStudio.id)\
         .join(AnnoAccademico, Offerta.anno_accademico_id==AnnoAccademico.id)\
         .join(Docente, Offerta.docente_id==Docente.id)\
-        .filter(AnnoAccademico.anno==aa)\
+        .filter(AnnoAccademico.id==aa)\
         .filter(Offerta.semestre==semestre).all()   
         for m in moduli:
             moduli_tt.append(ModuloTt(m.Modulo.id,m.Modulo.codice,m.Modulo.descrizione,m.AttivitaDidattica.codice,m.AttivitaDidattica.descrizione,\

@@ -127,6 +127,8 @@ class OrarioTestata(Model):
 class OrarioDettaglio(Model):
     id = Column(Integer, primary_key=True)
     testata_id = Column(Integer, ForeignKey('orario_testata.id'), nullable=False)
+    corso_di_studio_id = Column(Integer, ForeignKey('corso_di_studio.id'), nullable=False)
+    corso_di_studio = relationship("CorsoDiStudio")
     modulo_id = Column(Integer, ForeignKey('modulo.id'), nullable=False)
     modulo = relationship("Modulo")
     slot_id = Column(Integer, ForeignKey('slot.id'), nullable=False)

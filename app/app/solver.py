@@ -325,9 +325,6 @@ class AlgoritmoCompleto(TemplateCalcoloOrario):
         skd=str_aux.get_schedulazione()  
         if (pl.LpStatus[model.status]) == 'Optimal':
             try:
-                db.session.query(Orario).delete()           
-                db.session.execute('ALTER TABLE orario AUTO_INCREMENT = 1')
-                
                 for c in dati.get_corsi():
                     for g in dati.get_giorni():
                         for m in dati.get_moduli():
@@ -361,7 +358,6 @@ class AlgoritmoCompleto(TemplateCalcoloOrario):
                 flash('Orario correttamente registrato nel db','success')
             except SQLAlchemyError:
                 flash('Errore di registrazione dell\'orario generato nel db','danger')
-                flash(aa)
         
     
     
