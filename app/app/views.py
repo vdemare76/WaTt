@@ -174,8 +174,8 @@ class OrariGeneratiView(ModelView):
                     "semestre",
                     "data_creazione"]
 
-    @action("Cancella", "Cancella", "Delete all Really?", "fa-rocket", single=False)
-    def myact(self, items):
+    @action("cancella", "Cancella", "Delete all Really?", "fa-rocket", single=False)
+    def cancella(self, items):
         flash("ECCO")
         return redirect(self.get_redirect())
 
