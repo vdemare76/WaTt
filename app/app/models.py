@@ -117,7 +117,8 @@ class LogisticaDocente(Model):
 class OrarioTestata(Model):
     id = Column(Integer, primary_key=True)
     descrizione = Column(String(100))
-    anno_accademico_id = Column(Integer, ForeignKey('anno_accademico.id'))
+    anno_accademico_id = Column(Integer, ForeignKey('anno_accademico.id'), nullable=False)
+    anno_accademico = relationship("AnnoAccademico")
     semestre = Column(Integer)
     data_creazione = Column(DateTime)
 

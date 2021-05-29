@@ -174,6 +174,11 @@ class OrariGeneratiView(ModelView):
                     "semestre",
                     "data_creazione"]
 
+    @action("Cancella", "Cancella", "Delete all Really?", "fa-rocket", single=False)
+    def myact(self, items):
+        flash("ECCO")
+        return redirect(self.get_redirect())
+
 class UtilitaView(BaseView):
     default_view = 'srv_home'
 
