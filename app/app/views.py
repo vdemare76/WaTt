@@ -174,9 +174,9 @@ class OrariGeneratiView(ModelView):
                     "semestre",
                     "data_creazione"]
 
-    @action("cancella", "Cancella", "Delete all Really?", "fa-rocket", single=False)
+    @action("cancella", "Elimina", "Vuoi eliminare gli orari selezionati?", "fa-trash-alt", single=False)
     def cancella(self, items):
-        flash("ECCO")
+        flash(items[0])
         return redirect(self.get_redirect())
 
 class UtilitaView(BaseView):
