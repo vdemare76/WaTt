@@ -1,5 +1,4 @@
-from .models import AnnoAccademico, CorsoDiStudio, AttivitaDidattica, Docente, \
-                    Aula, Offerta, LogisticaDocente, Modulo, Giorno, Slot, OrarioTestata, OrarioDettaglio
+from .models import AnnoAccademico, CorsoDiStudio, AttivitaDidattica, Docente, Aula, Offerta, LogisticaDocente, Modulo, Giorno, Slot, OrarioTestata, OrarioDettaglio, Orario
 from .import appbuilder, db
 from flask import flash
 from sqlalchemy.exc import SQLAlchemyError
@@ -27,6 +26,7 @@ logistica_docenti = []
 def __svuotaTabelle():
     db.session.query(OrarioDettaglio).delete()
     db.session.query(OrarioTestata).delete()
+    db.session.query(Orario).delete()
     db.session.query(LogisticaDocente).delete()
     db.session.query(Modulo).delete()
     db.session.query(Offerta).delete()
@@ -48,6 +48,7 @@ def __svuotaTabelle():
     db.session.execute('ALTER TABLE slot AUTO_INCREMENT = 1')
     db.session.execute('ALTER TABLE aula AUTO_INCREMENT = 1')
     db.session.execute('ALTER TABLE logistica_docente AUTO_INCREMENT = 1')
+    db.session.execute('ALTER TABLE orario AUTO_INCREMENT = 1')
     db.session.execute('ALTER TABLE orario_testata AUTO_INCREMENT = 1')
     db.session.execute('ALTER TABLE orario_dettaglio AUTO_INCREMENT = 1')
 
@@ -75,7 +76,21 @@ def __impostaDatiIniziali():
         ['A10','SCIENZE BIOLOGICHE',180,3]
     ]
     corsi_di_studio.extend(corsi_di_studio_i)
-    
+
+    aule_i = [
+        ['AN1','Aula 1',150,'N'],
+        ['AN2','Aula 2',100,'N'],
+        ['AN3','Aula 3',70,'N'],
+        ['AN4','Aula 4',50,'N'],
+        ['AN5','Aula 5',35,'N'],
+        ['AN6','Aula 6',35,'N'],
+        ['AN7','Aula 7',150,'N'],
+        ['AL1','Aula LAB1',50,'L'],
+        ['AL2','Aula LAB2',40,'L'],
+        ['AL3','Aula LAB3',35,'L']
+    ]
+    aule.extend(aule_i)
+
     attivita_didattiche_i = [ 
         # PRIMO SEMESTRE INFORMATICA
         ['MAT1-1S','Matematica 1',9],
@@ -121,25 +136,10 @@ def __impostaDatiIniziali():
         ['INDB','Indicatori biologici',12],
         ['BFAN','Biologia e fisiologia animale',6],
         ['ACVI','Analisi ciclo di vita',9],
-        ['','Farmacologia e tossicologia',6]
+        ['FTOS','Farmacologia e tossicologia',6]
     ]
     attivita_didattiche.extend(attivita_didattiche_i)
-    
 
-    aule_i = [
-        ['AN1','Aula 1',150,'N'],
-        ['AN2','Aula 2',100,'N'],
-        ['AN3','Aula 3',70,'N'],
-        ['AN4','Aula 4',50,'N'],
-        ['AN5','Aula 5',35,'N'],
-        ['AN6','Aula 6',35,'N'],
-        ['AN7','Aula 7',150,'N'],
-        ['AL1','Aula LAB1',50,'L'],
-        ['AL2','Aula LAB2',40,'L'],
-        ['AL3','Aula LAB3',35,'L']
-    ]   
-    aule.extend(aule_i)
-    
     docenti_i = [
         ['DNFLGU76D11F839P','DOC001','D\'Onofrio','Luigi'],
         ['MNTRFL76D11F839P','DOC002','Montella','Raffaele'],
@@ -282,85 +282,91 @@ def __impostaDatiIniziali():
     logistica_docenti.extend(logistica_docenti_i)
                    
 def __registraDatiInDb():
-    for g in giorni:
-        row = Giorno(descrizione=g)
-        db.session.add(row)
-    db.session.commit() 
+    try:
+        for g in giorni:
+            row = Giorno(descrizione=g)
+            db.session.add(row)
+        db.session.flush()
 
-    for s in slot:
-        row = Slot(descrizione=s) 
-        db.session.add(row)
-    db.session.commit()    
-            
-    for a in anni_accademici:
-        row = AnnoAccademico(anno = a[0],
-                             anno_esteso = a[1])
-        db.session.add(row)
-    db.session.commit()
-    
-    for c in corsi_di_studio:
-        row = CorsoDiStudio(codice = c[0],
-                            descrizione = c[1],
-                            cfu = c[2],
-                            durata_legale = c[3])
-        db.session.add(row)
-    db.session.commit()    
-    
-    for a in attivita_didattiche:
-        row = AttivitaDidattica(codice = a[0],
-                                descrizione = a[1],
-                                cfu = a[2])
-        db.session.add(row)
-    db.session.commit()
-        
-    for a in aule:
-        row = Aula(codice = a[0],
-                   descrizione = a[1],
-                   capienza = [2],
-                   tipo_aula = a[3])
-        db.session.add(row)
-    db.session.commit()    
-    
-    for d in docenti:
-        row = Docente(codice_fiscale = d[0],
-                      matricola = d[1],
-                      cognome = d[2],
-                      nome = d[3])
-        db.session.add(row)
-    db.session.commit()
-    
-    for o in offerta:
-        row = Offerta(anno_accademico_id = o[0],
-                      corso_di_studio_id = o[1],
-                      attivita_didattica_id = o[2],
-                      docente_id = o[3],
-                      anno_di_corso = o[4],
-                      semestre = o[5],
-                      max_studenti = o[6])
-        db.session.add(row)
-    db.session.commit()
-               
-    for m in moduli:
-        row = Modulo(codice = m[0],
-                     descrizione = m[1],
-                     offerta_id = m[2],
-                     docente_id = m[3],
-                     tipo_aula = m[4],
-                     numero_sessioni = m[5],
-                     durata_sessioni = m[6],
-                     max_studenti = m[7])
-        db.session.add(row)
-    db.session.commit()
-    
-    for l in logistica_docenti:
-        row = LogisticaDocente(offerta_id = l[0],
-                               modulo_id = l[1],
-                               slot_id = l[2],
-                               giorno_id = l[3])
-        db.session.add(row)
-    db.session.commit()   
-      
-                
+        for s in slot:
+            row = Slot(descrizione=s)
+            db.session.add(row)
+        db.session.flush()
+
+        for a in anni_accademici:
+            row = AnnoAccademico(anno = a[0],
+                                 anno_esteso = a[1])
+            db.session.add(row)
+        db.session.flush()
+
+        for c in corsi_di_studio:
+            row = CorsoDiStudio(codice = c[0],
+                                descrizione = c[1],
+                                cfu = c[2],
+                                durata_legale = c[3])
+            db.session.add(row)
+        db.session.flush()
+
+        for a in attivita_didattiche:
+            row = AttivitaDidattica(codice = a[0],
+                                    descrizione = a[1],
+                                    cfu = a[2])
+            db.session.add(row)
+        db.session.flush()
+
+        for a in aule:
+            row = Aula(codice = a[0],
+                       descrizione = a[1],
+                       capienza = a[2],
+                       tipo_aula = a[3])
+            db.session.add(row)
+        db.session.flush()
+
+        for d in docenti:
+            row = Docente(codice_fiscale = d[0],
+                          matricola = d[1],
+                          cognome = d[2],
+                          nome = d[3])
+            db.session.add(row)
+        db.session.flush()
+
+        for o in offerta:
+            row = Offerta(anno_accademico_id = o[0],
+                          corso_di_studio_id = o[1],
+                          attivita_didattica_id = o[2],
+                          docente_id = o[3],
+                          anno_di_corso = o[4],
+                          semestre = o[5],
+                          max_studenti = o[6])
+            db.session.add(row)
+        db.session.flush()
+
+        for m in moduli:
+            row = Modulo(codice = m[0],
+                         descrizione = m[1],
+                         offerta_id = m[2],
+                         docente_id = m[3],
+                         tipo_aula = m[4],
+                         numero_sessioni = m[5],
+                         durata_sessioni = m[6],
+                         max_studenti = m[7])
+            db.session.add(row)
+        db.session.flush()
+
+        for l in logistica_docenti:
+            row = LogisticaDocente(offerta_id = l[0],
+                                   modulo_id = l[1],
+                                   slot_id = l[2],
+                                   giorno_id = l[3])
+            db.session.add(row)
+        db.session.flush()
+
+        db.session.commit()
+    except SQLAlchemyError:
+        db.session.rollback()
+        flash("Errore di caricamento dati nel DB")
+    return -1
+
 def inizializzaDb():
     try:
         __svuotaTabelle()

@@ -9,7 +9,8 @@ from flask_appbuilder.fields import AJAXSelectField
 from wtforms import validators
 
 from .import appbuilder, db
-from .models import AnnoAccademico, CorsoDiStudio, AttivitaDidattica, Docente, Aula, Offerta, LogisticaDocente, Modulo, Giorno, Slot, Orario
+from .models import AnnoAccademico, CorsoDiStudio, AttivitaDidattica, Docente, Aula, Offerta, \
+                    LogisticaDocente, Modulo, Giorno, Slot, Orario, OrarioTestata
 from flask.templating import render_template
 from .util import inizializzaDb, svuotaDb
 from .solver import AlgoritmoCompleto
@@ -161,7 +162,18 @@ class LogisticaDocentiView(ModelView):
     }
     
     edit_form_extra_fields = add_form_extra_fields 
-    
+
+class OrariGeneratiView(ModelView):
+    datamodel = SQLAInterface(OrarioTestata)
+    label_columns = {"descrizione":"Descrizione",
+                     "anno_accademico.anno_esteso":"Anno Accademico",
+                     "semestre":"Semestre",
+                     "data_creazione":"Data creazione"}
+    list_columns = ["descrizione",
+                    "anno_accademico.anno_esteso",
+                    "semestre",
+                    "data_creazione"]
+
 class UtilitaView(BaseView):
     default_view = 'srv_home'
 
@@ -260,6 +272,8 @@ appbuilder.add_view(LogisticaDocentiView, "Logistica docenti", icon="fa-hand-o-u
 appbuilder.add_view(UtilitaView, "Funzioni utilità",  icon="fa-cogs", category="Admin")
 
 appbuilder.add_view(PreferenzeView, "Elaborazione orario",  icon="fa-cogs", category="Admin")
+
+appbuilder.add_view(OrariGeneratiView, "Orari generati",  icon="fa-cogs", category="Admin")
 
 appbuilder.add_view(CalendarioView, "Calendario orario",  icon="fa-cogs", category="Admin")
 

@@ -127,6 +127,9 @@ FAB_ROLES = {
         ["LogisticaDocentiView", "can_list"],["LogisticaDocentiView", "can_show"],["LogisticaDocentiView", "can_add"],
         ["LogisticaDocentiView", "can_edit"],["LogisticaDocentiView", "can_delete"],["LogisticaDocentiView", "can_download"],
         ["Logistica docenti", "menu_access"],
+
+        ["OrariGeneratiView", "can_list"], ["OrariGeneratiView", "can_show"], ["OrariGeneratiView", "can_download"],
+        ["Orari generati", "menu_access"],
         
         ["Funzioni utilità", "menu_access"],
         ["UtilitaView", "can_srv_home"],["UtilitaView", "can_srv_util"],
