@@ -129,7 +129,7 @@ FAB_ROLES = {
         ["Logistica docenti", "menu_access"],
 
         ["OrariGeneratiView", "can_list"], ["OrariGeneratiView", "can_show"], ["OrariGeneratiView", "can_download"],
-        ["OrariGeneratiView", "can_cancella"],["Orari generati", "menu_access"],["OrariGeneratiView", "cancella"]
+        ["OrariGeneratiView", "can_cancella"],["Orari generati", "menu_access"],["OrariGeneratiView", "cancella"],
         
         ["Funzioni utilità", "menu_access"],
         ["UtilitaView", "can_srv_home"],["UtilitaView", "can_srv_util"],
