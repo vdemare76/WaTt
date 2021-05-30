@@ -3,6 +3,7 @@ from flask_appbuilder import ModelView, BaseView, expose, has_access, action
 from flask_appbuilder.fieldwidgets import Select2Widget
 from flask_appbuilder.models.sqla.interface import SQLAInterface
 from wtforms.ext.sqlalchemy.fields import QuerySelectField
+from sqlalchemy.exc import SQLAlchemyError
 
 from flask_appbuilder.fieldwidgets import Select2AJAXWidget, Select2SlaveAJAXWidget
 from flask_appbuilder.fields import AJAXSelectField
@@ -10,7 +11,7 @@ from wtforms import validators
 
 from .import appbuilder, db
 from .models import AnnoAccademico, CorsoDiStudio, AttivitaDidattica, Docente, Aula, Offerta, \
-                    LogisticaDocente, Modulo, Giorno, Slot, Orario, OrarioTestata
+                    LogisticaDocente, Modulo, Giorno, Slot, Orario, OrarioTestata, OrarioDettaglio
 from flask.templating import render_template
 from .util import inizializzaDb, svuotaDb
 from .solver import AlgoritmoCompleto
@@ -165,18 +166,41 @@ class LogisticaDocentiView(ModelView):
 
 class OrariGeneratiView(ModelView):
     datamodel = SQLAInterface(OrarioTestata)
-    label_columns = {"descrizione":"Descrizione",
+    label_columns = {"id":"identificativo",
+                     "descrizione":"Descrizione",
                      "anno_accademico.anno_esteso":"Anno Accademico",
                      "semestre":"Semestre",
                      "data_creazione":"Data creazione"}
-    list_columns = ["descrizione",
+    list_columns = ["id",
+                    "descrizione",
                     "anno_accademico.anno_esteso",
                     "semestre",
                     "data_creazione"]
 
     @action("cancella", "Elimina", "Vuoi eliminare gli orari selezionati?", "fa-trash-alt", single=False)
     def cancella(self, items):
-        flash(items[0])
+        for i in items:
+            try:
+                db.session.query(OrarioDettaglio).filter(OrarioDettaglio.testata_id == i.id).delete()
+                db.session.query(OrarioTestata).filter(OrarioTestata.id == i.id).delete()
+                db.session.commit()
+            except SQLAlchemyError:
+                db.sessione.rollback()
+                flash("Errore durante la cancellazione degli orari selezionati")
+                return -1
+        return redirect(self.get_redirect())
+
+    @action("schema", "Visualizza schema", "Vuoi visualizzare lo schema orario selezionato?", "fa-trash-alt", single=False)
+    def schema(self, items):
+        for i in items:
+            try:
+                db.session.query(OrarioDettaglio).filter(OrarioDettaglio.testata_id == i.id).delete()
+                db.session.query(OrarioTestata).filter(OrarioTestata.id == i.id).delete()
+                db.session.commit()
+            except SQLAlchemyError:
+                db.sessione.rollback()
+                flash("Errore durante la cancellazione degli orari selezionati")
+                return -1
         return redirect(self.get_redirect())
 
 class UtilitaView(BaseView):
