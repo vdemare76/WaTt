@@ -13,7 +13,7 @@ from .import appbuilder, db
 from .models import AnnoAccademico, CorsoDiStudio, AttivitaDidattica, Docente, Aula, Offerta, \
                     LogisticaDocente, Modulo, Giorno, Slot, Orario, OrarioTestata, OrarioDettaglio
 from flask.templating import render_template
-from .util import inizializzaDb, svuotaDb
+from .util import inizializzaDb, svuotaDb, getColori
 from .solver import AlgoritmoCompleto
 
 class AnniAccademiciView(ModelView):
@@ -190,17 +190,46 @@ class OrariGeneratiView(ModelView):
                 return -1
         return redirect(self.get_redirect())
 
-    @action("schema", "Visualizza schema", "Vuoi visualizzare lo schema orario selezionato?", "fa-trash-alt", single=False)
+    @action("schema", "Carica orario", "Vuoi visualizzare lo schema orario selezionato?", "fa-trash-alt", single=False)
     def schema(self, items):
-        for i in items:
-            try:
-                db.session.query(OrarioDettaglio).filter(OrarioDettaglio.testata_id == i.id).delete()
-                db.session.query(OrarioTestata).filter(OrarioTestata.id == i.id).delete()
-                db.session.commit()
-            except SQLAlchemyError:
-                db.sessione.rollback()
-                flash("Errore durante la cancellazione degli orari selezionati")
-                return -1
+        try:
+            db.session.query(Orario).delete()
+            db.session.execute('ALTER TABLE orario AUTO_INCREMENT = 1')
+
+            rows=db.session.query(OrarioDettaglio, Modulo, Giorno, Offerta, AttivitaDidattica, CorsoDiStudio, Docente, Slot, Aula) \
+            .join(CorsoDiStudio, OrarioDettaglio.corso_di_studio_id == CorsoDiStudio.id) \
+            .join(Modulo, OrarioDettaglio.modulo_id == Modulo.id) \
+            .join(Offerta, Modulo.offerta_id == Offerta.id) \
+            .join(Docente, Modulo.docente_id == Docente.id) \
+            .join(Slot, OrarioDettaglio.slot_id == Slot.id) \
+            .join(Giorno, OrarioDettaglio.giorno_id == Giorno.id) \
+            .join(AttivitaDidattica, Offerta.attivita_didattica_id == AttivitaDidattica.id) \
+            .join(Aula, OrarioDettaglio.aula_id==Aula.id)\
+            .filter(OrarioDettaglio.testata_id==items[0].id)\
+            .order_by(CorsoDiStudio.codice.asc(), Giorno.id.asc(), Modulo.codice.asc(), Slot.id.asc(), Aula.codice.asc()).all()
+
+            for r in rows:
+                row = Orario(giorno=r.Giorno.descrizione,
+                             id_corso=r.CorsoDiStudio.id,
+                             codice_corso=r.CorsoDiStudio.codice,
+                             colore_corso=getColori()[r.CorsoDiStudio.id],
+                             codice_attivita=r.AttivitaDidattica.codice,
+                             descrizione_modulo=r.Modulo.descrizione,
+                             numerosita_modulo=r.Modulo.max_studenti,
+                             slot_id=r.Slot.id,
+                             descrizione_slot=r.Slot.descrizione,
+                             nome_docente=r.Docente.nome,
+                             cognome_docente=r.Docente.cognome,
+                             anno_corso=r.Offerta.anno_di_corso,
+                             aula=r.Aula.descrizione,
+                             capienza_aula=r.Aula.capienza)
+                db.session.add(row)
+            db.session.commit()
+            flash("Orario caricato correttamente!")
+        except SQLAlchemyError:
+            db.sessione.rollback()
+            flash("Errore durante la cancellazione degli orari selezionati")
+            return -1
         return redirect(self.get_redirect())
 
 class UtilitaView(BaseView):
