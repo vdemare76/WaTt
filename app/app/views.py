@@ -190,7 +190,7 @@ class OrariGeneratiView(ModelView):
                 return -1
         return redirect(self.get_redirect())
 
-    @action("schema", "Carica orario", "Vuoi visualizzare lo schema orario selezionato?", "fa-trash-alt", single=False)
+    @action("schema", "Carica orario", "Vuoi visualizzare lo schema orario selezionato?", "fa-trash-alt", multiple=False, single=True)
     def schema(self, items):
         try:
             db.session.query(Orario).delete()
