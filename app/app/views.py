@@ -96,6 +96,15 @@ class OffertaView(ModelView):
     
 class ModuliView(ModelView):
     datamodel = SQLAInterface(Modulo)
+    label_columns = {"orario_testata.descrizione":"Descrizione orario",
+                     "data":"Data chiusura"}
+    list_columns = ["orario_testata.descrizione",
+                    "data"]
+    order_columns = ["orario_testata.descrizione",
+                    "data"]
+
+class ChiusuraView(ModelView):
+    datamodel = SQLAInterface(Chiusura)
     label_columns = {"codice":"Codice modulo",
                      "descrizione":"Descrizione",
                      "offerta.anno_accademico":"A.A. Offerta",
@@ -126,7 +135,7 @@ class ModuliView(ModelView):
                     "numero_sessioni",
                     "durata_sessioni",
                     "max_studenti"]
-    
+
 class LogisticaDocentiView(ModelView):
     datamodel = SQLAInterface(LogisticaDocente)
 

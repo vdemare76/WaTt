@@ -1,6 +1,6 @@
 from flask import url_for
 from flask_appbuilder import Model
-from sqlalchemy import Column, ForeignKey, Integer, String, Table, Text, DateTime
+from sqlalchemy import Column, ForeignKey, Integer, String, Table, Text, DateTime, Date
 from sqlalchemy.orm import relationship
         
 class AnnoAccademico(Model):
@@ -158,3 +158,9 @@ class Orario(Model):
     anno_corso = Column(Integer)
     aula = Column(String(35))
     capienza_aula = Column(Integer)
+
+class Chiusura(Model):
+    id = Column(Integer, primary_key=True)
+    testata_id = Column(Integer, ForeignKey('orario_testata.id'), nullable=False)
+    data = Column(Date)
+    nota = Column(String(100))
