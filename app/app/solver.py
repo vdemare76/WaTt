@@ -325,28 +325,6 @@ class AlgoritmoCompleto(TemplateCalcoloOrario):
         skd=str_aux.get_schedulazione()  
         if (pl.LpStatus[model.status]) == 'Optimal':
             try:
-                for c in dati.get_corsi():
-                    for g in dati.get_giorni():
-                        for m in dati.get_moduli():
-                            for s in dati.get_slot():
-                                for a in dati.get_aule():
-                                    if skd[(c,m,a,g,s)].varValue>0:
-                                        row = Orario(giorno = g.get_descrizione(),
-                                                     id_corso = m.get_corso_id(),
-                                                     codice_corso = m.get_cod_corso(),
-                                                     colore_corso = getColori()[m.get_corso_id()],
-                                                     codice_attivita = m.get_cod_attivita(),
-                                                     descrizione_modulo = m.get_descrizione(),
-                                                     numerosita_modulo = m.get_max_studenti(),
-                                                     slot_id = s.get_id(),
-                                                     descrizione_slot = s.get_descrizione(),
-                                                     nome_docente = m.get_nome_doc(),
-                                                     cognome_docente = m.get_cognome_doc(),
-                                                     anno_corso = m.get_anno_corso(),
-                                                     aula = a.get_descrizione(),
-                                                     capienza_aula = a.get_capienza())
-                                        db.session.add(row)
-
                 tz = pytz.timezone('Europe/Rome')
                 row_test = OrarioTestata(descrizione = desc_orario,
                                          anno_accademico_id = aa,

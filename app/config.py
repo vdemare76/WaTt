@@ -86,7 +86,8 @@ FAB_ROLES = {
         ["Tabelle di base", "menu_access"],
         ["Didattica", "menu_access"],
         ["Offerta didattica", "menu_access"],
-        ["Admin", "menu_access"],
+        ["Orario", "menu_access"],
+        ["Utilità", "menu_access"],
        
         ["SlotView", "can_list"],["SlotView", "can_show"],["SlotView", "can_add"],
         ["SlotView", "can_edit"],["SlotView", "can_delete"],["SlotView", "can_download"],
@@ -127,6 +128,10 @@ FAB_ROLES = {
         ["LogisticaDocentiView", "can_list"],["LogisticaDocentiView", "can_show"],["LogisticaDocentiView", "can_add"],
         ["LogisticaDocentiView", "can_edit"],["LogisticaDocentiView", "can_delete"],["LogisticaDocentiView", "can_download"],
         ["Logistica docenti", "menu_access"],
+
+        ["ChiusuraView", "can_list"], ["ChiusuraView", "can_show"], ["ChiusuraView", "can_add"],
+        ["ChiusuraView", "can_edit"], ["ChiusuraView", "can_delete"], ["ChiusuraView", "can_download"],
+        ["Imposta chiusure", "menu_access"],
 
         ["OrariGeneratiView", "can_list"], ["OrariGeneratiView", "can_show"], ["OrariGeneratiView", "can_download"],
         ["Orari generati", "menu_access"], ["OrariGeneratiView", "cancella"], ["OrariGeneratiView", "schema"],

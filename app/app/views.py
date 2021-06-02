@@ -11,7 +11,7 @@ from wtforms import validators
 
 from .import appbuilder, db
 from .models import AnnoAccademico, CorsoDiStudio, AttivitaDidattica, Docente, Aula, Offerta, \
-                    LogisticaDocente, Modulo, Giorno, Slot, Orario, OrarioTestata, OrarioDettaglio
+                    LogisticaDocente, Modulo, Giorno, Slot, Orario, OrarioTestata, OrarioDettaglio, Chiusura
 from flask.templating import render_template
 from .util import inizializzaDb, svuotaDb, getColori
 from .solver import AlgoritmoCompleto
@@ -313,7 +313,6 @@ class SchemaSettimanaleView(BaseView):
           
 db.create_all()
 
-
 appbuilder.add_view(SlotView, "Slot", icon="fa-clock-o", category="Tabelle di base")
 
 appbuilder.add_view(GiorniView, "Giorni", icon="fa-calendar-check-o", category="Tabelle di base")
@@ -334,15 +333,17 @@ appbuilder.add_view(OffertaView, "Offerta", icon="fa-university", category="Offe
 
 appbuilder.add_view(ModuliView, "Moduli", icon="fa-puzzle-piece", category="Offerta didattica")
 
+appbuilder.add_view(ChiusuraView, "Imposta chiusure", icon="fa-hand-o-up", category="Offerta didattica")
+
 appbuilder.add_view(LogisticaDocentiView, "Logistica docenti", icon="fa-hand-o-up", category="Offerta didattica")
 
-appbuilder.add_view(UtilitaView, "Funzioni utilità",  icon="fa-cogs", category="Admin")
+appbuilder.add_view(UtilitaView, "Funzioni utilità",  icon="fa-cogs", category="Utilità")
 
-appbuilder.add_view(PreferenzeView, "Elaborazione orario",  icon="fa-cogs", category="Admin")
+appbuilder.add_view(PreferenzeView, "Elaborazione orario",  icon="fa-cogs", category="Orario")
 
-appbuilder.add_view(OrariGeneratiView, "Orari generati",  icon="fa-cogs", category="Admin")
+appbuilder.add_view(OrariGeneratiView, "Orari generati",  icon="fa-cogs", category="Orario")
 
-appbuilder.add_view(CalendarioView, "Calendario orario",  icon="fa-cogs", category="Admin")
+appbuilder.add_view(CalendarioView, "Calendario orario",  icon="fa-cogs", category="Orario")
 
-appbuilder.add_view(SchemaSettimanaleView, "Schema settimanale",  icon="fa-cogs", category="Admin")
+appbuilder.add_view(SchemaSettimanaleView, "Schema settimanale",  icon="fa-cogs", category="Orario")
 
