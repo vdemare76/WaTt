@@ -96,15 +96,6 @@ class OffertaView(ModelView):
     
 class ModuliView(ModelView):
     datamodel = SQLAInterface(Modulo)
-    label_columns = {"orario_testata.descrizione":"Descrizione orario",
-                     "data":"Data chiusura"}
-    list_columns = ["orario_testata.descrizione",
-                    "data"]
-    order_columns = ["orario_testata.descrizione",
-                    "data"]
-
-class ChiusuraView(ModelView):
-    datamodel = SQLAInterface(Chiusura)
     label_columns = {"codice":"Codice modulo",
                      "descrizione":"Descrizione",
                      "offerta.anno_accademico":"A.A. Offerta",
@@ -136,9 +127,17 @@ class ChiusuraView(ModelView):
                     "durata_sessioni",
                     "max_studenti"]
 
+class ChiusuraView(ModelView):
+    datamodel = SQLAInterface(Chiusura)
+    label_columns = {"orario_testata.descrizione":"Descrizione orario",
+                     "data":"Data chiusura",
+                     "nota":"Nota"}
+    list_columns = ["testata",
+                    "data",
+                    "nota"]
+
 class LogisticaDocentiView(ModelView):
     datamodel = SQLAInterface(LogisticaDocente)
-
     label_columns = {"offerta.attivita_didattica":"Offerta",
                      "modulo.descrizione":"Modulo",
                      "slot.descrizione":"Slot",
@@ -200,7 +199,7 @@ class OrariGeneratiView(ModelView):
         return redirect(self.get_redirect())
 
     @action("schema", "Carica orario", "Vuoi visualizzare lo schema orario selezionato?", "fa-trash-alt", multiple=False, single=True)
-    def schema(self, items):
+    def schema(self, item):
         try:
             db.session.query(Orario).delete()
             db.session.execute('ALTER TABLE orario AUTO_INCREMENT = 1')
@@ -214,7 +213,7 @@ class OrariGeneratiView(ModelView):
             .join(Giorno, OrarioDettaglio.giorno_id == Giorno.id) \
             .join(AttivitaDidattica, Offerta.attivita_didattica_id == AttivitaDidattica.id) \
             .join(Aula, OrarioDettaglio.aula_id==Aula.id)\
-            .filter(OrarioDettaglio.testata_id==items[0].id)\
+            .filter(OrarioDettaglio.testata_id==item.id)\
             .order_by(CorsoDiStudio.codice.asc(), Giorno.id.asc(), Modulo.codice.asc(), Slot.id.asc(), Aula.codice.asc()).all()
 
             for r in rows:
@@ -333,17 +332,17 @@ appbuilder.add_view(OffertaView, "Offerta", icon="fa-university", category="Offe
 
 appbuilder.add_view(ModuliView, "Moduli", icon="fa-puzzle-piece", category="Offerta didattica")
 
-appbuilder.add_view(ChiusuraView, "Imposta chiusure", icon="fa-hand-o-up", category="Offerta didattica")
+appbuilder.add_view(ChiusuraView, "Imposta chiusure", icon="fa-home", category="Orario")
 
 appbuilder.add_view(LogisticaDocentiView, "Logistica docenti", icon="fa-hand-o-up", category="Offerta didattica")
 
-appbuilder.add_view(UtilitaView, "Funzioni utilità",  icon="fa-cogs", category="Utilità")
+appbuilder.add_view(UtilitaView, "Funzioni utilità",  icon="fa-briefcase", category="Utilità")
 
 appbuilder.add_view(PreferenzeView, "Elaborazione orario",  icon="fa-cogs", category="Orario")
 
-appbuilder.add_view(OrariGeneratiView, "Orari generati",  icon="fa-cogs", category="Orario")
+appbuilder.add_view(OrariGeneratiView, "Orari generati",  icon="fa-table", category="Orario")
 
-appbuilder.add_view(CalendarioView, "Calendario orario",  icon="fa-cogs", category="Orario")
+appbuilder.add_view(CalendarioView, "Calendario orario",  icon="fa-clipboard", category="Orario")
 
-appbuilder.add_view(SchemaSettimanaleView, "Schema settimanale",  icon="fa-cogs", category="Orario")
+appbuilder.add_view(SchemaSettimanaleView, "Schema settimanale",  icon="fa-calendar", category="Orario")
 

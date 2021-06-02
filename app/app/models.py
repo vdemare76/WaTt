@@ -162,5 +162,6 @@ class Orario(Model):
 class Chiusura(Model):
     id = Column(Integer, primary_key=True)
     testata_id = Column(Integer, ForeignKey('orario_testata.id'), nullable=False)
+    testata = relationship("OrarioTestata")
     data = Column(Date)
     nota = Column(String(100))
