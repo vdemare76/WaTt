@@ -134,7 +134,8 @@ FAB_ROLES = {
         ["Imposta chiusure", "menu_access"],
 
         ["OrariGeneratiView", "can_list"], ["OrariGeneratiView", "can_show"], ["OrariGeneratiView", "can_download"],
-        ["Orari generati", "menu_access"], ["OrariGeneratiView", "cancella"], ["OrariGeneratiView", "schema"],
+        ["OrariGeneratiView", "can_edit"],["Orari generati", "menu_access"], ["OrariGeneratiView", "cancella"],
+        ["OrariGeneratiView", "schema"],
         
         ["Funzioni utilità", "menu_access"],
         ["UtilitaView", "can_srv_home"],["UtilitaView", "can_srv_util"],
