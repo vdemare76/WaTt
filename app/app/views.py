@@ -187,10 +187,9 @@ class OrariGeneratiView(ModelView):
                     "data_creazione",
                     "data_avvio"]
     edit_exclude_columns = ["id",
-                            "anno_accademico.anno_esteso",
+                            "anno_accademico",
                             "semestre",
                             "data_creazione"]
-    search_columns = ["descrizione"]
 
     @action("cancella", "Elimina", "Vuoi eliminare gli orari selezionati?", "fa-trash-alt", single=False)
     def cancella(self, items):
@@ -201,7 +200,7 @@ class OrariGeneratiView(ModelView):
                 db.session.commit()
             except SQLAlchemyError:
                 db.sessione.rollback()
-                flash("Errore durante la cancellazione degli orari selezionati")
+                flash('Errore durante la cancellazione degli orari selezionati','error')
                 return -1
         return redirect(self.get_redirect())
 
@@ -240,10 +239,10 @@ class OrariGeneratiView(ModelView):
                              capienza_aula=r.Aula.capienza)
                 db.session.add(row)
             db.session.commit()
-            flash("Orario caricato correttamente!")
+            flash('Orario caricato correttamente!','success')
         except SQLAlchemyError:
             db.sessione.rollback()
-            flash("Errore durante la cancellazione degli orari selezionati")
+            flash('Errore durante la cancellazione degli orari selezionati','error')
             return -1
         return redirect(self.get_redirect())
 
@@ -294,6 +293,16 @@ class PreferenzeView(BaseView):
         return redirect(url_for('PreferenzeView.prf_home'));  
     
 class CalendarioView(BaseView):
+    default_view = 'wsk_home'
+
+    @expose('/wsk_home/')
+    @has_access
+    def wsk_home(self, name=None):
+        return render_template("week_model.html",
+                               base_template=appbuilder.base_template,
+                               appbuilder=appbuilder)
+
+class SchemaSettimanaleView(BaseView):
     default_view = 'cld_home'
 
     @expose('/cld_home/')
@@ -301,21 +310,11 @@ class CalendarioView(BaseView):
     def cld_home(self, name=None):
         slot=db.session.query(Slot).all()
         orario=db.session.query(Orario).all()
-        return render_template("calendario.html", 
-                               base_template=appbuilder.base_template, 
-                               appbuilder=appbuilder, 
+        return render_template("calendario.html",
+                               base_template=appbuilder.base_template,
+                               appbuilder=appbuilder,
                                slot=slot,
                                orario=orario)
-
-class SchemaSettimanaleView(BaseView):
-    default_view = 'wsk_home'
-
-    @expose('/wsk_home/')
-    @has_access
-    def wsk_home(self, name=None):
-        return render_template("week_model.html", 
-                               base_template=appbuilder.base_template, 
-                               appbuilder=appbuilder)
           
 db.create_all()
 
