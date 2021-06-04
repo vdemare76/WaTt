@@ -204,8 +204,8 @@ class OrariGeneratiView(ModelView):
                 return -1
         return redirect(self.get_redirect())
 
-    @action("schema", "Carica orario", "Vuoi visualizzare lo schema orario selezionato?", "fa-trash-alt", multiple=False, single=True)
-    def schema(self, item):
+    @action("carica_schema", "Carica orario", "Vuoi visualizzare lo schema orario selezionato?", "fa-trash-alt", multiple=False, single=True)
+    def carica_schema(self, item):
         try:
             db.session.query(Orario).delete()
             db.session.execute('ALTER TABLE orario AUTO_INCREMENT = 1')
@@ -244,6 +244,11 @@ class OrariGeneratiView(ModelView):
             db.sessione.rollback()
             flash('Errore durante la cancellazione degli orari selezionati','error')
             return -1
+        return redirect(self.get_redirect())
+
+    @action("genera_calendario", "Genera calendario", "Vuoi generare il calendario per questo orario?", "fa-trash-alt",
+            multiple=False, single=True)
+    def genera_calendario(self, item):
         return redirect(self.get_redirect())
 
 class UtilitaView(BaseView):
@@ -293,21 +298,21 @@ class PreferenzeView(BaseView):
         return redirect(url_for('PreferenzeView.prf_home'));  
     
 class CalendarioView(BaseView):
-    default_view = 'wsk_home'
-
-    @expose('/wsk_home/')
-    @has_access
-    def wsk_home(self, name=None):
-        return render_template("week_model.html",
-                               base_template=appbuilder.base_template,
-                               appbuilder=appbuilder)
-
-class SchemaSettimanaleView(BaseView):
     default_view = 'cld_home'
 
     @expose('/cld_home/')
     @has_access
     def cld_home(self, name=None):
+        return render_template("week_model.html",
+                               base_template=appbuilder.base_template,
+                               appbuilder=appbuilder)
+
+class SchemaSettimanaleView(BaseView):
+    default_view = 'wsk_home'
+
+    @expose('/wsk_home/')
+    @has_access
+    def wsk_home(self, name=None):
         slot=db.session.query(Slot).all()
         orario=db.session.query(Orario).all()
         return render_template("calendario.html",
@@ -348,7 +353,8 @@ appbuilder.add_view(PreferenzeView, "Elaborazione orario",  icon="fa-cogs", cate
 
 appbuilder.add_view(OrariGeneratiView, "Orari generati",  icon="fa-table", category="Orario")
 
+appbuilder.add_view(SchemaSettimanaleView, "Schema settimanale",  icon="fa-calendar", category="Orario")
+
 appbuilder.add_view(CalendarioView, "Calendario orario",  icon="fa-clipboard", category="Orario")
 
-appbuilder.add_view(SchemaSettimanaleView, "Schema settimanale",  icon="fa-calendar", category="Orario")
 
