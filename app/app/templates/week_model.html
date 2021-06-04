@@ -9,39 +9,50 @@
     <meta charset='utf-8' />
     <link href='/static/fullcalendar-5.6.0/lib/main.css' rel='stylesheet' />
     <script src='/static/fullcalendar-5.6.0/lib/main.js'></script>
-    <script src='fullcalendar/lang-all.js'></script>
-    <script>
 
+    <script>
       document.addEventListener('DOMContentLoaded', function() {
         var calendarEl = document.getElementById('calendar');
         var calendar = new FullCalendar.Calendar(calendarEl, {
           locale: 'itLocale',
           initialView: 'dayGridMonth',
-          events: [
-            {
-              title: 'my event',
-              start: '2021-06-01'
-            }
-          ]
         });
         calendar.render();
       });
-
     </script>
   </head>
+
   <body>
     <div>
-      <label for="corso_id">Seleziona lo schema orario di riferimento:</label>
-      <select type="date" id="corso_id">
+      <label for="corso_id">Seleziona il corso di studio:</label>
+      <select type="date" id="corso_id" name="corso_id">
         {% for c in corsi %}
-          <option value={{c.corso_id}}>{{c.codice_corso + ' - ' + c.descrizione}}</option>
+          <option value={{c.id_corso}}>{{c.codice_corso}} - {{c.descrizione}}</option>
         {% endfor %}
-      </select>
-      <label for="data_avvio_lezioni">Data di avvio delle lezioni:</label>
-      <input type="date" id="data_avvio_lezioni"></td>
-    </div>
+      </select><br>
+      <label for="data_avvio_lezioni">Imposta la data di avvio delle lezioni:</label>
+      <input type="date" id="data_avvio_lezioni"><br><br>
+      <button type="button" id="genera_calendario" onclick="genera_calendario({{orario}})" class="btn btn-primary">Genera calendario per il corso selezionato</button>
+    </div><br>
     <div id='calendar'></div>
   </body>
+
 </html>
+
+<script>
+    function genera_calendario(arrOrario) {
+      var data_avvio=$("#data_avvio_lezioni").val();
+      var idc=$("#corso_id option:selected").val();
+      var orLen=arrOrario.length;
+        for (var i=0; i<orLen; i++) {
+          if (arrOrario[i].id_corso==idc) {
+            console.log(arrOrario[i].id);
+          }
+        }
+        console.log(data_avvio);
+        var event={id:1 , title: 'BELLE event', start: '2021-06-01'};
+        $('#calendar').fullCalendar( 'renderEvent', event, true);
+    }
+</script>
 	
 {% endblock %}

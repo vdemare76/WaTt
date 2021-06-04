@@ -1,8 +1,6 @@
 from flask import flash, render_template, redirect, url_for, request
 from flask_appbuilder import ModelView, BaseView, expose, has_access, action
-from flask_appbuilder.fieldwidgets import Select2Widget
 from flask_appbuilder.models.sqla.interface import SQLAInterface
-from wtforms.fields import TextField
 from sqlalchemy.exc import SQLAlchemyError
 
 from flask_appbuilder.fieldwidgets import Select2AJAXWidget, Select2SlaveAJAXWidget
@@ -15,7 +13,7 @@ from .models import AnnoAccademico, CorsoDiStudio, AttivitaDidattica, Docente, A
 from flask.templating import render_template
 from .util import inizializzaDb, svuotaDb, getColori
 from .solver import AlgoritmoCompleto
-from datetime import datetime, timedelta
+import json
 
 class AnniAccademiciView(ModelView):
     datamodel = SQLAInterface(AnnoAccademico)
@@ -311,15 +309,18 @@ class CalendarioView(BaseView):
     @expose('/cld_home/')
     @has_access
     def cld_home(self, name=None):
-        corsi = db.session.query(Orario) \
+        corsi = db.session.query(Orario.id_corso, Orario.codice_corso, CorsoDiStudio.descrizione) \
             .join(CorsoDiStudio, Orario.id_corso == CorsoDiStudio.id) \
-            .order_by(CorsoDiStudio.codice.asc()).all()
-        orario = db.sessione.query(Orario).all()
+            .order_by(CorsoDiStudio.codice.asc()).distinct().all()
+        orario = db.session.query(Orario).all()
+        results = []
+        for result in orario:
+            results.append(result.to_dict())
         return render_template("week_model.html",
                                base_template=appbuilder.base_template,
                                appbuilder=appbuilder,
                                corsi=corsi,
-                               orario=orario)
+                               orario=results)
 
 db.create_all()
 

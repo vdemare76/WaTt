@@ -2,6 +2,7 @@ from flask import url_for
 from flask_appbuilder import Model
 from sqlalchemy import Column, ForeignKey, Integer, String, Table, Text, DateTime, Date
 from sqlalchemy.orm import relationship
+import json
         
 class AnnoAccademico(Model):
     id = Column(Integer, primary_key=True)
@@ -158,6 +159,10 @@ class Orario(Model):
     anno_corso = Column(Integer)
     aula = Column(String(35))
     capienza_aula = Column(Integer)
+
+    def to_dict(self):
+        return dict([(k, getattr(self, k)) for k in self.__dict__.keys() if not k.startswith("_")])
+
 
 class Chiusura(Model):
     id = Column(Integer, primary_key=True)
