@@ -2,7 +2,7 @@ from flask import flash, render_template, redirect, url_for, request
 from flask_appbuilder import ModelView, BaseView, expose, has_access, action
 from flask_appbuilder.fieldwidgets import Select2Widget
 from flask_appbuilder.models.sqla.interface import SQLAInterface
-from wtforms.ext.sqlalchemy.fields import QuerySelectField
+from wtforms.fields import TextField
 from sqlalchemy.exc import SQLAlchemyError
 
 from flask_appbuilder.fieldwidgets import Select2AJAXWidget, Select2SlaveAJAXWidget
@@ -15,6 +15,7 @@ from .models import AnnoAccademico, CorsoDiStudio, AttivitaDidattica, Docente, A
 from flask.templating import render_template
 from .util import inizializzaDb, svuotaDb, getColori
 from .solver import AlgoritmoCompleto
+from datetime import datetime, timedelta
 
 class AnniAccademiciView(ModelView):
     datamodel = SQLAInterface(AnnoAccademico)
@@ -178,14 +179,12 @@ class OrariGeneratiView(ModelView):
                      "descrizione":"Descrizione",
                      "anno_accademico.anno_esteso":"Anno Accademico",
                      "semestre":"Semestre",
-                     "data_creazione":"Data creazione",
-                     "data_avvio":"Data avvio lezioni"}
+                     "data_creazione":"Data creazione"}
     list_columns = ["id",
                     "descrizione",
                     "anno_accademico.anno_esteso",
                     "semestre",
-                    "data_creazione",
-                    "data_avvio"]
+                    "data_creazione"]
     edit_exclude_columns = ["id",
                             "anno_accademico",
                             "semestre",
@@ -246,14 +245,6 @@ class OrariGeneratiView(ModelView):
             return -1
         return redirect(self.get_redirect())
 
-    @action("genera_calendario", "Genera calendario", "Vuoi generare il calendario per questo orario?", "fa-trash-alt",
-            multiple=False, single=True)
-    def genera_calendario(self, item):
-        return render_template("week_model.html",
-                        base_template=appbuilder.base_template,
-                        appbuilder=appbuilder,
-                        item=item)
-
 class UtilitaView(BaseView):
     default_view = 'srv_home'
 
@@ -299,16 +290,6 @@ class PreferenzeView(BaseView):
             algoritmo=AlgoritmoCompleto()
             algoritmo.genera_orario(request.form.get('aa'),request.form.get('semestre'),request.form.get('txt_desc_orario'))
         return redirect(url_for('PreferenzeView.prf_home'));  
-    
-class CalendarioView(BaseView):
-    default_view = 'cld_home'
-
-    @expose('/cld_home/')
-    @has_access
-    def cld_home(self, name=None):
-        return render_template("week_model.html",
-                               base_template=appbuilder.base_template,
-                               appbuilder=appbuilder)
 
 class SchemaSettimanaleView(BaseView):
     default_view = 'wsk_home'
@@ -323,7 +304,23 @@ class SchemaSettimanaleView(BaseView):
                                appbuilder=appbuilder,
                                slot=slot,
                                orario=orario)
-          
+
+class CalendarioView(BaseView):
+    default_view = 'cld_home'
+
+    @expose('/cld_home/')
+    @has_access
+    def cld_home(self, name=None):
+        corsi = db.session.query(Orario) \
+            .join(CorsoDiStudio, Orario.id_corso == CorsoDiStudio.id) \
+            .order_by(CorsoDiStudio.codice.asc()).all()
+        orario = db.sessione.query(Orario).all()
+        return render_template("week_model.html",
+                               base_template=appbuilder.base_template,
+                               appbuilder=appbuilder,
+                               corsi=corsi,
+                               orario=orario)
+
 db.create_all()
 
 appbuilder.add_view(SlotView, "Slot", icon="fa-clock-o", category="Tabelle di base")

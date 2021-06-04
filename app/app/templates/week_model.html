@@ -9,16 +9,18 @@
     <meta charset='utf-8' />
     <link href='/static/fullcalendar-5.6.0/lib/main.css' rel='stylesheet' />
     <script src='/static/fullcalendar-5.6.0/lib/main.js'></script>
+    <script src='fullcalendar/lang-all.js'></script>
     <script>
 
       document.addEventListener('DOMContentLoaded', function() {
         var calendarEl = document.getElementById('calendar');
         var calendar = new FullCalendar.Calendar(calendarEl, {
+          locale: 'itLocale',
           initialView: 'dayGridMonth',
           events: [
             {
               title: 'my event',
-              start: '{{ item.data_avvio }}'
+              start: '2021-06-01'
             }
           ]
         });
@@ -28,6 +30,16 @@
     </script>
   </head>
   <body>
+    <div>
+      <label for="corso_id">Seleziona lo schema orario di riferimento:</label>
+      <select type="date" id="corso_id">
+        {% for c in corsi %}
+          <option value={{c.corso_id}}>{{c.codice_corso + ' - ' + c.descrizione}}</option>
+        {% endfor %}
+      </select>
+      <label for="data_avvio_lezioni">Data di avvio delle lezioni:</label>
+      <input type="date" id="data_avvio_lezioni"></td>
+    </div>
     <div id='calendar'></div>
   </body>
 </html>

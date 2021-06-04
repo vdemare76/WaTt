@@ -121,7 +121,6 @@ class OrarioTestata(Model):
     anno_accademico = relationship("AnnoAccademico")
     semestre = Column(Integer)
     data_creazione = Column(DateTime)
-    data_avvio = Column(Date)
 
     def __repr__(self):
         return self.descrizione
