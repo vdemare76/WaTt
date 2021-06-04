@@ -239,7 +239,7 @@ class OrariGeneratiView(ModelView):
                              capienza_aula=r.Aula.capienza)
                 db.session.add(row)
             db.session.commit()
-            flash('Orario caricato correttamente!','success')
+            flash('Orario caricato correttamente! (Puoi visualizzarlo con Orario -> Schema settimanale','success')
         except SQLAlchemyError:
             db.sessione.rollback()
             flash('Errore durante la cancellazione degli orari selezionati','error')
@@ -249,7 +249,10 @@ class OrariGeneratiView(ModelView):
     @action("genera_calendario", "Genera calendario", "Vuoi generare il calendario per questo orario?", "fa-trash-alt",
             multiple=False, single=True)
     def genera_calendario(self, item):
-        return redirect(self.get_redirect())
+        return render_template("week_model.html",
+                        base_template=appbuilder.base_template,
+                        appbuilder=appbuilder,
+                        item=item)
 
 class UtilitaView(BaseView):
     default_view = 'srv_home'

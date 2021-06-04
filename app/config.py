@@ -139,13 +139,13 @@ FAB_ROLES = {
         ["OrariGeneratiView", "genera_calendario"],
 
         ["Funzioni utilità", "menu_access"],
-        ["UtilitaView", "can_srv_home"],["UtilitaView", "can_srv_util"],
+        ["UtilitaView", "can_srv_home"], ["UtilitaView", "can_srv_util"],
         ["Elaborazione orario", "menu_access"],   
-        ["PreferenzeView", "can_prf_home"],["PreferenzeView", "can_prf_calc"],
+        ["PreferenzeView", "can_prf_home"], ["PreferenzeView", "can_prf_calc"],
         ["Schema settimanale", "menu_access"],
-        ["SchemaSettimanaleView", "can_wsk_home"]
+        ["SchemaSettimanaleView", "can_wsk_home"],
         ["Calendario orario", "menu_access"],
-        ["CalendarioView", "can_cld_home"],
+        ["CalendarioView", "can_cld_home"]
     ],
 
     # Profilo STUDENTE
