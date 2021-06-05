@@ -9,26 +9,18 @@
     <meta charset='utf-8' />
     <link href='/static/fullcalendar-5.6.0/lib/main.css' rel='stylesheet' />
     <script src='/static/fullcalendar-5.6.0/lib/main.js'></script>
-
-    <script>
-      document.addEventListener('DOMContentLoaded', function() {
-        var calendarEl = document.getElementById('calendar');
-        var calendar = new FullCalendar.Calendar(calendarEl, {
-          locale: 'itLocale',
-          initialView: 'dayGridMonth',
-        });
-        calendar.render();
-      });
-    </script>
   </head>
 
   <body>
     <div>
       <label for="corso_id">Seleziona il corso di studio:</label>
-      <select type="date" id="corso_id" name="corso_id">
+      <select type="date" id="corso_id" name="corso_id" onchange="caricaAnni({{anni_corso}})">
         {% for c in corsi %}
           <option value={{c.id_corso}}>{{c.codice_corso}} - {{c.descrizione}}</option>
         {% endfor %}
+      </select><br>
+      <label for="anno_corso">Seleziona l'anno di corso:</label>
+      <select type="date" id="anno_corso" name="anno_corso">
       </select><br>
       <label for="data_avvio_lezioni">Imposta la data di avvio delle lezioni:</label>
       <input type="date" id="data_avvio_lezioni"><br><br>
@@ -41,17 +33,69 @@
 
 <script>
     function genera_calendario(arrOrario) {
-      var data_avvio=$("#data_avvio_lezioni").val();
+      var day = 60 * 60 * 24 * 1000;
+
+      var data_avvio=new Date($("#data_avvio_lezioni").val());
+      data_avvio.setHours(0);
+      var data_fine=new Date(data_avvio.getTime()+(10*day));
+      var data_cur=new Date($("#data_avvio_lezioni").val());
+
       var idc=$("#corso_id option:selected").val();
+      var adc=$("#anno_corso option:selected").val();
       var orLen=arrOrario.length;
+
+      var calendarEl = document.getElementById('calendar');
+      var calendar = new FullCalendar.Calendar(calendarEl, {
+          headerToolbar: { center: 'dayGridMonth,timeGridWeek' },
+          locale: 'itLocale',
+          initialView: 'dayGridMonth',
+          displayEventEnd: true
+      });
+
+      while (data_cur < data_fine) {
+        var new_date = data_cur.setTime(data_cur.getTime()+day);
+        data_cur = new Date(new_date);
         for (var i=0; i<orLen; i++) {
-          if (arrOrario[i].id_corso==idc) {
-            console.log(arrOrario[i].id);
+          if (arrOrario[i].id_corso==idc && arrOrario[i].anno_corso==adc && data_cur.getDay()==1) {
+            var titolo_evento = arrOrario[i].codice_attivita + " - " + arrOrario[i].descrizione_modulo;
+            if (arrOrario[i].giorno=='Lunedì') {
+              ora_inizio=arrOrario[i].descrizione_slot.substring(0,2);
+              ora_fine=arrOrario[i].descrizione_slot.substring(6,8);
+
+              calendar.addEvent({title:titolo_evento,
+                                 start:data_cur.setHours(ora_inizio),
+                                 end:data_cur.setHours(ora_fine),
+                                 description:' test della descrizione'
+                                 });
+            }
+          }
+          else if (arrOrario[i].id_corso==idc && arrOrario[i].anno_corso==adc && data_cur.getDay()==2) {
+            var titolo_evento = arrOrario[i].codice_attivita + " - " + arrOrario[i].descrizione_modulo;
+            if (arrOrario[i].giorno=='Martedì') {
+              ora_inizio=arrOrario[i].descrizione_slot.substring(0,2);
+              ora_fine=arrOrario[i].descrizione_slot.substring(6,8);
+
+              calendar.addEvent({title:titolo_evento,
+                                 start:data_cur.setHours(ora_inizio),
+                                 end:data_cur.setHours(ora_fine)
+                                 });
+            }
           }
         }
-        console.log(data_avvio);
-        var event={id:1 , title: 'BELLE event', start: '2021-06-01'};
-        $('#calendar').fullCalendar( 'renderEvent', event, true);
+      }
+
+      calendar.render();
+    }
+
+    function caricaAnni(arrAnni) {
+      var idc=$('#corso_id option:selected').val();
+      var anLen=arrAnni.length;
+      $('#anno_corso').empty();
+      for (var i=0; i<anLen; i++) {
+          if (arrAnni[i].id_corso==idc) {
+            $('#anno_corso').append(new Option(arrAnni[i].anno_corso, arrAnni[i].anno_corso));
+          }
+      }
     }
 </script>
 	

@@ -312,15 +312,23 @@ class CalendarioView(BaseView):
         corsi = db.session.query(Orario.id_corso, Orario.codice_corso, CorsoDiStudio.descrizione) \
             .join(CorsoDiStudio, Orario.id_corso == CorsoDiStudio.id) \
             .order_by(CorsoDiStudio.codice.asc()).distinct().all()
+        anni_corso = db.session.query(Orario.id_corso.label("id_corso"),
+                                      Orario.codice_corso.label("codice_corso"),
+                                      Orario.anno_corso.label("anno_corso"))\
+            .order_by(Orario.id_corso.asc(), Orario.anno_corso.asc()).distinct().all()
+        dictAnniCorso = []
+        for a in anni_corso:
+            dictAnniCorso.append({"id_corso":a[0],"codice_corso":a[1],"anno_corso":a[2]})
         orario = db.session.query(Orario).all()
-        results = []
-        for result in orario:
-            results.append(result.to_dict())
+        dictOrario = []
+        for o in orario:
+            dictOrario.append(o.to_dict())
         return render_template("week_model.html",
                                base_template=appbuilder.base_template,
                                appbuilder=appbuilder,
                                corsi=corsi,
-                               orario=results)
+                               anni_corso=dictAnniCorso,
+                               orario=dictOrario)
 
 db.create_all()
 
