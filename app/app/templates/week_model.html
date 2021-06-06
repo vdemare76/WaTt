@@ -11,7 +11,7 @@
     <script src='/static/fullcalendar-5.6.0/lib/main.js'></script>
   </head>
 
-  <body>
+  <body onload="inizializza({{anni_corso}})">
     <div>
       <label for="corso_id">Seleziona il corso di studio:</label>
       <select type="date" id="corso_id" name="corso_id" onchange="caricaAnni({{anni_corso}})">
@@ -23,7 +23,9 @@
       <select type="date" id="anno_corso" name="anno_corso">
       </select><br>
       <label for="data_avvio_lezioni">Imposta la data di avvio delle lezioni:</label>
-      <input type="date" id="data_avvio_lezioni"><br><br>
+      <input type="date" id="data_avvio_lezioni" onchange="aggiorna_data_fine()"><br>
+      <label for="data_fine_lezioni">Imposta la data di fine delle lezioni:</label>
+      <input type="date" id="data_fine_lezioni"><br><br>
       <button type="button" id="genera_calendario" onclick="genera_calendario({{orario}})" class="btn btn-primary">Genera calendario per il corso selezionato</button>
     </div><br>
     <div id='calendar'></div>
@@ -33,17 +35,18 @@
 
 <script>
     function genera_calendario(arrOrario) {
-      var day = 60 * 60 * 24 * 1000;
-      var giorni_settimana = ["Domenica","Lunedì","Martedì","Mercoledì","Giovedì","Venerdì","Sabato"];
+      let day = 60 * 60 * 24 * 1000;
+      let giorni_settimana = ["Domenica","Lunedì","Martedì","Mercoledì","Giovedì","Venerdì","Sabato"];
 
-      var data_avvio=new Date($("#data_avvio_lezioni").val());
+      let data_avvio=new Date($("#data_avvio_lezioni").val());
+      let data_fine=new Date($("#data_fine_lezioni").val());
       data_avvio.setHours(0);
-      var data_fine=new Date(data_avvio.getTime()+(10*day));
-      var data_cur=new Date($("#data_avvio_lezioni").val());
+      data_fine.setHours(0);
+      let data_cur=new Date($("#data_avvio_lezioni").val());
 
-      var idc=$("#corso_id option:selected").val();
-      var adc=$("#anno_corso option:selected").val();
-      var orLen=arrOrario.length;
+      let idc=$("#corso_id option:selected").val();
+      let adc=$("#anno_corso option:selected").val();
+      let orLen=arrOrario.length;
 
       var calendarEl = document.getElementById('calendar');
       var calendar = new FullCalendar.Calendar(calendarEl, {
@@ -53,13 +56,14 @@
           displayEventEnd: true
       });
 
+      data_cur.setTime(data_cur.getTime()-day);
       while (data_cur < data_fine) {
-        var new_date = data_cur.setTime(data_cur.getTime()+day);
+        let new_date = data_cur.setTime(data_cur.getTime()+day);
         data_cur = new Date(new_date);
         for (var i=0; i<orLen; i++) {
           if (arrOrario[i].id_corso==idc && arrOrario[i].anno_corso==adc) {
-            var titolo_evento = arrOrario[i].codice_attivita + " - " + arrOrario[i].descrizione_modulo;
-            if (arrOrario[i].giorno==giorni_settimana(data_cur.getDay())) {
+            let titolo_evento = arrOrario[i].codice_attivita + " - " + arrOrario[i].descrizione_modulo;
+            if (arrOrario[i].giorno==giorni_settimana[data_cur.getDay()]) {
               ora_inizio=arrOrario[i].descrizione_slot.substring(0,2);
               ora_fine=arrOrario[i].descrizione_slot.substring(6,8);
 
@@ -77,14 +81,25 @@
     }
 
     function caricaAnni(arrAnni) {
-      var idc=$('#corso_id option:selected').val();
-      var anLen=arrAnni.length;
+      let idc=$('#corso_id option:selected').val();
+      let anLen=arrAnni.length;
       $('#anno_corso').empty();
       for (var i=0; i<anLen; i++) {
           if (arrAnni[i].id_corso==idc) {
             $('#anno_corso').append(new Option(arrAnni[i].anno_corso, arrAnni[i].anno_corso));
           }
       }
+    }
+
+    function inizializza(arrAnni) {
+      caricaAnni(arrAnni);
+      let today = new Date();
+      document.getElementById("data_avvio_lezioni").value = today.getFullYear() + '-' + ('0' + (today.getMonth() + 1)).slice(-2) + '-' + ('0' + today.getDate()).slice(-2);
+      document.getElementById("data_fine_lezioni").value = today.getFullYear() + '-' + ('0' + (today.getMonth() + 1)).slice(-2) + '-' + ('0' + today.getDate()).slice(-2);
+    }
+
+    function aggiorna_data_fine() {
+      $("#data_fine_lezioni").val($("#data_avvio_lezioni").val());
     }
 </script>
 	
