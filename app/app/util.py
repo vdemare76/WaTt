@@ -90,18 +90,7 @@ def __impostaDatiIniziali():
         ['AL3','Aula LAB3',35,'L']
     ]
     aule.extend(aule_i)
-    colori_cal = {
-        1: "#E0FFFF",
-        2: "#FFFFE0",
-        3: "#E6E6FA",
-        4: "#D8BFD8",
-        5: "#7FFFD4",
-        6: "#FFA07A",
-        7: "#E0FFFF",
-        8: "#FFE4C4",
-        9: "#F5F5F5",
-        10: "#F0FFF0"
-    }
+
     attivita_didattiche_i = [ 
         # PRIMO SEMESTRE INFORMATICA
         ['MAT1-1S','Matematica 1',9,'#E0FFFF'],
@@ -120,7 +109,7 @@ def __impostaDatiIniziali():
         ['CPGR','Computer Graphics',6,'#D8BFD8'],
         ['HPCP','High Performance Computing',6,'#7FFFD4'],
         ['MMLE','Multimodal Machine Learning',6,'#FFA07A'],
-        ['IOTH-1S','Internet of Things',6],
+        ['IOTH-1S','Internet of Things',6,'#E0FFFF'],
         # SECONDO SEMESTRE INFORMATICA
         ['LING','Lingua Inglese',3,'#E0FFFF'],
         ['MAT1-2S','Matematica 1',9,'#FFFFE0'],
@@ -321,7 +310,8 @@ def __registraDatiInDb():
         for a in attivita_didattiche:
             row = AttivitaDidattica(codice = a[0],
                                     descrizione = a[1],
-                                    cfu = a[2])
+                                    cfu = a[2],
+                                    colore = a[3])
             db.session.add(row)
         db.session.flush()
 

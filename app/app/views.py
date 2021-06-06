@@ -47,10 +47,12 @@ class AttivitaDidatticheView(ModelView):
     datamodel = SQLAInterface(AttivitaDidattica)
     label_columns = {"codice":"Codice AD",
                      "Descrizione":"Descrizione",
-                     "cfu":"Cfu"}
+                     "cfu":"Cfu",
+                     "colore":"Colore"}
     list_columns = ["codice", 
                     "descrizione", 
-                    "cfu"]
+                    "cfu",
+                    "colore"]
     
 class AuleView(ModelView):
     datamodel = SQLAInterface(Aula)
@@ -228,6 +230,7 @@ class OrariGeneratiView(ModelView):
                              codice_corso=r.CorsoDiStudio.codice,
                              colore_corso=getColori()[r.CorsoDiStudio.id],
                              codice_attivita=r.AttivitaDidattica.codice,
+                             colore_attivita=r.AttivitaDidattica.colore,
                              descrizione_modulo=r.Modulo.descrizione,
                              numerosita_modulo=r.Modulo.max_studenti,
                              slot_id=r.Slot.id,
