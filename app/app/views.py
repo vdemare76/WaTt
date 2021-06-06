@@ -177,16 +177,19 @@ class OrariGeneratiView(ModelView):
                      "descrizione":"Descrizione",
                      "anno_accademico.anno_esteso":"Anno Accademico",
                      "semestre":"Semestre",
-                     "data_creazione":"Data creazione"}
+                     "data_creazione":"Data creazione",
+                     "note_creazione":"note_creazione"}
     list_columns = ["id",
                     "descrizione",
                     "anno_accademico.anno_esteso",
                     "semestre",
-                    "data_creazione"]
+                    "data_creazione",
+                    "note_creazione"]
     edit_exclude_columns = ["id",
                             "anno_accademico",
                             "semestre",
-                            "data_creazione"]
+                            "data_creazione",
+                            "note_creazione"]
 
     @action("cancella", "Elimina", "Vuoi eliminare gli orari selezionati?", "fa-trash-alt", single=False)
     def cancella(self, items):

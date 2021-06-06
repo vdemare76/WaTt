@@ -43,6 +43,7 @@ class AttivitaDidattica(Model):
     descrizione = Column(String(150))
     cfu = Column(Integer)
     offerta = relationship("Offerta", back_populates="attivita_didattica")
+    colore = Column(String(7))
 
     def __repr__(self):
         return self.codice +  ' ' + self.descrizione
