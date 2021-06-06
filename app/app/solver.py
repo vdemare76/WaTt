@@ -219,11 +219,10 @@ class TemplateCalcoloOrario(ABC):
     
     
 class AlgoritmoCompleto(TemplateCalcoloOrario):
-
     def imposta_vincoli_facoltativi(self, model, dati, str_aux):
         
         skd=str_aux.get_schedulazione()
-        
+
         if request.form.get('chk_sessione_unica')=='1':
             # Per ogni giorno, ogni corso ed ogni aula il numero di slot massimo consentito è pari alla durata delle sessioni
             # ciò evita che ci possano essere due sessioni nello stesso giorno    
@@ -296,7 +295,7 @@ class AlgoritmoCompleto(TemplateCalcoloOrario):
                                     model+=skd[(c,m,a,g,dati.get_slot()[s])]-skd[(c,m,a,g,dati.get_slot()[s-1])]<=0 
                                     model+=skd[(c,m,a,g,dati.get_slot()[s])]-skd[(c,m,a,g,dati.get_slot()[s-2])]<=0
                                     model+=skd[(c,m,a,g,dati.get_slot()[s])]-skd[(c,m,a,g,dati.get_slot()[s-3])]<=0
-                            
+
         # Vincolo che fissa  il numero massimo di slot per giorno per un anno di corso
         if request.form.get('chk_max_ore')=='1': 
             limsup=int(request.form.get('sel_max_ore'))
@@ -305,7 +304,7 @@ class AlgoritmoCompleto(TemplateCalcoloOrario):
                     model+=lpSum(skd[(c,m,a,g,s)] for m in dati.get_moduli() if m.get_anno_corso()==1 for s in dati.get_slot() for a in dati.get_aule())<=limsup
                     model+=lpSum(skd[(c,m,a,g,s)] for m in dati.get_moduli() if m.get_anno_corso()==2 for s in dati.get_slot() for a in dati.get_aule())<=limsup
                     model+=lpSum(skd[(c,m,a,g,s)] for m in dati.get_moduli() if m.get_anno_corso()==3 for s in dati.get_slot() for a in dati.get_aule())<=limsup
-    
+
                                                                   
     def imposta_vincoli_addizionali(self, model, dati, str_aux):
         if request.form.get('chk_preferenze_docenti')=='1': 
@@ -320,16 +319,37 @@ class AlgoritmoCompleto(TemplateCalcoloOrario):
                         break
                 g=dati.get_giorni()
                 model+=lpSum(skd[(c,m,a,g[l[3]-1],dati.get_slot()[s-1])] for a in dati.get_aule())==1
+
              
     def registra_orario(self, model, dati, str_aux, aa, semestre, desc_orario):
         skd=str_aux.get_schedulazione()  
         if (pl.LpStatus[model.status]) == 'Optimal':
             try:
                 tz = pytz.timezone('Europe/Rome')
+
+                if request.form.get('chk_sessione_unica')=='1':
+                    vincolo1="Sessione Unica # "
+                else:
+                    vincolo1=""
+                if request.form.get('chk_slot_sessioni_consecutive') == '1':
+                    vincolo2="Sessioni consecutive # "
+                else:
+                    vincolo2=""
+                if request.form.get('chk_max_ore') == '1':
+                    vincolo3="Massimo numero di ore # "
+                else:
+                    vincolo3=""
+                if request.form.get('chk_preferenze_docenti') == '1':
+                    vincolo4="Preferenze docenti # "
+                else:
+                    vincolo4=""
+                vincoli = "Vincoli: " + vincolo1 + vincolo2 + vincolo3 + vincolo4
+
                 row_test = OrarioTestata(descrizione = desc_orario,
                                          anno_accademico_id = aa,
                                          semestre = semestre,
-                                         data_creazione = datetime.datetime.now(tz))
+                                         data_creazione = datetime.datetime.now(tz),
+                                         note_creazione = vincoli)
                 db.session.add(row_test)
                 db.session.flush()
 

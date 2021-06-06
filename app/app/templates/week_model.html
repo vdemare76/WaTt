@@ -52,8 +52,9 @@
       var calendar = new FullCalendar.Calendar(calendarEl, {
           headerToolbar: { center: 'dayGridMonth,timeGridWeek' },
           locale: 'itLocale',
-          initialView: 'dayGridMonth',
-          displayEventEnd: true
+          initialView: 'timeGridWeek',
+          displayEventEnd: true,
+          editable: true
       });
 
       data_cur.setTime(data_cur.getTime()-day);
@@ -62,7 +63,7 @@
         data_cur = new Date(new_date);
         for (var i=0; i<orLen; i++) {
           if (arrOrario[i].id_corso==idc && arrOrario[i].anno_corso==adc) {
-            let titolo_evento = arrOrario[i].codice_attivita + " - " + arrOrario[i].descrizione_modulo;
+            let titolo_evento = arrOrario[i].codice_attivita + " - " + arrOrario[i].descrizione_modulo + " (" + arrOrario[i].aula + ")";
             if (arrOrario[i].giorno==giorni_settimana[data_cur.getDay()]) {
               ora_inizio=arrOrario[i].descrizione_slot.substring(0,2);
               ora_fine=arrOrario[i].descrizione_slot.substring(6,8);

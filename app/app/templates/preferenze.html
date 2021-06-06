@@ -42,17 +42,17 @@
 					</ul>
 				</label>
 				<div class="bg-info">VINCOLI FACOLTATIVI</div><br>
-				<input type="checkbox" name="chk_sessione_unica" id="sessione_unica" value="1">	
-				<label for = "unica_sessione_giorno">
+				<input type="checkbox" name="chk_sessione_unica" id="chk_sessione_unica" value="1">
+				<label for = "chk_sessione_unica">
 					Non devono essere consentite due sessioni dello stesso modulo nella stessa giornata
 				</label>  	
 				<br>
-				<input type="checkbox" name="chk_slot_sessioni_consecutive" id="slot_sessioni_consecutive" value="1">	
-				<label for = "sessione_stessa_aula">
+				<input type="checkbox" name="chk_slot_sessioni_consecutive" id="chk_slot_sessioni_consecutive" value="1">
+				<label for = "chk_slot_sessioni_consecutive">
 					Le sessione di un giorno deve tenersi obbligatoriamente nella stessa aula ed in slot consecutivi
 				</label>  	  		  
 				<br>
-				<input type="checkbox" name="chk_max_ore" value="1">
+				<input type="checkbox" name="chk_max_ore" id="chk_max_ore" value="1">
 				<label for="chk_max_ore">Numero massimo di slot di lezioni da destinare in una settimana per ogni anno di corso</label>
 				<select name="sel_max_ore">
 				  <option value="7">7</option>
@@ -63,8 +63,8 @@
 				  <option value="12">12</option>
 				</select> 	
 				<br>
-				<input type="checkbox" name="chk_preferenze_docenti" value="1">	
-				<label for = "preferenza_docenti">
+				<input type="checkbox" name="chk_preferenze_docenti" id="chk_preferenze_docenti" value="1">
+				<label for = "chk_preferenze_docenti">
 					Devono essere considerate le indicazioni dei docenti
 				</label>  	  		 
 			</div><br>

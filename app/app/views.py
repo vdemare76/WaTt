@@ -286,7 +286,9 @@ class PreferenzeView(BaseView):
     def prf_calc(self, target=None):
         if target=="genera_orario" :
             algoritmo=AlgoritmoCompleto()
-            algoritmo.genera_orario(request.form.get('aa'),request.form.get('semestre'),request.form.get('txt_desc_orario'))
+            algoritmo.genera_orario(request.form.get('aa'),
+                                    request.form.get('semestre'),
+                                    request.form.get('txt_desc_orario'))
         return redirect(url_for('PreferenzeView.prf_home'));  
 
 class SchemaSettimanaleView(BaseView):
@@ -312,9 +314,7 @@ class CalendarioView(BaseView):
         corsi = db.session.query(Orario.id_corso, Orario.codice_corso, CorsoDiStudio.descrizione) \
             .join(CorsoDiStudio, Orario.id_corso == CorsoDiStudio.id) \
             .order_by(CorsoDiStudio.codice.asc()).distinct().all()
-        anni_corso = db.session.query(Orario.id_corso.label("id_corso"),
-                                      Orario.codice_corso.label("codice_corso"),
-                                      Orario.anno_corso.label("anno_corso"))\
+        anni_corso = db.session.query(Orario.id_corso, Orario.codice_corso, Orario.anno_corso)\
             .order_by(Orario.id_corso.asc(), Orario.anno_corso.asc()).distinct().all()
         dictAnniCorso = []
         for a in anni_corso:
