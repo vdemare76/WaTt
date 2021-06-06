@@ -34,6 +34,7 @@
 <script>
     function genera_calendario(arrOrario) {
       var day = 60 * 60 * 24 * 1000;
+      var giorni_settimana = ["Domenica","Lunedì","Martedì","Mercoledì","Giovedì","Venerdì","Sabato"];
 
       var data_avvio=new Date($("#data_avvio_lezioni").val());
       data_avvio.setHours(0);
@@ -56,9 +57,9 @@
         var new_date = data_cur.setTime(data_cur.getTime()+day);
         data_cur = new Date(new_date);
         for (var i=0; i<orLen; i++) {
-          if (arrOrario[i].id_corso==idc && arrOrario[i].anno_corso==adc && data_cur.getDay()==1) {
+          if (arrOrario[i].id_corso==idc && arrOrario[i].anno_corso==adc) {
             var titolo_evento = arrOrario[i].codice_attivita + " - " + arrOrario[i].descrizione_modulo;
-            if (arrOrario[i].giorno=='Lunedì') {
+            if (arrOrario[i].giorno==giorni_settimana(data_cur.getDay())) {
               ora_inizio=arrOrario[i].descrizione_slot.substring(0,2);
               ora_fine=arrOrario[i].descrizione_slot.substring(6,8);
 
@@ -66,18 +67,6 @@
                                  start:data_cur.setHours(ora_inizio),
                                  end:data_cur.setHours(ora_fine),
                                  description:' test della descrizione'
-                                 });
-            }
-          }
-          else if (arrOrario[i].id_corso==idc && arrOrario[i].anno_corso==adc && data_cur.getDay()==2) {
-            var titolo_evento = arrOrario[i].codice_attivita + " - " + arrOrario[i].descrizione_modulo;
-            if (arrOrario[i].giorno=='Martedì') {
-              ora_inizio=arrOrario[i].descrizione_slot.substring(0,2);
-              ora_fine=arrOrario[i].descrizione_slot.substring(6,8);
-
-              calendar.addEvent({title:titolo_evento,
-                                 start:data_cur.setHours(ora_inizio),
-                                 end:data_cur.setHours(ora_fine)
                                  });
             }
           }
