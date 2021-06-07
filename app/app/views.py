@@ -13,7 +13,7 @@ from .models import AnnoAccademico, CorsoDiStudio, AttivitaDidattica, Docente, A
 from flask.templating import render_template
 from .util import inizializzaDb, svuotaDb, getColori
 from .solver import AlgoritmoCompleto
-from datetime import timedelta, date
+from datetime import timedelta
 
 class AnniAccademiciView(ModelView):
     datamodel = SQLAInterface(AnnoAccademico)
@@ -335,14 +335,14 @@ class CalendarioView(BaseView):
         for o in orario:
             vOrario.append(o.to_dict())
 
-        chiusure = db.sessione.query(Chiusura).filter(Chiusura.testata_id==Orario.testata_id).all()
+        chiusure = db.session.query(Chiusura).filter(Chiusura.testata_id==Orario.testata_id).all()
         vChiusure = []
         for c in chiusure:
             cur = c.data_inizio
-            end = c.data_oinizi + timedelta(days=1)
+            end = c.data_fine + timedelta(days=1)
             while (cur<end):
-                if cur not in vChiusure:
-                    vChiusure.add(cur)
+                if cur.strftime('%Y/%m/%d') not in vChiusure:
+                    vChiusure.append(cur.strftime('%Y/%m/%d'))
                 cur = cur + timedelta(days=1)
 
         return render_template("week_model.html",

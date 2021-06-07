@@ -11,7 +11,7 @@
     <script src='/static/fullcalendar-5.6.0/lib/main.js'></script>
   </head>
 
-  <body onload="inizializza({{anni_corso}},{{chiusure}})">
+  <body onload="inizializza({{anni_corso}})">
     <div>
       <label for="corso_id">Seleziona il corso di studio:</label>
       <select type="date" id="corso_id" name="corso_id" onchange="caricaAnni({{anni_corso}})">
@@ -23,9 +23,9 @@
       <select type="date" id="anno_corso" name="anno_corso">
       </select><br>
       <label for="data_avvio_lezioni">Imposta la data di avvio e fine delle lezioni:</label>
-      <input type="date" id="data_avvio_lezioni" onchange="aggiorna_data_fine()">
+      <input type="date" id="data_avvio_lezioni" onchange="aggiorna_data_fine({{chiusure}})">
       <input type="date" id="data_fine_lezioni"><br><br>
-      <button type="button" id="genera_calendario" onclick="genera_calendario({{orario}})" class="btn btn-primary">Genera calendario per il corso selezionato</button>
+      <button type="button" id="genera_calendario" onclick="genera_calendario({{orario}},{{chiusure}})" class="btn btn-primary">Genera calendario per il corso selezionato</button>
     </div><br>
     <div id='calendar'></div>
   </body>
@@ -33,7 +33,21 @@
 </html>
 
 <script>
-    function genera_calendario(arrOrario) {
+    function formatDate(date) {
+        var d = new Date(date),
+            month = '' + (d.getMonth() + 1),
+            day = '' + d.getDate(),
+            year = d.getFullYear();
+
+        if (month.length < 2)
+            month = '0' + month;
+        if (day.length < 2)
+            day = '0' + day;
+
+        return [year, month, day].join('/');
+    }
+
+    function genera_calendario(arrOrario,arrChiusure) {
       let day = 60 * 60 * 24 * 1000;
       let giorni_settimana = ["Domenica","Lunedì","Martedì","Mercoledì","Giovedì","Venerdì","Sabato"];
 
@@ -53,27 +67,49 @@
           locale: 'itLocale',
           initialView: 'timeGridWeek',
           displayEventEnd: true,
-          editable: true
+          editable: true,
+          slotMinTime: "09:00:00",
+          slotMaxTime: "18:00:00",
+          height: 720,
+          expandRows: true
       });
 
       data_cur.setTime(data_cur.getTime()-day);
       while (data_cur < data_fine) {
         let new_date = data_cur.setTime(data_cur.getTime()+day);
         data_cur = new Date(new_date);
-        for (var i=0; i<orLen; i++) {
-          if (arrOrario[i].id_corso==idc && arrOrario[i].anno_corso==adc) {
-            let titolo_evento = arrOrario[i].codice_attivita + " - " + arrOrario[i].descrizione_modulo + " (" + arrOrario[i].aula + ")";
-            if (arrOrario[i].giorno==giorni_settimana[data_cur.getDay()]) {
-              ora_inizio=arrOrario[i].descrizione_slot.substring(0,2);
-              ora_fine=arrOrario[i].descrizione_slot.substring(6,8);
-
-              calendar.addEvent({title:titolo_evento,
-                                 start:data_cur.setHours(ora_inizio),
-                                 end:data_cur.setHours(ora_fine),
-                                 description:' test della descrizione',
-                                 color:arrOrario[i].colore_attivita,
-                                 textColor:'#000000'
-                                 });
+        if (data_cur.getDay()==0 || data_cur.getDay()==6) {
+           calendar.addEvent({title:"",
+                              start:data_cur.setHours("09"),
+                              end:data_cur.setHours("19"),
+                              displayEventTime:false,
+                              color:'#DDDDDD',
+                              textColor:'#000000'
+                              });
+        }
+        else if (arrChiusure.includes(formatDate(data_cur))) {
+           calendar.addEvent({title:"",
+                              start:data_cur.setHours("09"),
+                              end:data_cur.setHours("19"),
+                              displayEventTime:false,
+                              color:'#FFCCCC',
+                              textColor:'#000000'
+                              });
+        }
+        else {
+          for (var i=0; i<orLen; i++) {
+            if (arrOrario[i].corso_id==idc && arrOrario[i].anno_corso==adc) {
+              let titolo_evento = arrOrario[i].codice_attivita + " - " + arrOrario[i].descrizione_modulo + " (" + arrOrario[i].aula + ")";
+              if (arrOrario[i].giorno==giorni_settimana[data_cur.getDay()]) {
+                ora_inizio=arrOrario[i].descrizione_slot.substring(0,2);
+                ora_fine=arrOrario[i].descrizione_slot.substring(6,8);
+                calendar.addEvent({title:titolo_evento,
+                                   start:data_cur.setHours(ora_inizio),
+                                   end:data_cur.setHours(ora_fine),
+                                   color:arrOrario[i].colore_attivita,
+                                   textColor:'#000000'
+                                   });
+              }
             }
           }
         }
@@ -87,22 +123,23 @@
       let anLen=arrAnni.length;
       $('#anno_corso').empty();
       for (var i=0; i<anLen; i++) {
-          if (arrAnni[i].id_corso==idc) {
+          if (arrAnni[i].corso_id==idc) {
             $('#anno_corso').append(new Option(arrAnni[i].anno_corso, arrAnni[i].anno_corso));
           }
       }
     }
 
-    function inizializza(arrAnni, arrChiusure) {
+    function inizializza(arrAnni) {
       caricaAnni(arrAnni);
       let today = new Date();
       document.getElementById("data_avvio_lezioni").value = today.getFullYear() + '-' + ('0' + (today.getMonth() + 1)).slice(-2) + '-' + ('0' + today.getDate()).slice(-2);
       document.getElementById("data_fine_lezioni").value = today.getFullYear() + '-' + ('0' + (today.getMonth() + 1)).slice(-2) + '-' + ('0' + today.getDate()).slice(-2);
-      console.log(arrChiusure);
     }
 
-    function aggiorna_data_fine() {
+    function aggiorna_data_fine(arrChiusure) {
       $("#data_fine_lezioni").val($("#data_avvio_lezioni").val());
+
+      console.log(arrChiusure.includes("2021/06/18"));
     }
 </script>
 	
