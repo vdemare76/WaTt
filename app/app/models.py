@@ -147,8 +147,9 @@ class OrarioDettaglio(Model):
 
 class Orario(Model):
     id = Column(Integer, primary_key=True)
+    testata_id = Column(Integer)
     giorno = Column(String(10))
-    id_corso = Column(Integer)
+    corso_id = Column(Integer)
     codice_corso = Column(String(10))
     colore_corso = Column(String(10))
     codice_attivita = Column(String(25))
@@ -171,5 +172,6 @@ class Chiusura(Model):
     id = Column(Integer, primary_key=True)
     testata_id = Column(Integer, ForeignKey('orario_testata.id'), nullable=False)
     testata = relationship("OrarioTestata")
-    data = Column(Date)
+    data_inizio = Column(Date)
+    data_fine = Column(Date)
     nota = Column(String(100))

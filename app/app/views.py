@@ -13,7 +13,7 @@ from .models import AnnoAccademico, CorsoDiStudio, AttivitaDidattica, Docente, A
 from flask.templating import render_template
 from .util import inizializzaDb, svuotaDb, getColori
 from .solver import AlgoritmoCompleto
-import json
+from datetime import timedelta, date
 
 class AnniAccademiciView(ModelView):
     datamodel = SQLAInterface(AnnoAccademico)
@@ -131,10 +131,12 @@ class ModuliView(ModelView):
 class ChiusuraView(ModelView):
     datamodel = SQLAInterface(Chiusura)
     label_columns = {"orario_testata.descrizione":"Descrizione orario",
-                     "data":"Data chiusura",
+                     "data_inizio":"Data chiusura",
+                     "data_fine":"Data fine",
                      "nota":"Nota"}
     list_columns = ["testata",
-                    "data",
+                    "data_inizio",
+                    "data_fine",
                     "nota"]
 
 class LogisticaDocentiView(ModelView):
@@ -225,8 +227,9 @@ class OrariGeneratiView(ModelView):
             .order_by(CorsoDiStudio.codice.asc(), Giorno.id.asc(), Modulo.codice.asc(), Slot.id.asc(), Aula.codice.asc()).all()
 
             for r in rows:
-                row = Orario(giorno=r.Giorno.descrizione,
-                             id_corso=r.CorsoDiStudio.id,
+                row = Orario(testata_id=item.id,
+                             giorno=r.Giorno.descrizione,
+                             corso_id=r.CorsoDiStudio.id,
                              codice_corso=r.CorsoDiStudio.codice,
                              colore_corso=getColori()[r.CorsoDiStudio.id],
                              codice_attivita=r.AttivitaDidattica.codice,
@@ -317,24 +320,38 @@ class CalendarioView(BaseView):
     @expose('/cld_home/')
     @has_access
     def cld_home(self, name=None):
-        corsi = db.session.query(Orario.id_corso, Orario.codice_corso, CorsoDiStudio.descrizione) \
-            .join(CorsoDiStudio, Orario.id_corso == CorsoDiStudio.id) \
+        corsi = db.session.query(Orario.corso_id, Orario.codice_corso, CorsoDiStudio.descrizione) \
+            .join(CorsoDiStudio, Orario.corso_id == CorsoDiStudio.id) \
             .order_by(CorsoDiStudio.codice.asc()).distinct().all()
-        anni_corso = db.session.query(Orario.id_corso, Orario.codice_corso, Orario.anno_corso)\
-            .order_by(Orario.id_corso.asc(), Orario.anno_corso.asc()).distinct().all()
-        dictAnniCorso = []
+
+        anni_corso = db.session.query(Orario.corso_id, Orario.codice_corso, Orario.anno_corso)\
+            .order_by(Orario.corso_id.asc(), Orario.anno_corso.asc()).distinct().all()
+        vAnniCorso = []
         for a in anni_corso:
-            dictAnniCorso.append({"id_corso":a[0],"codice_corso":a[1],"anno_corso":a[2]})
+            vAnniCorso.append({"corso_id":a[0],"codice_corso":a[1],"anno_corso":a[2]})
+
         orario = db.session.query(Orario).all()
-        dictOrario = []
+        vOrario = []
         for o in orario:
-            dictOrario.append(o.to_dict())
+            vOrario.append(o.to_dict())
+
+        chiusure = db.sessione.query(Chiusura).filter(Chiusura.testata_id==Orario.testata_id).all()
+        vChiusure = []
+        for c in chiusure:
+            cur = c.data_inizio
+            end = c.data_oinizi + timedelta(days=1)
+            while (cur<end):
+                if cur not in vChiusure:
+                    vChiusure.add(cur)
+                cur = cur + timedelta(days=1)
+
         return render_template("week_model.html",
                                base_template=appbuilder.base_template,
                                appbuilder=appbuilder,
                                corsi=corsi,
-                               anni_corso=dictAnniCorso,
-                               orario=dictOrario)
+                               anni_corso=vAnniCorso,
+                               orario=vOrario,
+                               chiusure=vChiusure)
 
 db.create_all()
 

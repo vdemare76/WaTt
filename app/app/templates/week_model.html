@@ -11,20 +11,19 @@
     <script src='/static/fullcalendar-5.6.0/lib/main.js'></script>
   </head>
 
-  <body onload="inizializza({{anni_corso}})">
+  <body onload="inizializza({{anni_corso}},{{chiusure}})">
     <div>
       <label for="corso_id">Seleziona il corso di studio:</label>
       <select type="date" id="corso_id" name="corso_id" onchange="caricaAnni({{anni_corso}})">
         {% for c in corsi %}
-          <option value={{c.id_corso}}>{{c.codice_corso}} - {{c.descrizione}}</option>
+          <option value={{c.corso_id}}>{{c.codice_corso}} - {{c.descrizione}}</option>
         {% endfor %}
       </select><br>
       <label for="anno_corso">Seleziona l'anno di corso:</label>
       <select type="date" id="anno_corso" name="anno_corso">
       </select><br>
-      <label for="data_avvio_lezioni">Imposta la data di avvio delle lezioni:</label>
-      <input type="date" id="data_avvio_lezioni" onchange="aggiorna_data_fine()"><br>
-      <label for="data_fine_lezioni">Imposta la data di fine delle lezioni:</label>
+      <label for="data_avvio_lezioni">Imposta la data di avvio e fine delle lezioni:</label>
+      <input type="date" id="data_avvio_lezioni" onchange="aggiorna_data_fine()">
       <input type="date" id="data_fine_lezioni"><br><br>
       <button type="button" id="genera_calendario" onclick="genera_calendario({{orario}})" class="btn btn-primary">Genera calendario per il corso selezionato</button>
     </div><br>
@@ -50,7 +49,7 @@
 
       var calendarEl = document.getElementById('calendar');
       var calendar = new FullCalendar.Calendar(calendarEl, {
-          headerToolbar: { center: 'dayGridMonth,timeGridWeek' },
+          //headerToolbar: { center: 'dayGridMonth,timeGridWeek' },
           locale: 'itLocale',
           initialView: 'timeGridWeek',
           displayEventEnd: true,
@@ -94,11 +93,12 @@
       }
     }
 
-    function inizializza(arrAnni) {
+    function inizializza(arrAnni, arrChiusure) {
       caricaAnni(arrAnni);
       let today = new Date();
       document.getElementById("data_avvio_lezioni").value = today.getFullYear() + '-' + ('0' + (today.getMonth() + 1)).slice(-2) + '-' + ('0' + today.getDate()).slice(-2);
       document.getElementById("data_fine_lezioni").value = today.getFullYear() + '-' + ('0' + (today.getMonth() + 1)).slice(-2) + '-' + ('0' + today.getDate()).slice(-2);
+      console.log(arrChiusure);
     }
 
     function aggiorna_data_fine() {
