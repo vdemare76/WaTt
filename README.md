@@ -21,7 +21,7 @@ The system is created using Docker technology and is currently made up of three 
 To run the application
 
 1) Download and install docker desktop (latest stable version)
-2) Download master branch of WATT and extract the contents of the .zip file to a folder on your filesystem.
+2) Clone master branch of WATT into a folder on your filesystem.
 3) Execute from this folder the command : docker-compose up -—build
 4) At the end of the container installation and startup procedure, you can access the application by typing the web address localhost:5000
 
