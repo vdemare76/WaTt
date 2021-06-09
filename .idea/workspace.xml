@@ -1,10 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="4bd4ca69-5fab-4bca-9aae-55bf4e9525ff" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docker-app" beforeDir="false" afterPath="$PROJECT_DIR$/docker-app" afterDir="false" />
-    </list>
+    <list default="true" id="4bd4ca69-5fab-4bca-9aae-55bf4e9525ff" name="Default Changelist" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -31,6 +28,7 @@
       <recent name="C:\Users\enzo\PyCharmProjects\Watt\app\app" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/app/app" />
       <recent name="$PROJECT_DIR$/app" />
     </key>
   </component>
@@ -71,7 +69,7 @@
       <updated>1620592652527</updated>
       <workItem from="1623144420986" duration="2377000" />
       <workItem from="1623221223852" duration="37000" />
-      <workItem from="1623221261867" duration="681000" />
+      <workItem from="1623221261867" duration="1022000" />
     </task>
     <task id="LOCAL-00001" summary="Update">
       <created>1620594033349</created>
@@ -136,7 +134,14 @@
       <option name="project" value="LOCAL" />
       <updated>1623144432785</updated>
     </task>
-    <option name="localTasksCounter" value="10" />
+    <task id="LOCAL-00010" summary="Update">
+      <created>1623226000082</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1623226000082</updated>
+    </task>
+    <option name="localTasksCounter" value="11" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
