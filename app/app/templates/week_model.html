@@ -7,10 +7,6 @@
 <html lang='en'>
   <head>
     <meta charset='utf-8' />
-    <!--<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
-    <link href='/static/fullcalendar-5.6.0/lib/main.css' rel='stylesheet' />
-    <script src='/static/fullcalendar-5.6.0/lib/main.js'></script>-->
     <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.7.2/main.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.7.2/locales-all.min.js"></script>
     <link href="https://cdn.jsdelivr.net/npm/fullcalendar@5.7.2/main.min.css" rel="stylesheet" />
@@ -33,7 +29,6 @@
       <button type="button" id="genera_calendario" onclick="genera_calendario({{orario}},{{chiusure}})" class="btn btn-primary">Genera calendario per il corso selezionato</button>
     </div><br>
     <div id='calendar'></div>
-    <button type="button" id="Download file JSON" onclick="download_json()" class="btn btn-primary">Scarica il file JSON del calendario visualizzato</button>
   </body>
 
 </html>
@@ -86,9 +81,22 @@
             month:'mese',
             week:'settimana',
             day:'giorno',
-            list:'lista'
+            list:'lista',
+            prev:'prec',
+            next:'succ'
+          },
+          customButtons: {
+            jsonButton: {
+              text: 'Download Json',
+              click: function() {
+                download(JSON.stringify(Object.assign({}, calendar.getEvents())), 'json.txt', 'text/plain');
+              }
+            }
+          },
+          headerToolbar: {
+            left: 'jsonButton',
+            center: 'title'
           }
-
     });
 
       data_cur.setTime(data_cur.getTime()-day);
@@ -139,7 +147,6 @@
       }
 
       calendar.render();
-
     }
 
     function download(content, fileName, contentType) {
@@ -148,15 +155,6 @@
       a.href = URL.createObjectURL(file);
       a.download = fileName;
       a.click();
-    }
-
-    function download_json() {
-      $('#calendar').fullCalendar({
-        dayClick: function() {
-          alert('a day has been clicked!');
-        }
-      });
-      //download(JSON.stringify(Object.assign({}, calendar.getEvents())), 'json.txt', 'text/plain');
     }
 
     function caricaAnni(arrAnni) {
