@@ -233,6 +233,7 @@ class OrariGeneratiView(ModelView):
                              codice_corso=r.CorsoDiStudio.codice,
                              colore_corso=getColori()[r.CorsoDiStudio.id],
                              codice_attivita=r.AttivitaDidattica.codice,
+                             descrizione_attivita=r.AttivitaDidattica.descrizione,
                              colore_attivita=r.AttivitaDidattica.colore,
                              descrizione_modulo=r.Modulo.descrizione,
                              numerosita_modulo=r.Modulo.max_studenti,
@@ -375,8 +376,6 @@ appbuilder.add_view(OffertaView, "Offerta", icon="fa-university", category="Offe
 
 appbuilder.add_view(ModuliView, "Moduli", icon="fa-puzzle-piece", category="Offerta didattica")
 
-appbuilder.add_view(ChiusuraView, "Imposta chiusure", icon="fa-home", category="Orario")
-
 appbuilder.add_view(LogisticaDocentiView, "Logistica docenti", icon="fa-hand-o-up", category="Offerta didattica")
 
 appbuilder.add_view(UtilitaView, "Funzioni utilità",  icon="fa-briefcase", category="Utilità")
@@ -384,6 +383,8 @@ appbuilder.add_view(UtilitaView, "Funzioni utilità",  icon="fa-briefcase", cate
 appbuilder.add_view(PreferenzeView, "Elaborazione orario",  icon="fa-cogs", category="Orario")
 
 appbuilder.add_view(OrariGeneratiView, "Orari generati",  icon="fa-table", category="Orario")
+
+appbuilder.add_view(ChiusuraView, "Imposta chiusure", icon="fa-home", category="Orario")
 
 appbuilder.add_view(SchemaSettimanaleView, "Schema settimanale",  icon="fa-calendar", category="Orario")
 

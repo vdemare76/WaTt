@@ -28,6 +28,7 @@
       <button type="button" id="genera_calendario" onclick="genera_calendario({{orario}},{{chiusure}})" class="btn btn-primary">Genera calendario per il corso selezionato</button>
     </div><br>
     <div id='calendar'></div>
+    <button type="button" id="Download file JSON" onclick="download_json()" class="btn btn-primary">Scarica il file JSON del calendario visualizzato</button>
   </body>
 
 </html>
@@ -64,15 +65,26 @@
       var calendarEl = document.getElementById('calendar');
       var calendar = new FullCalendar.Calendar(calendarEl, {
           //headerToolbar: { center: 'dayGridMonth,timeGridWeek' },
-          locale: 'itLocale',
-          initialView: 'timeGridWeek',
-          displayEventEnd: true,
-          editable: true,
-          slotMinTime: "09:00:00",
-          slotMaxTime: "18:00:00",
-          height: 720,
-          expandRows: true
-      });
+          locale:'itLocale',
+          initialDate:data_avvio,
+          initialView:'timeGridWeek',
+          displayEventTime:false,
+          eventOverlap:false,
+          editable:true,
+          slotMinTime:"09:00:00",
+          slotMaxTime:"18:00:00",
+          height:720,
+          expandRows:true,
+          buttonText:
+          {
+            today:'oggi',
+            month:'mese',
+            week:'settimana',
+            day:'giorno',
+            list:'lista'
+          }
+
+    });
 
       data_cur.setTime(data_cur.getTime()-day);
       while (data_cur < data_fine) {
@@ -83,6 +95,7 @@
                               start:data_cur.setHours("09"),
                               end:data_cur.setHours("19"),
                               displayEventTime:false,
+                              editable:false,
                               color:'#DDDDDD',
                               textColor:'#000000'
                               });
@@ -92,6 +105,7 @@
                               start:data_cur.setHours("09"),
                               end:data_cur.setHours("19"),
                               displayEventTime:false,
+                              editable:false,
                               color:'#FFCCCC',
                               textColor:'#000000'
                               });
@@ -104,10 +118,14 @@
                 ora_inizio=arrOrario[i].descrizione_slot.substring(0,2);
                 ora_fine=arrOrario[i].descrizione_slot.substring(6,8);
                 calendar.addEvent({title:titolo_evento,
+                                   displayEventTime:true,
+                                   displayEventEnd:true,
                                    start:data_cur.setHours(ora_inizio),
                                    end:data_cur.setHours(ora_fine),
+                                   editable:true,
                                    color:arrOrario[i].colore_attivita,
-                                   textColor:'#000000'
+                                   textColor:'#000000',
+                                   description:arrOrario[i]
                                    });
               }
             }
@@ -116,6 +134,20 @@
       }
 
       calendar.render();
+
+    }
+
+    function download(content, fileName, contentType) {
+      var a = document.createElement("a");
+      var file = new Blob([content], {type: contentType});
+      a.href = URL.createObjectURL(file);
+      a.download = fileName;
+      a.click();
+    }
+
+    function download_json() {
+      calendar = $("#calendar").calendar;
+      download(JSON.stringify(Object.assign({}, calendar.getEvents())), 'json.txt', 'text/plain');
     }
 
     function caricaAnni(arrAnni) {
@@ -138,8 +170,6 @@
 
     function aggiorna_data_fine(arrChiusure) {
       $("#data_fine_lezioni").val($("#data_avvio_lezioni").val());
-
-      console.log(arrChiusure.includes("2021/06/18"));
     }
 </script>
 	

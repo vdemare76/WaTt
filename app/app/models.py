@@ -153,6 +153,7 @@ class Orario(Model):
     codice_corso = Column(String(10))
     colore_corso = Column(String(10))
     codice_attivita = Column(String(25))
+    descrizione_attivita = Column(String(150))
     colore_attivita = Column(String(7))
     descrizione_modulo = Column(String(100))
     numerosita_modulo = Column(Integer)
