@@ -349,7 +349,8 @@ class AlgoritmoCompleto(TemplateCalcoloOrario):
                                          anno_accademico_id = aa,
                                          semestre = semestre,
                                          data_creazione = datetime.datetime.now(tz),
-                                         note_creazione = vincoli)
+                                         note_creazione = vincoli,
+                                         stato = 'P')
                 db.session.add(row_test)
                 db.session.flush()
 
