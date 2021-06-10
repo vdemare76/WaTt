@@ -131,7 +131,7 @@ class OrarioTestata(Model):
     anno_accademico = relationship("AnnoAccademico")
     semestre = Column(Integer)
     data_creazione = Column(DateTime)
-    note_creazione = Column(String(150)),
+    note_creazione = Column(String(150))
     stato_id = Column(Integer, ForeignKey('stato_orario.id'), nullable=False)
     stato = relationship("StatoOrario")
 
