@@ -12,6 +12,14 @@ class AnnoAccademico(Model):
     def __repr__(self):
         return self.anno_esteso
 
+class StatoOrario(Model):
+    id = Column(Integer, primary_key=True)
+    codice = Column(String(1))
+    descrizione = Column(String(25))
+
+    def __repr__(self):
+        return self.descrizione
+
 class Slot(Model):
     id = Column(Integer, primary_key=True)
     descrizione = Column(String(30))
@@ -124,7 +132,8 @@ class OrarioTestata(Model):
     semestre = Column(Integer)
     data_creazione = Column(DateTime)
     note_creazione = Column(String(150)),
-    stato = Column(String(1))
+    stato_id = Column(Integer, ForeignKey('stato_orario.id'), nullable=False)
+    stato = relationship("StatoOrario")
 
     def __repr__(self):
         return self.descrizione

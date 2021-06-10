@@ -1,4 +1,6 @@
-from .models import AnnoAccademico, CorsoDiStudio, AttivitaDidattica, Docente, Aula, Offerta, LogisticaDocente, Modulo, Giorno, Slot, OrarioTestata, OrarioDettaglio, Orario
+from .models import AnnoAccademico, CorsoDiStudio, AttivitaDidattica, \
+    Docente, Aula, Offerta, LogisticaDocente, Modulo, Giorno, Slot, \
+    OrarioTestata, OrarioDettaglio, Orario, StatoOrario
 from .import appbuilder, db
 from flask import flash
 from sqlalchemy.exc import SQLAlchemyError
@@ -455,3 +457,16 @@ def caricaDatiDalDb(aa, semestre):
 
 def getColori():
     return colori
+
+def inizializza_db():
+    try:
+        db.session.query(StatoOrario).delete()
+        db.session.execute('ALTER TABLE stato_orario AUTO_INCREMENT = 1')
+        row = StatoOrario(codice='P', descrizione='Pubblicato')
+        db.session.add(row)
+        row = StatoOrario(codice='B', descrizione='Bozza')
+        db.session.add(row)
+        db.session.commit()
+    except SQLAlchemyError:
+        flash("Errore di inizializzazione del db")
+        return -1

@@ -15,18 +15,23 @@
 
   <body onload="inizializza({{anni_corso}})">
     <div>
-      <label for="corso_id">Seleziona il corso di studio:</label>
-      <select type="date" id="corso_id" name="corso_id" onchange="caricaAnni({{anni_corso}})">
-        {% for c in corsi %}
-          <option value={{c.corso_id}}>{{c.codice_corso}} - {{c.descrizione}}</option>
-        {% endfor %}
-      </select><br>
-      <label for="anno_corso">Seleziona l'anno di corso:</label>
-      <select type="date" id="anno_corso" name="anno_corso">
-      </select><br>
-      <label for="data_avvio_lezioni">Imposta la data di avvio e fine delle lezioni:</label>
-      <input type="date" id="data_avvio_lezioni" onchange="aggiorna_data_fine({{chiusure}})">
-      <input type="date" id="data_fine_lezioni"><br><br>
+      <div>
+        <label for="corso_id">Seleziona il corso di studio:</label>
+        <select type="date" id="corso_id" name="corso_id" onchange="caricaAnni({{anni_corso}})">
+          {% for c in corsi %}
+            <option value={{c.corso_id}}>{{c.codice_corso}} - {{c.descrizione}}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div>
+        <label for="anno_corso">Seleziona l'anno di corso:</label>
+        <select type="date" id="anno_corso" name="anno_corso"></select>
+      </div>
+      <div>
+        <label for="data_avvio_lezioni">Imposta la data di avvio e fine delle lezioni:</label><br>
+        <input type="date" id="data_avvio_lezioni" data-date-format="DD MM YYYY" onchange="aggiorna_data_fine({{chiusure}})">
+        <input type="date" id="data_fine_lezioni">
+      </div><br>
       <button type="button" id="genera_calendario" onclick="genera_calendario({{orario}},{{chiusure}})" class="btn btn-primary">Genera calendario per il corso selezionato</button>
     </div><br>
     <div id='calendar'></div>
