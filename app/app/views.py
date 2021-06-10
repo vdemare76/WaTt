@@ -309,7 +309,7 @@ class SchemaSettimanaleView(BaseView):
     def wsk_home(self, name=None):
         slot=db.session.query(Slot).all()
         orario=db.session.query(Orario).all()
-        return render_template("calendario.html",
+        return render_template("schema.html",
                                base_template=appbuilder.base_template,
                                appbuilder=appbuilder,
                                slot=slot,
@@ -346,7 +346,7 @@ class CalendarioView(BaseView):
                     vChiusure.append(cur.strftime('%Y/%m/%d'))
                 cur = cur + timedelta(days=1)
 
-        return render_template("week_model.html",
+        return render_template("calendario.html",
                                base_template=appbuilder.base_template,
                                appbuilder=appbuilder,
                                corsi=corsi,

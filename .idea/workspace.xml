@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="4bd4ca69-5fab-4bca-9aae-55bf4e9525ff" name="Default Changelist" comment="" />
+    <list default="true" id="4bd4ca69-5fab-4bca-9aae-55bf4e9525ff" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/app/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/app/models.py" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -70,7 +73,7 @@
       <workItem from="1623144420986" duration="2377000" />
       <workItem from="1623221223852" duration="37000" />
       <workItem from="1623221261867" duration="14157000" />
-      <workItem from="1623302191283" duration="2199000" />
+      <workItem from="1623302191283" duration="3220000" />
     </task>
     <task id="LOCAL-00001" summary="Update">
       <created>1620594033349</created>
@@ -212,7 +215,14 @@
       <option name="project" value="LOCAL" />
       <updated>1623306708406</updated>
     </task>
-    <option name="localTasksCounter" value="21" />
+    <task id="LOCAL-00021" summary="Update">
+      <created>1623307611957</created>
+      <option name="number" value="00021" />
+      <option name="presentableId" value="LOCAL-00021" />
+      <option name="project" value="LOCAL" />
+      <updated>1623307611957</updated>
+    </task>
+    <option name="localTasksCounter" value="22" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
