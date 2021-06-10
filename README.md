@@ -2,13 +2,14 @@
 
 This project concerns the creation of a web application aimed at generating a university timetable.
 
-The application will allows you to create and modify the timetable and then publish it as a pdf page, web, rest api and iCAL. 
+The application will allows you to create and modify the timetable and then publish it. 
 The timetable will be determined by applying the constraints deriving from the training offer and directly from the needs expressed by the professors.
 
 Project actors and their main tasks
 
-<ul><li><b>Administrative Staff</b> for the insertion of data concerning the educational offer of a specific academic year.</li>
-<li><u><b>Professors</b></u> for the insertion of requirements and preferences to be managed as useful constraints for the generation of the timetable.</li></ul>
+<ul><li><b>Administrative Staff</b> for the insertion of data concerning the educational offer of a specific academic year;</li>
+<li><u><b>Professors</b></u> for the insertion of requirements and preferences to be managed as useful constraints for the generation of the timetable;</li>
+<li><u><b>Students</b></u> for viewing lesson calendars based on the timetable generated and published by the university.</li></ul>
 
 The system is created using Docker technology and is currently made up of three containers
 
@@ -42,4 +43,11 @@ Test users (Username/Password)
 To explore the system structure, the connection parameters to the database and the openldap server are shown below
 - db : watt/wwaatttt (localhost - port 3306)
 - openldap : cn=admin,dc=uniparthenope,dc=it/wattpw01 (localhost - port:389)
+
+To do a quick test of the application you can:
+<ul><li>Login as tam202001/pw202001</li>
+<li>Load some test data using the menu item:<br><i>Utilità -> Funzioni di utilità -> Inizializza il database con dati di test</i></li>
+<li>generate a timetable from the data for one academic year and one semester: <br><i>Orario -> Elaborazione orario</i></li>
+<li>from the list of timetables, access one and load it as the current working time: <br><i>Orario ->Orari generati</i></li>
+<li>generate a calendar of lessons once the start and end date have been set and the course and year of the course have been chosen from the respective combobox: <br><i>Orario -> Calendario orario</i></li>
 
