@@ -132,8 +132,8 @@ class OrarioTestata(Model):
     semestre = Column(Integer)
     data_creazione = Column(DateTime)
     note_creazione = Column(String(150))
-    stato_id = Column(Integer, ForeignKey('stato_orario.id'), nullable=False)
-    stato = relationship("StatoOrario")
+    stato_orario_id = Column(Integer, ForeignKey('stato_orario.id'), nullable=False)
+    stato_orario = relationship("StatoOrario")
 
     def __repr__(self):
         return self.descrizione
