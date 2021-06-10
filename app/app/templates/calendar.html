@@ -10,10 +10,10 @@
     <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.7.2/main.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.7.2/locales-all.min.js"></script>
     <link href="https://cdn.jsdelivr.net/npm/fullcalendar@5.7.2/main.min.css" rel="stylesheet" />
-    <script src="https://cdn.jsdelivr.net/npm/tooltip-js@3.0.0/dist/tooltip.js"></script>
   </head>
 
   <body onload="inizializza({{anni_corso}})">
+  <p class="bg-primary">PARAMETRI PER LA GENERAZIONE DEL CALENDARIO</p><br>
     <div>
       <div>
         <label for="corso_id">Seleziona il corso di studio:</label>
@@ -32,8 +32,9 @@
         <input type="date" id="data_avvio_lezioni" data-date-format="DD MM YYYY" onchange="aggiorna_data_fine({{chiusure}})">
         <input type="date" id="data_fine_lezioni">
       </div><br>
-      <button type="button" id="genera_calendario" onclick="genera_calendario({{orario}},{{chiusure}})" class="btn btn-primary">Genera calendario per il corso selezionato</button>
+      <button type="button" id="genera_calendario" onclick="genera_calendario({{orario}},{{chiusure}})" class="btn bg-info">Genera calendario per il corso selezionato</button>
     </div><br>
+    <p class="bg-primary">CALENDARIO</p><br>
     <div id='calendar'></div>
   </body>
 
@@ -74,6 +75,7 @@
           locale:'itLocale',
           initialDate:data_avvio,
           initialView:'timeGridWeek',
+          allDaySlot: false,
           displayEventTime:false,
           eventOverlap:false,
           editable:true,
@@ -81,6 +83,17 @@
           slotMaxTime:"18:00:00",
           height:720,
           expandRows:true,
+          eventDidMount: function(info) {
+            $(info.el).popover({
+              title: info.event.title,
+              placement: 'top',
+              trigger: 'hover',
+              content: info.event.extendedProps.description,
+              background:'#FFF000',
+              container: 'body',
+              html: true
+            });
+          },
           buttonText:
           {
             today:'oggi',
@@ -95,16 +108,13 @@
             jsonButton: {
               text: 'Download Json',
               click: function() {
-                download(JSON.stringify(Object.assign({}, calendar.getEvents())), 'json.txt', 'text/plain');
+                download(JSON.stringify(Object.assign({}, calendar.getEvents())), 'calendar.json', 'application/json');
               }
             }
           },
           headerToolbar: {
             left: 'jsonButton',
             center: 'title'
-          },
-          eventDidMount: function(info) {
-            console.log(info);
           }
       });
 
@@ -112,6 +122,18 @@
       while (data_cur < data_fine) {
         let new_date = data_cur.setTime(data_cur.getTime()+day);
         data_cur = new Date(new_date);
+        if (data_cur.getDay()>0 && data_cur.getDay()<6) {
+          calendar.addEvent({
+            title:"",
+            start:data_cur.setHours("13"),
+            end:data_cur.setHours("14"),
+            displayEventTime:false,
+            editable:false,
+            color:'#DDDDDD',
+            textColor:'#000000',
+            description:'Pausa lezioni'
+          });
+        }
         if (data_cur.getDay()==0 || data_cur.getDay()==6) {
            calendar.addEvent({title:"",
                               start:data_cur.setHours("09"),
@@ -120,7 +142,7 @@
                               editable:false,
                               color:'#DDDDDD',
                               textColor:'#000000',
-                              description:'Test'
+                              description:'Lezioni non previste'
                               });
         }
         else if (arrChiusure.includes(formatDate(data_cur))) {
@@ -131,7 +153,7 @@
                               editable:false,
                               color:'#FFCCCC',
                               textColor:'#000000',
-                              description:'Test'
+                              description:'Chiusura'
                               });
         }
         else {
@@ -149,7 +171,8 @@
                                    editable:true,
                                    color:arrOrario[i].colore_attivita,
                                    textColor:'#000000',
-                                   description:arrOrario[i]
+                                   description: '<b>' + arrOrario[i].descrizione_attivita + '</b><br>'
+                                              + '<i>' + arrOrario[i].cognome_docente + ' ' + arrOrario[i].nome_docente + '</i>'
                                    });
               }
             }
