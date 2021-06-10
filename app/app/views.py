@@ -182,7 +182,7 @@ class OrariGeneratiView(ModelView):
                      "anno_accademico.anno_esteso":"Anno Accademico",
                      "semestre":"Semestre",
                      "data_creazione":"Data creazione",
-                     "note_creazione":"note_creazione",
+                     "note_creazione":"Note",
                      "stato_orario.descrizione":"Stato"}
     list_columns = ["id",
                     "descrizione",
