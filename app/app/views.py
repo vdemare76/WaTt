@@ -259,7 +259,7 @@ class UtilitaView(BaseView):
     @expose('/srv_home/')
     @has_access
     def srv_home(self, name=None):
-        return render_template("utilita.html", base_template=appbuilder.base_template, appbuilder=appbuilder)
+        return render_template("utility.html", base_template=appbuilder.base_template, appbuilder=appbuilder)
     
     @expose('/srv_initdb/<target>')
     @has_access
@@ -285,7 +285,7 @@ class PreferenzeView(BaseView):
         anni_accademici=db.session.query(AnnoAccademico.id, AnnoAccademico.anno, AnnoAccademico.anno_esteso)\
         .join(Offerta, Offerta.anno_accademico_id==AnnoAccademico.id).distinct()
         semestri=db.session.query(Offerta.semestre).distinct()
-        return render_template("preferenze.html", 
+        return render_template("preferences.html",
                                 base_template=appbuilder.base_template, 
                                 appbuilder=appbuilder,
                                 anni_accademici=anni_accademici, 
@@ -309,7 +309,7 @@ class SchemaSettimanaleView(BaseView):
     def wsk_home(self, name=None):
         slot=db.session.query(Slot).all()
         orario=db.session.query(Orario).all()
-        return render_template("schema.html",
+        return render_template("timetable.html",
                                base_template=appbuilder.base_template,
                                appbuilder=appbuilder,
                                slot=slot,
@@ -346,7 +346,7 @@ class CalendarioView(BaseView):
                     vChiusure.append(cur.strftime('%Y/%m/%d'))
                 cur = cur + timedelta(days=1)
 
-        return render_template("calendario.html",
+        return render_template("calendar.html",
                                base_template=appbuilder.base_template,
                                appbuilder=appbuilder,
                                corsi=corsi,
