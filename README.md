@@ -7,7 +7,7 @@ The timetable will be determined by applying the constraints deriving from the t
 
 Project actors and their main tasks
 
-<ul><li><b>Administrative Staff</b> for the insertion of data concerning the educational offer of a specific academic year;</li>
+<u><><u><b>Administrative Staff</b></u> for the insertion of data concerning the educational offer of a specific academic year;</li>
 <li><u><b>Professors</b></u> for the insertion of requirements and preferences to be managed as useful constraints for the generation of the timetable;</li>
 <li><u><b>Students</b></u> for viewing lesson calendars based on the timetable generated and published by the university.</li></ul>
 
