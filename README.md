@@ -1,6 +1,7 @@
 <B>WATT - WebApp TimeTable</B>
 
-This project concerns the creation of a web application aimed at generating a university timetable.
+This project was developed as part of the course of study in Computer Science - University of Naples PARTHENOPE
+and concerns the creation of a web application aimed at generating timetables for the conduct of university courses. 
 
 The application will allows you to create and modify the timetable and then publish it. 
 The timetable will be determined by applying the constraints deriving from the training offer and directly from the needs expressed by the professors.
