@@ -46,7 +46,7 @@ To explore the system structure, the connection parameters to the database and t
 
 To do a quick test of the application you can:
 <ul><li>Login as tam202001/pw202001 <i>(Administrative Staff)</i></li>
-<li>Load some test data using the menu item: <br><i>Utilità -> Funzioni di utilità -> Inizializza il database con dati di test</i></li>
+<li>Load test data using the menu item: <br><i>Utilità -> Funzioni di utilità -> Inizializza il database con dati di test</i></li>
 <li>generate a timetable from the data for one academic year and one semester: <br><i>Orario -> Elaborazione orario</i></li>
 <li>from the list of timetables, access one and load it as the current working time: <br><i>Orario -> Orari generati</i></li>
 <li>generate a calendar of lessons once the start and end date have been set and the course and year of the course have been chosen from the respective combobox: <br><i>Orario -> Calendario orario</i></li>
