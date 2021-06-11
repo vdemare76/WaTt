@@ -122,19 +122,19 @@
       while (data_cur < data_fine) {
         let new_date = data_cur.setTime(data_cur.getTime()+day);
         data_cur = new Date(new_date);
-        if (data_cur.getDay()>0 && data_cur.getDay()<6) {
+        if (arrChiusure.includes(formatDate(data_cur))) {
           calendar.addEvent({
-            title:"",
-            start:data_cur.setHours("13"),
-            end:data_cur.setHours("14"),
-            displayEventTime:false,
-            editable:false,
-            color:'#DDDDDD',
-            textColor:'#000000',
-            description:'Pausa lezioni'
+            title: "",
+            start: data_cur.setHours("09"),
+            end: data_cur.setHours("19"),
+            displayEventTime: false,
+            editable: false,
+            color: '#FFCCCC',
+            textColor: '#000000',
+            description: 'Chiusura'
           });
         }
-        if (data_cur.getDay()==0 || data_cur.getDay()==6) {
+        else if (data_cur.getDay()==0 || data_cur.getDay()==6) {
            calendar.addEvent({title:"",
                               start:data_cur.setHours("09"),
                               end:data_cur.setHours("19"),
@@ -145,38 +145,38 @@
                               description:'Lezioni non previste'
                               });
         }
-        else if (arrChiusure.includes(formatDate(data_cur))) {
-           calendar.addEvent({title:"",
-                              start:data_cur.setHours("09"),
-                              end:data_cur.setHours("19"),
-                              displayEventTime:false,
-                              editable:false,
-                              color:'#FFCCCC',
-                              textColor:'#000000',
-                              description:'Chiusura'
-                              });
-        }
         else {
           for (var i=0; i<orLen; i++) {
             if (arrOrario[i].corso_id==idc && arrOrario[i].anno_corso==adc) {
               let titolo_evento = arrOrario[i].codice_attivita + " - " + arrOrario[i].descrizione_modulo + " (" + arrOrario[i].aula + ")";
-              if (arrOrario[i].giorno==giorni_settimana[data_cur.getDay()]) {
-                ora_inizio=arrOrario[i].descrizione_slot.substring(0,2);
-                ora_fine=arrOrario[i].descrizione_slot.substring(6,8);
-                calendar.addEvent({title:titolo_evento,
-                                   displayEventTime:true,
-                                   displayEventEnd:true,
-                                   start:data_cur.setHours(ora_inizio),
-                                   end:data_cur.setHours(ora_fine),
-                                   editable:true,
-                                   color:arrOrario[i].colore_attivita,
-                                   textColor:'#000000',
-                                   description: '<b>' + arrOrario[i].descrizione_attivita + '</b><br>'
-                                              + '<i>' + arrOrario[i].cognome_docente + ' ' + arrOrario[i].nome_docente + '</i>'
-                                   });
+              if (arrOrario[i].giorno == giorni_settimana[data_cur.getDay()]) {
+                ora_inizio = arrOrario[i].descrizione_slot.substring(0, 2);
+                ora_fine = arrOrario[i].descrizione_slot.substring(6, 8);
+                calendar.addEvent({
+                  title: titolo_evento,
+                  displayEventTime: true,
+                  displayEventEnd: true,
+                  start: data_cur.setHours(ora_inizio),
+                  end: data_cur.setHours(ora_fine),
+                  editable: true,
+                  color: arrOrario[i].colore_attivita,
+                  textColor: '#000000',
+                  description: '<b>' + arrOrario[i].descrizione_attivita + '</b><br>'
+                          + '<i>' + arrOrario[i].cognome_docente + ' ' + arrOrario[i].nome_docente + '</i>'
+                });
               }
             }
           }
+          calendar.addEvent({
+              title:"",
+              start:data_cur.setHours("13"),
+              end:data_cur.setHours("14"),
+              displayEventTime:false,
+              editable:false,
+              color:'#DDDDDD',
+              textColor:'#000000',
+              description:'Pausa lezioni'
+            });
         }
       }
 
