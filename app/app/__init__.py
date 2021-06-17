@@ -13,3 +13,8 @@ db = SQLA(app)
 appbuilder = AppBuilder(app, db.session, security_manager_class=MySecurityManager)
 
 from . import models, views  # noqa
+from . import util
+
+@app.before_first_request
+def before_request_func():
+  util.inizializza_db()

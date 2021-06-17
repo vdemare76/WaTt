@@ -1,7 +1,7 @@
 from .models import AnnoAccademico, CorsoDiStudio, AttivitaDidattica, \
     Docente, Aula, Offerta, LogisticaDocente, Modulo, Giorno, Slot, \
     OrarioTestata, OrarioDettaglio, Orario, StatoOrario
-from .import appbuilder, db
+from .import db
 from flask import flash
 from sqlalchemy.exc import SQLAlchemyError
 from .solver_models import ModuloTt, AulaTt, CorsoDiStudioTt, SlotTt, GiornoTt
@@ -369,7 +369,7 @@ def __registraDatiInDb():
         flash("Errore di caricamento dati nel DB")
     return -1
 
-def inizializzaDb():
+def caricaDatiTest():
     try:
         __svuotaTabelle()
         __impostaDatiIniziali()

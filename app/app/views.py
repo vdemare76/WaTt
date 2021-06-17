@@ -10,8 +10,9 @@ from wtforms import validators
 from .import appbuilder, db
 from .models import AnnoAccademico, CorsoDiStudio, AttivitaDidattica, Docente, Aula, Offerta, \
                     LogisticaDocente, Modulo, Giorno, Slot, Orario, OrarioTestata, OrarioDettaglio, Chiusura
+
 from flask.templating import render_template
-from .util import inizializzaDb, svuotaDb, getColori, inizializza_db
+from .util import caricaDatiTest, svuotaDb, getColori
 from .solver import AlgoritmoCompleto
 from datetime import timedelta
 
@@ -267,7 +268,7 @@ class UtilitaView(BaseView):
     @has_access
     def srv_util(self, target=None):     
         if target=="initdb":
-            if inizializzaDb()==0:
+            if caricaDatiTest()==0:
                 flash('Inizializzazione del db effettuata correttamente!','success')
             else:    
                 flash('Errore nella fase di inizializzazione del db.','error')
@@ -358,9 +359,6 @@ class CalendarioView(BaseView):
 
 db.create_all()
 
-# Inizializza il db con i dati di base
-inizializza_db()
-
 appbuilder.add_view(SlotView, "Slot", icon="fa-clock-o", category="Tabelle di base")
 
 appbuilder.add_view(GiorniView, "Giorni", icon="fa-calendar-check-o", category="Tabelle di base")
@@ -395,4 +393,5 @@ appbuilder.add_view(SchemaSettimanaleView, "Schema settimanale",  icon="fa-calen
 
 appbuilder.add_view(CalendarioView, "Calendario orario",  icon="fa-clipboard", category="Orario")
 
-
+# Inizializza il db con i dati di base
+#inizializza_db()
