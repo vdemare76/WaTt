@@ -53,7 +53,6 @@ def __svuotaTabelle():
     db.session.execute('ALTER TABLE orario AUTO_INCREMENT = 1')
     db.session.execute('ALTER TABLE orario_testata AUTO_INCREMENT = 1')
     db.session.execute('ALTER TABLE orario_dettaglio AUTO_INCREMENT = 1')
-
     db.session.commit()
     
 def __impostaDatiIniziali():

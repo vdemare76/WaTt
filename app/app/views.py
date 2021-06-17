@@ -11,7 +11,7 @@ from .import appbuilder, db
 from .models import AnnoAccademico, CorsoDiStudio, AttivitaDidattica, Docente, Aula, Offerta, \
                     LogisticaDocente, Modulo, Giorno, Slot, Orario, OrarioTestata, OrarioDettaglio, Chiusura
 from flask.templating import render_template
-from .util import inizializzaDb, svuotaDb, getColori
+from .util import inizializzaDb, svuotaDb, getColori, inizializza_db
 from .solver import AlgoritmoCompleto
 from datetime import timedelta
 
@@ -357,6 +357,9 @@ class CalendarioView(BaseView):
                                chiusure=vChiusure)
 
 db.create_all()
+
+# Inizializza il db con i dati di base
+inizializza_db()
 
 appbuilder.add_view(SlotView, "Slot", icon="fa-clock-o", category="Tabelle di base")
 
