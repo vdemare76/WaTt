@@ -13,6 +13,7 @@ RUN pip install flask-appbuilder
 RUN pip install python-ldap
 RUN pip install --upgrade werkzeug==0.16.1
 RUN pip install pulp
+RUN pip install amply
 RUN pip install pyopenssl
 RUN pip install requests
 
