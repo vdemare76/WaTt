@@ -3,7 +3,7 @@
   <component name="ChangeListManager">
     <list default="true" id="4bd4ca69-5fab-4bca-9aae-55bf4e9525ff" name="Default Changelist" comment="Update">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/app/templates/calendar.html" beforeDir="false" afterPath="$PROJECT_DIR$/app/app/templates/calendar.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docker-app" beforeDir="false" afterPath="$PROJECT_DIR$/docker-app" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -32,11 +32,12 @@
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/../WattNew" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/app/app/templates" />
     <property name="settings.editor.selected.configurable" value="preferences.lookFeel" />
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\enzo\PyCharmProjects\Watt\app\app\templates" />
       <recent name="C:\Users\enzo\PyCharmProjects\Watt\app\app" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
@@ -86,7 +87,15 @@
       <workItem from="1623342486648" duration="16688000" />
       <workItem from="1623399745351" duration="2976000" />
       <workItem from="1623609281568" duration="1553000" />
-      <workItem from="1623946995368" duration="9422000" />
+      <workItem from="1623946995368" duration="10581000" />
+      <workItem from="1625331534137" duration="1157000" />
+      <workItem from="1627312120331" duration="1240000" />
+      <workItem from="1627313884829" duration="4001000" />
+      <workItem from="1627591267302" duration="302000" />
+      <workItem from="1627629432888" duration="2793000" />
+      <workItem from="1628714275534" duration="3108000" />
+      <workItem from="1628876853273" duration="437000" />
+      <workItem from="1628877459368" duration="463000" />
     </task>
     <task id="LOCAL-00001" summary="Update">
       <created>1620594033349</created>
@@ -340,7 +349,14 @@
       <option name="project" value="LOCAL" />
       <updated>1623959189338</updated>
     </task>
-    <option name="localTasksCounter" value="37" />
+    <task id="LOCAL-00037" summary="Update">
+      <created>1623961287801</created>
+      <option name="number" value="00037" />
+      <option name="presentableId" value="LOCAL-00037" />
+      <option name="project" value="LOCAL" />
+      <updated>1623961287801</updated>
+    </task>
+    <option name="localTasksCounter" value="38" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
