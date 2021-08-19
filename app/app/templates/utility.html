@@ -19,6 +19,13 @@
 	      			Inizializza il database con dati di test
 	      		</button>  	  	  	  		  
 			</div>
+			<br>
+			<div>
+				<p>Invoca Login Esse3</p>
+	      		<button type="button" class="btn btn-primary" onclick="login_esse3()">
+	      			Inizializza il database con dati di test
+	      		</button>
+			</div>
 		</form>
 	</div>
 	
@@ -39,7 +46,11 @@
 			window.location.href="{{ url_for('UtilitaView.srv_util', target='emptydb')}}";
         });
 		$('#modal-confirm-w').modal('show');
-	}	
+	}
+
+	function login_esse3() {
+		window.location.href="{{ url_for('UtilitaView.srv_util', target='login_esse3')}}";
+	}
 	</script>
 	
 {% endblock %}
