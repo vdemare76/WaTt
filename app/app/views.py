@@ -1,4 +1,4 @@
-from flask import flash, render_template, redirect, url_for, request
+from flask import flash, render_template, redirect, url_for, request, g
 from flask_appbuilder import ModelView, BaseView, expose, has_access, action
 from flask_appbuilder.models.sqla.interface import SQLAInterface
 from sqlalchemy.exc import SQLAlchemyError
@@ -8,7 +8,9 @@ from flask_appbuilder.fields import AJAXSelectField
 from wtforms import validators
 
 from .import appbuilder, db
-import requests, base64
+from ldap3 import Server, Connection, ALL, SUBTREE
+from ldap3.core.exceptions import LDAPException, LDAPBindError, LDAPSocketOpenError
+import requests, base64, config
 from .models import AnnoAccademico, CorsoDiStudio, AttivitaDidattica, Docente, Aula, Offerta, \
                     LogisticaDocente, Modulo, Giorno, Slot, Orario, OrarioTestata, OrarioDettaglio, Chiusura
 
@@ -279,24 +281,7 @@ class UtilitaView(BaseView):
             else:    
                 flash('Errore nella fase di svuotamento del db.','error')
         elif target == "login_esse3":
-            url = "https://uniparthenope.esse3.cineca.it/e3rest/api/"
-            headers = {
-                'Content-Type': "application/json",
-                "Authorization": "Basic " + "MDEwODAwMTY3MjoyMkxlb24wOQ=="
-            }
-            response = requests.request("GET", url + "login", headers=headers, timeout=60)
-            r = response.json()
-            token = r["authToken"]
-            message_bytes = token.encode('utf-8')
-            base64_bytes = base64.b64encode(message_bytes)
-            base64_message = base64_bytes.decode('utf-8')
-
-            headers = {
-                'Content-Type': "application/json",
-                "Authorization": "Basic " + base64_message
-            }
-            response = requests.request("GET", url + "offerta-service-v1/offerte?aaOffId=2020", headers=headers, timeout=60)
-            flash(response.json())
+            flash('ENZO')
         return redirect(url_for('UtilitaView.srv_home'));
 
 class PreferenzeView(BaseView):

@@ -16,6 +16,7 @@ RUN pip install pulp
 RUN pip install amply
 RUN pip install pyopenssl
 RUN pip install requests
+RUN pip install ldap3
 
 COPY app/ ./
 COPY app/custom/manager.py /usr/local/lib/python3.6/site-packages/flask_appbuilder/security/

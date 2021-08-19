@@ -1,4 +1,11 @@
+from flask import flash, render_template, redirect, url_for, request
+from flask_appbuilder import ModelView, BaseView, expose, has_access, action
+from flask_appbuilder.models.sqla.interface import SQLAInterface
+from sqlalchemy.exc import SQLAlchemyError
+
 import requests, base64
+import ldap
+from ldap.filter import escape_filter_chars
 
 url = "https://uniparthenope.esse3.cineca.it/e3rest/api/"
 headers = {
@@ -6,16 +13,21 @@ headers = {
     "Authorization": "Basic " + "MDEwODAwMTY3MjoyMkxlb24wOQ=="
 }
 
-response = requests.request("GET", url + "login", headers=headers, timeout=60)
-            r = response.json()
-            token = r["authToken"]
-            message_bytes = token.encode('utf-8')
-            base64_bytes = base64.b64encode(message_bytes)
-            base64_message = base64_bytes.decode('utf-8')
+def getToken():
+    s = Server(172.100.0.3, get_info=ALL)  # define an unsecure LDAP server, requesting info on DSE and schema
 
-            headers = {
-                'Content-Type': "application/json",
-                "Authorization": "Basic " + base64_message
-            }
-            response = requests.request("GET", url + "offerta-service-v1/offerte?aaOffId=2020", headers=headers, timeout=60)
-            flash(response.json())
+    # the following is the user_dn format provided by the ldap server
+    user_dn = "uid=" + user + ",ou=people,dc=uniparthenope,dc=it"
+
+    # define the connection
+    c = Connection(s, user=user_dn, password=passwd)
+    # print(c)
+
+    # perform the Bind operation
+    c.bind()
+
+    if c.result['result'] == 0:
+        print("LDAP people!")
+
+        c.result["user"] = {"grpDes": "PTA", "grpId": 99, "userId": user}
+        return c.result
