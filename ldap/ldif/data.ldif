@@ -190,6 +190,7 @@ uid: tam202002
 uidNumber: 202002
 userPassword: pw202002
 role: wattTamm
+token: pippo
 
 dn: uid=stu203001,cn=Studenti,ou=ScienzeTecnologie,dc=uniparthenope,dc=it
 changetype: add
