@@ -175,6 +175,7 @@ uid: tam202001
 uidNumber: 202001
 userPassword: pw202001
 role: wattTamm
+token: testToken
 
 dn: uid=tam202002,cn=PersonaleTA,ou=ScienzeTecnologie,dc=uniparthenope,dc=it
 changetype: add
