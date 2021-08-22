@@ -15,7 +15,13 @@ def getAuthToken(token):
         }
 
         response = requests.request("GET", url + "login", headers=headers, timeout=60)
-        return response.json()['authToken']
+        authTokenString = response.json()['authToken']
+
+        sample_string_bytes = authTokenString.encode("ascii")
+        b64_bytes = base64.b64encode(sample_string_bytes)
+        b64_token = b64_bytes.decode("ascii")
+
+        return b64_token
 
     except requests.exceptions.Timeout as e:
         return {'errMsg': 'Timeout Error!'}, 500
@@ -27,3 +33,20 @@ def getAuthToken(token):
         return {'errMsg': str(e)}, 500
 
 def getAnniAccademici(token):
+    try:
+        headers = {
+            'Content-Type': 'application/json',
+            'Authorization': 'Basic ' + token
+        }
+
+        response = requests.request("GET", url + "/offerta-service-v1/offerte", headers=headers, timeout=60)
+        return response.json()
+
+    except requests.exceptions.Timeout as e:
+        return {'errMsg': 'Timeout Error!'}, 500
+
+    except requests.exceptions.TooManyRedirects as e:
+        return {'errMsg': str(e)}, 500
+
+    except requests.exceptions.RequestException as e:
+        return {'errMsg': str(e)}, 500

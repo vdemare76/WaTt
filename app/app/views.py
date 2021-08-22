@@ -8,7 +8,7 @@ from flask_appbuilder.fields import AJAXSelectField
 from wtforms import validators
 
 from .import appbuilder, db
-import requests, base64
+import requests
 from .models import AnnoAccademico, CorsoDiStudio, AttivitaDidattica, Docente, Aula, Offerta, \
                     LogisticaDocente, Modulo, Giorno, Slot, Orario, OrarioTestata, OrarioDettaglio, Chiusura
 
