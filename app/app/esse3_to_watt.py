@@ -4,30 +4,26 @@ from flask_appbuilder.models.sqla.interface import SQLAInterface
 from sqlalchemy.exc import SQLAlchemyError
 
 import requests, base64
-import ldap
-from ldap.filter import escape_filter_chars
 
 url = "https://uniparthenope.esse3.cineca.it/e3rest/api/"
-headers = {
-    'Content-Type': "application/json",
-    "Authorization": "Basic " + "MDEwODAwMTY3MjoyMkxlb24wOQ=="
-}
 
-def getToken():
-    s = Server(172.100.0.3, get_info=ALL)  # define an unsecure LDAP server, requesting info on DSE and schema
+def getAuthToken(token):
+    try:
+        headers = {
+            'Content-Type': 'application/json',
+            'Authorization': 'Basic ' + token
+        }
 
-    # the following is the user_dn format provided by the ldap server
-    user_dn = "uid=" + user + ",ou=people,dc=uniparthenope,dc=it"
+        response = requests.request("GET", url + "login", headers=headers, timeout=60)
+        return response.json()['authToken']
 
-    # define the connection
-    c = Connection(s, user=user_dn, password=passwd)
-    # print(c)
+    except requests.exceptions.Timeout as e:
+        return {'errMsg': 'Timeout Error!'}, 500
 
-    # perform the Bind operation
-    c.bind()
+    except requests.exceptions.TooManyRedirects as e:
+        return {'errMsg': str(e)}, 500
 
-    if c.result['result'] == 0:
-        print("LDAP people!")
+    except requests.exceptions.RequestException as e:
+        return {'errMsg': str(e)}, 500
 
-        c.result["user"] = {"grpDes": "PTA", "grpId": 99, "userId": user}
-        return c.result
+def getAnniAccademici(token):

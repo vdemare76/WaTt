@@ -6,6 +6,10 @@ from flask import flash
 from sqlalchemy.exc import SQLAlchemyError
 from .solver_models import ModuloTt, AulaTt, CorsoDiStudioTt, SlotTt, GiornoTt
 
+from ldap3 import Server, Connection, ALL, SUBTREE
+from ldap3.core.exceptions import LDAPException, LDAPBindError, LDAPSocketOpenError
+import config
+
 colori = {
     1:"#FF0000",
     2:"#4169E1",
@@ -469,3 +473,25 @@ def inizializza_db():
     except SQLAlchemyError:
         flash("Errore di inizializzazione del db")
         return -1
+
+def getLdapToken(uid):
+
+    try:
+        ldap_server = Server(config.AUTH_LDAP_SERVER+":"+config.AUTH_LDAP_PORT, get_info=ALL)
+        ldap_connection = Connection(ldap_server, user = 'cn=admin,dc=uniparthenope,dc=it',password='wattpw01')
+
+        if ldap_connection.bind() == True:
+            if ldap_connection.search(search_base=config.AUTH_LDAP_SEARCH, search_filter=f'(uid={uid})',search_scope = SUBTREE, attributes=['token']) == True:
+                ent = ldap_connection.entries[0]
+                ldap_connection.unbind()
+                try:
+                    token = ent['token'][0]
+                except IndexError:
+                    token = None
+                return token
+            else:
+                return None
+
+    except LDAPSocketOpenError:
+        print('Unabled to connect to the LDAP server!')
+        return None

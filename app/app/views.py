@@ -8,14 +8,13 @@ from flask_appbuilder.fields import AJAXSelectField
 from wtforms import validators
 
 from .import appbuilder, db
-from ldap3 import Server, Connection, ALL, SUBTREE
-from ldap3.core.exceptions import LDAPException, LDAPBindError, LDAPSocketOpenError
-import requests, base64, config
+import requests, base64
 from .models import AnnoAccademico, CorsoDiStudio, AttivitaDidattica, Docente, Aula, Offerta, \
                     LogisticaDocente, Modulo, Giorno, Slot, Orario, OrarioTestata, OrarioDettaglio, Chiusura
 
 from flask.templating import render_template
-from .util import caricaDatiTest, svuotaDb, getColori
+from .util import caricaDatiTest, svuotaDb, getColori, getLdapToken
+from .esse3_to_watt import getAuthToken
 from .solver import AlgoritmoCompleto
 from datetime import timedelta
 
@@ -281,7 +280,12 @@ class UtilitaView(BaseView):
             else:    
                 flash('Errore nella fase di svuotamento del db.','error')
         elif target == "login_esse3":
-            flash('ENZO')
+            ldapToken = getLdapToken(g.user.username)
+            if ldapToken == None:
+                flash("Utente non in possesso del token per l'utilizzo delle API - Esse3",'error')
+            else:
+                r = getAuthToken(ldapToken)
+                flash(r)
         return redirect(url_for('UtilitaView.srv_home'));
 
 class PreferenzeView(BaseView):

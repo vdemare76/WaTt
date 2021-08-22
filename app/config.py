@@ -30,6 +30,7 @@ LANGUAGES = {
 AUTH_TYPE = AUTH_LDAP
 
 AUTH_LDAP_SERVER = "ldap://172.100.0.3"
+AUTH_LDAP_PORT = "389"
 AUTH_LDAP_USE_TLS = False
 
 AUTH_LDAP_SEARCH = "dc=uniparthenope,dc=it"
