@@ -4,6 +4,8 @@
     <list default="true" id="4bd4ca69-5fab-4bca-9aae-55bf4e9525ff" name="Default Changelist" comment="Update">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/app/esse3_to_watt.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/app/esse3_to_watt.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/app/templates/preferences.html" beforeDir="false" afterPath="$PROJECT_DIR$/app/app/templates/preferences.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/app/templates/utility.html" beforeDir="false" afterPath="$PROJECT_DIR$/app/app/templates/utility.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/app/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/app/views.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -34,6 +36,7 @@
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="nodejs_package_manager_path" value="npm" />
     <property name="settings.editor.selected.configurable" value="preferences.lookFeel" />
   </component>
   <component name="RecentsManager">
@@ -42,6 +45,7 @@
       <recent name="C:\Users\enzo\PyCharmProjects\Watt\app\app" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\enzo\PyCharmProjects\Watt\app\app\static\bootstrap-select\dist" />
       <recent name="$PROJECT_DIR$/app" />
       <recent name="$PROJECT_DIR$/app/app" />
     </key>
@@ -103,14 +107,9 @@
       <workItem from="1629385225486" duration="10593000" />
       <workItem from="1629401091908" duration="8493000" />
       <workItem from="1629452834214" duration="9819000" />
-      <workItem from="1629647227984" duration="7574000" />
-    </task>
-    <task id="LOCAL-00009" summary="Update">
-      <created>1623144432785</created>
-      <option name="number" value="00009" />
-      <option name="presentableId" value="LOCAL-00009" />
-      <option name="project" value="LOCAL" />
-      <updated>1623144432785</updated>
+      <workItem from="1629647227984" duration="8566000" />
+      <workItem from="1629740918361" duration="4317000" />
+      <workItem from="1629913839543" duration="5349000" />
     </task>
     <task id="LOCAL-00010" summary="Update">
       <created>1623226000082</created>
@@ -448,7 +447,14 @@
       <option name="project" value="LOCAL" />
       <updated>1629654237738</updated>
     </task>
-    <option name="localTasksCounter" value="58" />
+    <task id="LOCAL-00058" summary="Update">
+      <created>1629666369829</created>
+      <option name="number" value="00058" />
+      <option name="presentableId" value="LOCAL-00058" />
+      <option name="project" value="LOCAL" />
+      <updated>1629666369829</updated>
+    </task>
+    <option name="localTasksCounter" value="59" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -481,11 +487,6 @@
           <url>file://$PROJECT_DIR$/app/app/views.py</url>
           <line>15</line>
           <option name="timeStamp" value="2" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/app/app/views.py</url>
-          <line>269</line>
-          <option name="timeStamp" value="3" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

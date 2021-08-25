@@ -14,7 +14,7 @@ from .models import AnnoAccademico, CorsoDiStudio, AttivitaDidattica, Docente, A
 
 from flask.templating import render_template
 from .util import caricaDatiTest, svuotaDb, getColori, getLdapToken
-from .esse3_to_watt import getAuthToken
+from .esse3_to_watt import getAuthToken, getAcademicYears
 from .solver import AlgoritmoCompleto
 from datetime import timedelta
 
@@ -284,9 +284,11 @@ class UtilitaView(BaseView):
             if ldapToken == None:
                 flash("Utente non in possesso del token per l'utilizzo delle API - Esse3",'error')
             else:
-                r = getAuthToken(ldapToken)
-                flash(r)
-        return redirect(url_for('UtilitaView.srv_home'));
+                authToken = getAuthToken(ldapToken)
+                academicYears = getAcademicYears(authToken)
+
+        return render_template("utility.html", base_template=appbuilder.base_template, appbuilder=appbuilder, academicYears=academicYears)
+    '''  redirect(url_for('UtilitaView.srv_home'));    '''
 
 class PreferenzeView(BaseView):
     default_view = 'prf_home'

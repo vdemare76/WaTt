@@ -1,9 +1,12 @@
 {% extends "appbuilder/base.html" %}
 
 {% block content %}	
-	{% include "confirm_msg.html" %}	
+	{% include "confirm_msg.html" %}
 
-	<div class="container">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.2/css/bootstrap-select.min.css">
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.2/js/bootstrap-select.min.js"></script>
+
+    <div class="container">
 	  <h2>Funzioni di utilità</h2>
 		<form method="post">
 			<div>
@@ -21,10 +24,38 @@
 			</div>
 			<br>
 			<div>
-				<p>Invoca Login Esse3</p>
+				<p>Upload data from the student career management procedure (Esse3)</p>
 	      		<button type="button" class="btn btn-primary" onclick="login_esse3()">
-	      			Inizializza il database con dati di test
+	      			Load the academic years for which there is a training offer in the database
 	      		</button>
+			</div>
+			<br>
+			<div>
+				<select name="academicYears" id="academicYears">
+					{% for a in academicYears %}
+						<option value={{a}}>{{a}}/{{a+1}}</option>
+					{% endfor %}
+				</select>
+			   	<select class="selectpicker" multiple>
+					<optgroup label="Color">
+						<option value="red">Red</option>
+						<option value="green">Green</option>
+						<option value="blue">Blue</option>
+					</optgroup>
+					<optgroup label="Style">
+						<option value="square" >Square</option>
+						<option value="sphere">Sphere</option>
+					</optgroup>
+					<optgroup label="Size">
+						<option value="tiny">Tiny</option>
+						<option value="smallest">Smallest</option>
+						<option value="small">Small</option>
+						<option value="medium">Medium</option>
+						<option value="big">Big</option>
+						<option value="biggest">Biggest</option>
+						<option value="huge">Huge</option>
+					</optgroup>
+				</select>
 			</div>
 		</form>
 	</div>

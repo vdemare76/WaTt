@@ -32,7 +32,9 @@ def getAuthToken(token):
     except requests.exceptions.RequestException as e:
         return {'errMsg': str(e)}, 500
 
-def getAnniAccademici(token):
+''' Returns a list of academic years for which an educational offer is registered.
+    Example 2020 stands for 2020-21'''
+def getAcademicYears(token):
     try:
         headers = {
             'Content-Type': 'application/json',
@@ -40,7 +42,14 @@ def getAnniAccademici(token):
         }
 
         response = requests.request("GET", url + "/offerta-service-v1/offerte", headers=headers, timeout=60)
-        return response.json()
+        data = response.json()
+        size = len(data)
+        uniqueAY = [];
+        for i in range(0, size, 1):
+            if (data[i]["aaOffId"] not in uniqueAY and data[i]["aaOffId"]>=2017):
+                uniqueAY.append(data[i]["aaOffId"]);
+        uniqueAY.sort()
+        return uniqueAY
 
     except requests.exceptions.Timeout as e:
         return {'errMsg': 'Timeout Error!'}, 500
