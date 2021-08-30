@@ -288,10 +288,10 @@ class UtilitaView(BaseView):
                                    appbuilder=appbuilder,
                                    academicYears=session['academicYears'])
 
-        elif target == "load_educational_offer":
-            flash(session)
-            flash(session.get('aayy'))
-            educationalOffer = getEducationalOffer(2020)
+        elif target.startswith("load_educational_offer"):
+            flash(target)
+            flash(request.args.get('academicYear'))
+            educationalOffer=getEducationalOffer(2020)
             return render_template("utility.html",
                                    base_template=appbuilder.base_template,
                                    appbuilder=appbuilder,

@@ -69,7 +69,7 @@
 	}
 
 	function load_educational_offer(ay) {
-		window.location.href="{{ url_for('UtilitaView.srv_util', target='load_educational_offer'')}}";
+		window.location.href="{{ url_for('UtilitaView.srv_util', target='load_educational_offer?academicYear=2020') | replace('%3F', '?') | replace('%3D', '=')}}";
 	}
 	</script>
 	
