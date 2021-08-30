@@ -1,4 +1,4 @@
-from flask import flash, render_template, redirect, url_for, request, g
+from flask import flash, render_template, redirect, url_for, request, g, session
 from flask_appbuilder import ModelView, BaseView, expose, has_access, action
 from flask_appbuilder.models.sqla.interface import SQLAInterface
 from sqlalchemy.exc import SQLAlchemyError
@@ -13,8 +13,8 @@ from .models import AnnoAccademico, CorsoDiStudio, AttivitaDidattica, Docente, A
                     LogisticaDocente, Modulo, Giorno, Slot, Orario, OrarioTestata, OrarioDettaglio, Chiusura
 
 from flask.templating import render_template
-from .util import caricaDatiTest, svuotaDb, getColori, getLdapToken
-from .esse3_to_watt import getAuthToken, getAcademicYears
+from .util import caricaDatiTest, svuotaDb, getColori
+from .esse3_to_watt import getAuthToken, getAcademicYears, getEducationalOffer
 from .solver import AlgoritmoCompleto
 from datetime import timedelta
 
@@ -266,29 +266,39 @@ class UtilitaView(BaseView):
     def srv_home(self, name=None):
         return render_template("utility.html", base_template=appbuilder.base_template, appbuilder=appbuilder)
     
-    @expose('/srv_initdb/<target>')
+    @expose('/srv_initdb/<target>/')
     @has_access
-    def srv_util(self, target=None):     
+    def srv_util(self, target=None, academicYear=None):
         if target=="initdb":
             if caricaDatiTest()==0:
                 flash('Inizializzazione del db effettuata correttamente!','success')
             else:    
                 flash('Errore nella fase di inizializzazione del db.','error')
+
         elif target=="emptydb":
             if svuotaDb()==0:
                 flash('Db svuotato correttamente!','success')
             else:    
                 flash('Errore nella fase di svuotamento del db.','error')
-        elif target == "login_esse3":
-            ldapToken = getLdapToken(g.user.username)
-            if ldapToken == None:
-                flash("Utente non in possesso del token per l'utilizzo delle API - Esse3",'error')
-            else:
-                authToken = getAuthToken(ldapToken)
-                academicYears = getAcademicYears(authToken)
 
-        return render_template("utility.html", base_template=appbuilder.base_template, appbuilder=appbuilder, academicYears=academicYears)
-    '''  redirect(url_for('UtilitaView.srv_home'));    '''
+        elif target == "load_academic_years":
+            session['academicYears'] = getAcademicYears()
+            return render_template("utility.html",
+                                   base_template=appbuilder.base_template,
+                                   appbuilder=appbuilder,
+                                   academicYears=session['academicYears'])
+
+        elif target == "load_educational_offer":
+            flash(session)
+            flash(session.get('aayy'))
+            educationalOffer = getEducationalOffer(2020)
+            return render_template("utility.html",
+                                   base_template=appbuilder.base_template,
+                                   appbuilder=appbuilder,
+                                   academicYears=session['academicYears'],
+                                   educationalOffer=educationalOffer)
+
+        return render_template("utility.html", base_template=appbuilder.base_template, appbuilder=appbuilder)
 
 class PreferenzeView(BaseView):
     default_view = 'prf_home'

@@ -7,54 +7,39 @@
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.2/js/bootstrap-select.min.js"></script>
 
     <div class="container">
-	  <h2>Funzioni di utilità</h2>
 		<form method="post">
+			<h4>Utility functions</h4>
 			<div>
-				<p>Svuota il database</p>	
-	      		<button type="button" class="btn btn-primary" onclick="empty_db()">
-	      			Svuota DB
-	      		</button>  	  	  	  		  
+				<button type="button" class="btn btn-primary" onclick="empty_db()">Empty the db</button>
 			</div>
 			<br>
+			<h4>Empty the db and load the test data</h4>
 			<div>
-				<p>Svuota il database e carica i dati di test</p>	
-	      		<button type="button" class="btn btn-primary" onclick="init_db()">
-	      			Inizializza il database con dati di test
-	      		</button>  	  	  	  		  
+				<button type="button" class="btn btn-primary" onclick="init_db()">Empty and load data</button>
 			</div>
 			<br>
+			<h4>Upload data from the student career management procedure (Esse3)</h4>
 			<div>
-				<p>Upload data from the student career management procedure (Esse3)</p>
-	      		<button type="button" class="btn btn-primary" onclick="login_esse3()">
-	      			Load the academic years for which there is a training offer in the database
-	      		</button>
-			</div>
-			<br>
-			<div>
+				<button type="button" class="btn btn-primary" onclick="load_academic_years()">
+					Load the academic years for which there is a training offer in the database
+				</button>
+				<br><br>
 				<select name="academicYears" id="academicYears">
 					{% for a in academicYears %}
-						<option value={{a}}>{{a}}/{{a+1}}</option>
+						<option value={{a}}>{{a}}</option>
 					{% endfor %}
 				</select>
-			   	<select class="selectpicker" multiple>
-					<optgroup label="Color">
-						<option value="red">Red</option>
-						<option value="green">Green</option>
-						<option value="blue">Blue</option>
-					</optgroup>
-					<optgroup label="Style">
-						<option value="square" >Square</option>
-						<option value="sphere">Sphere</option>
-					</optgroup>
-					<optgroup label="Size">
-						<option value="tiny">Tiny</option>
-						<option value="smallest">Smallest</option>
-						<option value="small">Small</option>
-						<option value="medium">Medium</option>
-						<option value="big">Big</option>
-						<option value="biggest">Biggest</option>
-						<option value="huge">Huge</option>
-					</optgroup>
+			</div>
+			<br>
+			<div>
+				<button type="button" class="btn btn-primary" onclick="load_educational_offer($('#academicYears').val())">
+					Load the educational offer for the selected year
+				</button>
+				<br><br>
+				<select class="selectpicker" multiple data-live-search="true">
+					{% for e in educationalOffer %}
+						<option value={{e["courseId"]}}>{{e["courseCod"]}} - {{e["courseDes"]}}</option>
+					{% endfor %}
 				</select>
 			</div>
 		</form>
@@ -79,8 +64,12 @@
 		$('#modal-confirm-w').modal('show');
 	}
 
-	function login_esse3() {
-		window.location.href="{{ url_for('UtilitaView.srv_util', target='login_esse3')}}";
+	function load_academic_years() {
+		window.location.href="{{ url_for('UtilitaView.srv_util', target='load_academic_years')}}";
+	}
+
+	function load_educational_offer(ay) {
+		window.location.href="{{ url_for('UtilitaView.srv_util', target='load_educational_offer'')}}";
 	}
 	</script>
 	
