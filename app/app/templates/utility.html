@@ -7,7 +7,7 @@
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.2/js/bootstrap-select.min.js"></script>
 
     <div class="container">
-		<form method="post">
+		<form method="post" id="form_post" method="post" action="{{url_for('UtilitaView.srv_util')}}">
 			<h4>Utility functions</h4>
 			<div>
 				<button type="button" class="btn btn-primary" onclick="empty_db()">Empty the db</button>
@@ -25,23 +25,35 @@
 				</button>
 				<br><br>
 				<select name="academicYears" id="academicYears">
+					$('#academicYears).empty()
 					{% for a in academicYears %}
-						<option value={{a}}>{{a}}</option>
+						{% if a == selectedAcademicYear|int %}
+							<option selected="selected" value={{a}}>{{a}}/{{a+1}}</option>
+						{% else %}
+							<option value={{a}}>{{a}}/{{a+1}}</option>
+						{% endif %}
 					{% endfor %}
 				</select>
 			</div>
 			<br>
 			<div>
-				<button type="button" class="btn btn-primary" onclick="load_educational_offer($('#academicYears').val())">
+				<button type="button" class="btn btn-primary" onclick="load_educational_offer()">
 					Load the educational offer for the selected year
 				</button>
 				<br><br>
-				<select class="selectpicker" multiple data-live-search="true">
+				<select name="courses" id="courses" class="selectpicker" multiple data-live-search="true">
 					{% for e in educationalOffer %}
 						<option value={{e["courseId"]}}>{{e["courseCod"]}} - {{e["courseDes"]}}</option>
 					{% endfor %}
 				</select>
 			</div>
+			<br>
+			<div>
+				<button type="button" class="btn btn-primary" onclick="load_course_data()">
+					Upload the data of the selected courses
+				</button>
+			</div>
+			<input type="text" id="target" name="target" value="" style="display:none">
 		</form>
 	</div>
 	
@@ -65,13 +77,19 @@
 	}
 
 	function load_academic_years() {
-		window.location.href="{{ url_for('UtilitaView.srv_util', target='load_academic_years')}}";
+		$('#target').val("load_academic_years")
+		$('#form_post').submit();
 	}
 
-	function load_educational_offer(ay) {
-		window.location.href="{{ url_for('UtilitaView.srv_util', target='load_educational_offer?academicYear=2020') | replace('%3F', '?') | replace('%3D', '=')}}";
+	function load_educational_offer() {
+		$('#target').val("load_educational_offer")
+		$('#form_post').submit();
+	}
+
+	function load_course_data() {
+		$('#target').val("load_course_data")
+		$('#form_post').submit();
 	}
 	</script>
-	
-{% endblock %}
 
+{% endblock %}

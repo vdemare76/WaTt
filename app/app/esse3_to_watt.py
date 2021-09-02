@@ -103,3 +103,4 @@ def getEducationalOffer(academicYear):
 
     except requests.exceptions.RequestException as e:
         return {'errMsg': str(e)}, 500
+

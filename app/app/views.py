@@ -14,7 +14,7 @@ from .models import AnnoAccademico, CorsoDiStudio, AttivitaDidattica, Docente, A
 
 from flask.templating import render_template
 from .util import caricaDatiTest, svuotaDb, getColori
-from .esse3_to_watt import getAuthToken, getAcademicYears, getEducationalOffer
+from .esse3_to_watt import getAcademicYears, getEducationalOffer
 from .solver import AlgoritmoCompleto
 from datetime import timedelta
 
@@ -265,10 +265,11 @@ class UtilitaView(BaseView):
     @has_access
     def srv_home(self, name=None):
         return render_template("utility.html", base_template=appbuilder.base_template, appbuilder=appbuilder)
-    
-    @expose('/srv_initdb/<target>/')
+
+    @expose('/srv_initdb', methods=['GET','POST'])
     @has_access
-    def srv_util(self, target=None, academicYear=None):
+    def srv_util(self, target=None):
+        target=request.form.get("target")
         if target=="initdb":
             if caricaDatiTest()==0:
                 flash('Inizializzazione del db effettuata correttamente!','success')
@@ -286,16 +287,16 @@ class UtilitaView(BaseView):
             return render_template("utility.html",
                                    base_template=appbuilder.base_template,
                                    appbuilder=appbuilder,
+                                   selectedAcademicYear=1000,
                                    academicYears=session['academicYears'])
 
-        elif target.startswith("load_educational_offer"):
-            flash(target)
-            flash(request.args.get('academicYear'))
-            educationalOffer=getEducationalOffer(2020)
+        elif target == "load_educational_offer":
+            educationalOffer=getEducationalOffer(request.form.get("academicYears"))
             return render_template("utility.html",
                                    base_template=appbuilder.base_template,
                                    appbuilder=appbuilder,
                                    academicYears=session['academicYears'],
+                                   selectedAcademicYear=request.form.get("academicYears"),
                                    educationalOffer=educationalOffer)
 
         return render_template("utility.html", base_template=appbuilder.base_template, appbuilder=appbuilder)
