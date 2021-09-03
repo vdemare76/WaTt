@@ -104,3 +104,24 @@ def getEducationalOffer(academicYear):
     except requests.exceptions.RequestException as e:
         return {'errMsg': str(e)}, 500
 
+def getCouseData(academicYear, courses):
+    token = None
+    if 'Authorization' in request.headers:
+        token = request.headers['Authorization']
+    else:
+        token = getAuthToken(token)
+
+    try:
+        headers = {
+            'Content-Type': 'application/json',
+            'Authorization': 'Basic ' + token
+        }
+
+    except requests.exceptions.Timeout as e:
+        return {'errMsg': 'Timeout Error!'}, 500
+
+    except requests.exceptions.TooManyRedirects as e:
+        return {'errMsg': str(e)}, 500
+
+    except requests.exceptions.RequestException as e:
+        return {'errMsg': str(e)}, 500

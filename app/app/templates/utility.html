@@ -1,3 +1,9 @@
+<html>
+<head>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="/static/watt.css">
+</head>
+
 {% extends "appbuilder/base.html" %}
 
 {% block content %}	
@@ -8,6 +14,7 @@
 
     <div class="container">
 		<form method="post" id="form_post" method="post" action="{{url_for('UtilitaView.srv_util')}}">
+			<div id="loader" class="loader" style="display:none"></div>
 			<h4>Utility functions</h4>
 			<div>
 				<button type="button" class="btn btn-primary" onclick="empty_db()">Empty the db</button>
@@ -61,8 +68,10 @@
 	function init_db() {
 		$('#title').html('Richiesta di conferma');
 		$('#msg').html('Si intende realmente inizializzare il database con i dati di test?');
-		$(document).on("click", "#modal-confirm-ok", function () {
-			window.location.href="{{ url_for('UtilitaView.srv_util', target='initdb')}}";
+		$(document).on('click', '#modal-confirm-ok', function () {
+			$('#target').val('initdb');
+			$('#loader').css({'display':'block'});
+			$('#form_post').submit();
         });
 		$('#modal-confirm-w').modal('show');
 	}	
@@ -70,24 +79,26 @@
 	function empty_db() {
 		$('#title').html('Richiesta di conferma');
 		$('#msg').html('Si intende realmente svuotare il database?');
-		$(document).on("click", "#modal-confirm-ok", function () {
-			window.location.href="{{ url_for('UtilitaView.srv_util', target='emptydb')}}";
+		$(document).on('click', '#modal-confirm-ok', function () {
+			$('#target').val('emptydb');
+			$('#form_post').submit();
         });
 		$('#modal-confirm-w').modal('show');
 	}
 
 	function load_academic_years() {
-		$('#target').val("load_academic_years")
+		$('#target').val('load_academic_years');
+		$('#loader').css({'display':'block'});
 		$('#form_post').submit();
 	}
 
 	function load_educational_offer() {
-		$('#target').val("load_educational_offer")
+		$('#target').val('load_educational_offer');
 		$('#form_post').submit();
 	}
 
 	function load_course_data() {
-		$('#target').val("load_course_data")
+		$('#target').val('load_course_data');
 		$('#form_post').submit();
 	}
 	</script>

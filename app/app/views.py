@@ -209,7 +209,7 @@ class OrariGeneratiView(ModelView):
                 db.session.commit()
             except SQLAlchemyError:
                 db.sessione.rollback()
-                flash('Errore durante la cancellazione degli orari selezionati','error')
+                flash('Errore durante la cancellazione degli orari selezionati','danger')
                 return -1
         return redirect(self.get_redirect())
 
@@ -254,7 +254,7 @@ class OrariGeneratiView(ModelView):
             flash('Orario caricato correttamente! (Puoi visualizzarlo con Orario -> Schema settimanale','success')
         except SQLAlchemyError:
             db.sessione.rollback()
-            flash('Errore durante la cancellazione degli orari selezionati','error')
+            flash('Errore durante la cancellazione degli orari selezionati','danger')
             return -1
         return redirect(self.get_redirect())
 
@@ -268,22 +268,22 @@ class UtilitaView(BaseView):
 
     @expose('/srv_initdb', methods=['GET','POST'])
     @has_access
-    def srv_util(self, target=None):
+    def srv_util(self):
         target=request.form.get("target")
         if target=="initdb":
             if caricaDatiTest()==0:
                 flash('Inizializzazione del db effettuata correttamente!','success')
             else:    
-                flash('Errore nella fase di inizializzazione del db.','error')
+                flash('Errore nella fase di inizializzazione del db.','danger')
 
         elif target=="emptydb":
             if svuotaDb()==0:
                 flash('Db svuotato correttamente!','success')
             else:    
-                flash('Errore nella fase di svuotamento del db.','error')
+                flash('Errore nella fase di svuotamento del db.','danger')
 
         elif target == "load_academic_years":
-            session['academicYears'] = getAcademicYears()
+            session['academicYears']=getAcademicYears()
             return render_template("utility.html",
                                    base_template=appbuilder.base_template,
                                    appbuilder=appbuilder,
@@ -291,13 +291,26 @@ class UtilitaView(BaseView):
                                    academicYears=session['academicYears'])
 
         elif target == "load_educational_offer":
-            educationalOffer=getEducationalOffer(request.form.get("academicYears"))
+            session['educationalOffer']=getEducationalOffer(request.form.get("academicYears"))
             return render_template("utility.html",
                                    base_template=appbuilder.base_template,
                                    appbuilder=appbuilder,
                                    academicYears=session['academicYears'],
-                                   selectedAcademicYear=request.form.get("academicYears"),
-                                   educationalOffer=educationalOffer)
+                                   selectedAcademicYear=request.form.get('academicYears'),
+                                   educationalOffer=session['educationalOffer'])
+
+        elif target == "load_course_data":
+            try:
+                ay=session['academicYears']
+                eo=session['educationalOffer']
+                return render_template("utility.html",
+                                       base_template=appbuilder.base_template,
+                                       appbuilder=appbuilder,
+                                       academicYears=session['academicYears'],
+                                       selectedAcademicYear=request.form.get('academicYears'),
+                                       educationalOffer=session['educationalOffer'])
+            except:
+                flash('The set of courses to import has not been selected!','danger')
 
         return render_template("utility.html", base_template=appbuilder.base_template, appbuilder=appbuilder)
 
