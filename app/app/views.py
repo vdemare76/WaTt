@@ -291,24 +291,30 @@ class UtilitaView(BaseView):
                                    academicYears=session['academicYears'])
 
         elif target == "load_educational_offer":
-            session['educationalOffer']=getEducationalOffer(request.form.get("academicYears"))
-            return render_template("utility.html",
+            try:
+                ay=session['academicYears']
+                session['educationalOffer']=getEducationalOffer(request.form.get("academicYears"))
+                return render_template("utility.html",
                                    base_template=appbuilder.base_template,
                                    appbuilder=appbuilder,
                                    academicYears=session['academicYears'],
                                    selectedAcademicYear=request.form.get('academicYears'),
                                    educationalOffer=session['educationalOffer'])
+            except:
+                flash('The set of courses to import has not been selected!','danger')
 
         elif target == "load_course_data":
             try:
                 ay=session['academicYears']
                 eo=session['educationalOffer']
+                session['courses']=request.form.get('courses')
                 return render_template("utility.html",
                                        base_template=appbuilder.base_template,
                                        appbuilder=appbuilder,
                                        academicYears=session['academicYears'],
                                        selectedAcademicYear=request.form.get('academicYears'),
-                                       educationalOffer=session['educationalOffer'])
+                                       educationalOffer=session['educationalOffer'],
+                                       courses=session['courses'])
             except:
                 flash('The set of courses to import has not been selected!','danger')
 

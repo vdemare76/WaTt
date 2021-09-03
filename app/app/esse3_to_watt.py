@@ -72,6 +72,7 @@ def getAcademicYears():
     except requests.exceptions.RequestException as e:
         return {'errMsg': str(e)}, 500
 
+''' returns all courses on offer for the selected academic year '''
 def getEducationalOffer(academicYear):
     token = None
     if 'Authorization' in request.headers:
@@ -104,6 +105,7 @@ def getEducationalOffer(academicYear):
     except requests.exceptions.RequestException as e:
         return {'errMsg': str(e)}, 500
 
+'''returns the information of the selected courses'''
 def getCouseData(academicYear, courses):
     token = None
     if 'Authorization' in request.headers:
@@ -116,6 +118,9 @@ def getCouseData(academicYear, courses):
             'Content-Type': 'application/json',
             'Authorization': 'Basic ' + token
         }
+
+        for c in courses:
+            flash(c)
 
     except requests.exceptions.Timeout as e:
         return {'errMsg': 'Timeout Error!'}, 500
