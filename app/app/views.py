@@ -14,7 +14,7 @@ from .models import AnnoAccademico, CorsoDiStudio, AttivitaDidattica, Docente, A
 
 from flask.templating import render_template
 from .util import caricaDatiTest, svuotaDb, getColori
-from .esse3_to_watt import getAcademicYears, getEducationalOffer
+from .esse3_to_watt import getAcademicYears, getEducationalOffer, getCourseData
 from .solver import AlgoritmoCompleto
 from datetime import timedelta
 
@@ -301,22 +301,27 @@ class UtilitaView(BaseView):
                                    selectedAcademicYear=request.form.get('academicYears'),
                                    educationalOffer=session['educationalOffer'])
             except:
-                flash('The set of courses to import has not been selected!','danger')
+                flash('The available academic years have not been loaded!','wanrning')
 
         elif target == "load_course_data":
             try:
                 ay=session['academicYears']
                 eo=session['educationalOffer']
-                session['courses']=request.form.get('courses')
+                cc=request.form.getlist('courses')
+
+                if len(cc)>0:
+                    getCourseData(request.form.get('academicYears'),request.form.getlist('courses'))
+                else:
+                    flash('No course has been selected!', 'warning')
+
                 return render_template("utility.html",
                                        base_template=appbuilder.base_template,
                                        appbuilder=appbuilder,
                                        academicYears=session['academicYears'],
                                        selectedAcademicYear=request.form.get('academicYears'),
-                                       educationalOffer=session['educationalOffer'],
-                                       courses=session['courses'])
+                                       educationalOffer=session['educationalOffer'])
             except:
-                flash('The set of courses to import has not been selected!','danger')
+                flash('The set of courses to import has not been selected!','warning')
 
         return render_template("utility.html", base_template=appbuilder.base_template, appbuilder=appbuilder)
 

@@ -38,7 +38,6 @@ def getAuthToken(token):
 
 ''' Returns a list of academic years for which an educational offer is registered.
     Example 2020 stands for 2020-21'''
-
 def getAcademicYears():
 
     token = None
@@ -53,7 +52,7 @@ def getAcademicYears():
             'Authorization': 'Basic ' + token
         }
 
-        response = requests.request("GET", url + "/offerta-service-v1/offerte", headers=headers, timeout=60)
+        response = requests.request("GET", url + "offerta-service-v1/offerte", headers=headers, timeout=60)
         data = response.json()
         size = len(data)
         uniqueAY = []
@@ -86,7 +85,7 @@ def getEducationalOffer(academicYear):
             'Authorization': 'Basic ' + token
         }
 
-        response = requests.request("GET", url + "/offerta-service-v1/offerte?aaOffId=" + str(academicYear), headers=headers, timeout=60)
+        response = requests.request("GET", url + "offerta-service-v1/offerte?aaOffId=" + str(academicYear), headers=headers, timeout=60)
         data = response.json()
         size = len(data)
         courses = []
@@ -106,7 +105,7 @@ def getEducationalOffer(academicYear):
         return {'errMsg': str(e)}, 500
 
 '''returns the information of the selected courses'''
-def getCouseData(academicYear, courses):
+def getCourseData(academicYear, courses):
     token = None
     if 'Authorization' in request.headers:
         token = request.headers['Authorization']
@@ -119,8 +118,34 @@ def getCouseData(academicYear, courses):
             'Authorization': 'Basic ' + token
         }
 
+        acts = []
         for c in courses:
-            flash(c)
+            response = requests.request('GET', url + 'offerta-service-v1/offerte/' + str(academicYear) +'/' + str(c) + '/attivita',
+                                    headers=headers, timeout=60)
+            data = response.json()
+            size = len(data)
+            for i in range(0, size, 1):
+                if data[i]['nonErogabileOdFlg']==0:
+                    response = requests.request('GET', url + 'logistica-service-v1/logistica?aaOffId=' + str(academicYear) +'&adId=' + str(data[i]['chiaveAdContestualizzata']['adId']),
+                                            headers=headers, timeout=60)
+                    data_log = response.json()
+                    if len(data_log) > 0:
+                        adLogId = data_log[0]['chiavePartizione']['adLogId']
+                        if data_log[0]['chiavePartizione']['partCod']=='S2':
+                            semester=2
+                        else:
+                            semester=1
+                        '''response = requests.request('GET', url + 'logistica-service-v1/logistica?adLogId=' + str(adLogId) + '/udLogConDettagli',
+                                                    headers=headers, timeout=60)'''
+                        acts.append({'id': data[i]['chiaveAdContestualizzata']['adId'],
+                                     'cod': data[i]['chiaveAdContestualizzata']['adCod'],
+                                     'des': data[i]['chiaveAdContestualizzata']['adDes'],
+                                     'adLogId': str(adLogId),
+                                     'semester': str(semester),
+                                     'tip': data[i]['tipoInsCod']})
+
+        for a in acts:
+            flash(a)
 
     except requests.exceptions.Timeout as e:
         return {'errMsg': 'Timeout Error!'}, 500
