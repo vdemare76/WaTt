@@ -3,7 +3,6 @@
   <component name="ChangeListManager">
     <list default="true" id="4bd4ca69-5fab-4bca-9aae-55bf4e9525ff" name="Default Changelist" comment="Update">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/app/esse3_to_watt.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/app/esse3_to_watt.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -114,14 +113,7 @@
       <workItem from="1630594751845" duration="10441000" />
       <workItem from="1630792063862" duration="35000" />
       <workItem from="1630835632287" duration="16312000" />
-      <workItem from="1630913407685" duration="24704000" />
-    </task>
-    <task id="LOCAL-00013" summary="Update">
-      <created>1623227544271</created>
-      <option name="number" value="00013" />
-      <option name="presentableId" value="LOCAL-00013" />
-      <option name="project" value="LOCAL" />
-      <updated>1623227544271</updated>
+      <workItem from="1630913407685" duration="24848000" />
     </task>
     <task id="LOCAL-00014" summary="Update">
       <created>1623242088045</created>
@@ -459,7 +451,14 @@
       <option name="project" value="LOCAL" />
       <updated>1630879856255</updated>
     </task>
-    <option name="localTasksCounter" value="62" />
+    <task id="LOCAL-00062" summary="Update">
+      <created>1630964224651</created>
+      <option name="number" value="00062" />
+      <option name="presentableId" value="LOCAL-00062" />
+      <option name="project" value="LOCAL" />
+      <updated>1630964224651</updated>
+    </task>
+    <option name="localTasksCounter" value="63" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
