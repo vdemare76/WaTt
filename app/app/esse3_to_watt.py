@@ -48,7 +48,7 @@ def getHeaders():
     Example 2020 stands for 2020-21. '''
 def getAcademicYears():
     try:
-        response=requests.request("GET", url + "offerta-service-v1/offerte", headers=getHeaders(), timeout=60)
+        response=requests.request("GET", url+"offerta-service-v1/offerte", headers=getHeaders(), timeout=60)
         data=response.json()
         size=len(data)
         uniqueAY=[]
@@ -68,7 +68,7 @@ def getAcademicYears():
 ''' Returns all courses on offer for the selected academic year. '''
 def getEducationalOffer(academicYear):
     try:
-        response=requests.request("GET", url + "offerta-service-v1/offerte?aaOffId=" + str(academicYear), headers=getHeaders(), timeout=60)
+        response=requests.request("GET", url+"offerta-service-v1/offerte?aaOffId="+ str(academicYear), headers=getHeaders(), timeout=60)
         data=response.json()
         size=len(data)
         courses=[]
@@ -89,12 +89,12 @@ def getEducationalOffer(academicYear):
 def getRegScheme(cdsId):
     try:
         schemeSet=[]
-        response=requests.request('GET', url + 'regsce-service-v1/regsce?cdsId=' + str(cdsId), headers=getHeaders(), timeout=60)
+        response=requests.request('GET', url+'regsce-service-v1/regsce?cdsId='+str(cdsId), headers=getHeaders(), timeout=60)
         dataRegSce=response.json()
         size=len(dataRegSce)
         if size > 0:
             for i in range(0, size, 1):
-                response = requests.request('GET', url + '/regsce-service-v1/regsce/' + str(dataRegSce[i]['regsceId']) + '/schemi', headers=getHeaders(), timeout=60)
+                response = requests.request('GET',url+'/regsce-service-v1/regsce/'+str(dataRegSce[i]['regsceId'])+'/schemi', headers=getHeaders(), timeout=60)
                 dataScheme = response.json()
                 if len(dataScheme) > 0 and dataScheme[0]['statutarioFlg'] == 1:
                     schemeSet.append({'regSceId': dataRegSce[i]['regsceId'], 'schemeId': dataScheme[0]['schemaId']})
@@ -116,7 +116,7 @@ def getScheme(regScheme):
         size=len(regScheme)
         if size>0:
             for i in range(0, size, 1):
-                response = requests.request('GET', url + 'regsce-service-v1/regsce/' + str(regScheme[i]['regSceId']) + '/schemi/' + str(regScheme[i]['schemeId']), headers=getHeaders(), timeout=60)
+                response = requests.request('GET', url+'regsce-service-v1/regsce/'+str(regScheme[i]['regSceId'])+'/schemi/'+str(regScheme[i]['schemeId']), headers=getHeaders(), timeout=60)
                 data=response.json()
                 sizeReg=len(data['regoleDiScelta'])
                 for r in range(0, sizeReg, 1):
@@ -143,13 +143,13 @@ def getCourseData(academicYear, courses):
         flash(getCoursesInfo(courses))
         for cdsId in courses:
             scheme = getScheme(getRegScheme(cdsId))
-            response = requests.request('GET', url + 'offerta-service-v1/offerte/' + str(academicYear) +'/' + str(cdsId) + '/attivita', headers=getHeaders(), timeout=60)
+            response = requests.request('GET', url+'offerta-service-v1/offerte/'+str(academicYear)+'/'+str(cdsId)+'/attivita', headers=getHeaders(), timeout=60)
             dataOff = response.json()
             size = len(dataOff)
             for i in range(0, size, 1):
                 ad_id = dataOff[i]['chiaveAdContestualizzata']['adId']
                 if dataOff[i]['nonErogabileOdFlg']==0:
-                    response = requests.request('GET', url + 'logistica-service-v1/logistica?aaOffId=' + str(academicYear) +'&adId=' + str(ad_id), headers=getHeaders(), timeout=60)
+                    response = requests.request('GET', url+'logistica-service-v1/logistica?aaOffId='+str(academicYear)+'&adId='+str(ad_id), headers=getHeaders(), timeout=60)
                     dataLog = response.json()
                     if len(dataLog) > 0:
                         adLogId = dataLog[0]['chiavePartizione']['adLogId']
@@ -192,9 +192,9 @@ def getCoursesInfo(courses):
         found=False
 
         try:
-            response=requests.request('GET', url + 'struttura-service-v1/corsi/' + str(cdsId), headers=getHeaders(), timeout=60)
+            response=requests.request('GET', url+'struttura-service-v1/corsi/'+str(cdsId), headers=getHeaders(), timeout=60)
             dataCrs=response.json()
-            response=requests.request('GET', url + 'struttura-service-v1/corsi/' + str(cdsId) + '/ordinamenti', headers=getHeaders(), timeout=60)
+            response=requests.request('GET', url+'struttura-service-v1/corsi/'+str(cdsId)+'/ordinamenti', headers=getHeaders(), timeout=60)
             dataOrd=response.json()
         except requests.exceptions.Timeout as e:
             return {'errMsg': 'Timeout Error!'}, 500
@@ -220,11 +220,13 @@ def getCoursesInfo(courses):
 
 def getTeachers(teachings):
     teachers={}
+    teachersAct={}
 
     for t in teachings:
         try:
-            response = requests.request('GET', url + 'logistica-service-v1/logistica/' + str(t['adLogId']) + '/udLogConDettagli/', headers=getHeaders(), timeout=60)
-            data = response.json()
+            response=requests.request('GET', url+'logistica-service-v1/logistica/'+str(t['adLogId'])+'/udLogConDettagli/', headers=getHeaders(), timeout=60)
+            data=response.json()
+            adLogId=str(t['adLogId'])
             size = len(data)
             for i in range(0, size, 1):
                 for cd in data[i]['CaricoDocenti']:
@@ -233,6 +235,11 @@ def getTeachers(teachings):
                     surnameTch=cd['docenteCognome']
                     if badge not in teachers:
                         teachers[badge]={'name':nameTch, 'surname':surnameTch}
+                    if adLogId not in teachersAct:
+                        teachersAct[adLogId]=[badge]
+                    else:
+                        if badge not in teachersAct[adLogId]:
+                            teachersAct[adLogId].append(badge)
         except requests.exceptions.Timeout as e:
             return {'errMsg': 'Timeout Error!'}, 500
         except requests.exceptions.TooManyRedirects as e:
@@ -240,8 +247,8 @@ def getTeachers(teachings):
         except requests.exceptions.RequestException as e:
             return {'errMsg': str(e)}, 500
 
-    for t in teachers:
-        flash(teachers[t])
-    return teachers
+    flash(teachers)
+    flash(teachersAct)
+    return teachers, teachersAct
 
 
