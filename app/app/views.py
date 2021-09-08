@@ -14,7 +14,7 @@ from .models import AnnoAccademico, CorsoDiStudio, AttivitaDidattica, Docente, A
 
 from flask.templating import render_template
 from .util import caricaDatiTest, svuotaDb, getColori
-from .esse3_to_watt import getAcademicYears, getEducationalOffer, getAllData
+from .esse3_to_watt import getAcademicYears, getEducationalOffer, importData
 from .solver import AlgoritmoCompleto
 from datetime import timedelta
 
@@ -310,7 +310,7 @@ class UtilitaView(BaseView):
                 cc=request.form.getlist('courses')
 
                 if len(cc)>0:
-                    getAllData(request.form.get('academicYears'),request.form.getlist('courses'))
+                    importData(request.form.get('academicYears'),request.form.getlist('courses'))
                 else:
                     flash('No course has been selected!', 'warning')
 

@@ -2,6 +2,8 @@ from flask import flash, render_template, redirect, url_for, request, g, session
 from flask_appbuilder import ModelView, BaseView, expose, has_access, action
 from flask_appbuilder.models.sqla.interface import SQLAInterface
 from sqlalchemy.exc import SQLAlchemyError
+from .import db
+from .models import AnnoAccademico
 
 import requests, base64
 from .util import getLdapToken
@@ -249,17 +251,24 @@ def getTeachers(teachings):
 
     return teachers, teachersAct
 
-def getAllData(academicYear,courses):
+def importData(academicYear,courses):
     coursesInfo=getCoursesInfo(courses)
     teachings=getTeachingOfCourse(academicYear,courses)
     teachers, teachersAct=getTeachers(teachings)
 
-    flash(coursesInfo)
+    '''flash(coursesInfo)
     flash(teachings)
     flash(teachers)
-    flash(teachersAct)
+    flash(teachersAct)'''
 
-def import_data():
-    return 0
+    years=db.session.query(AnnoAccademico).filter(AnnoAccademico.anno==int(academicYear)).first()
+    if years is None:
+        row = AnnoAccademico(anno=academicYear, anno_esteso=academicYear+'/'+str(int(academicYear)+1))
+        db.session.add(row)
+        db.session.flush()
+        flash(row.id)
+
+    db.session.commit()
+
 
 
