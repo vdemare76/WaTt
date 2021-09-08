@@ -4,6 +4,7 @@
     <list default="true" id="4bd4ca69-5fab-4bca-9aae-55bf4e9525ff" name="Default Changelist" comment="Update">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/app/esse3_to_watt.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/app/esse3_to_watt.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/app/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/app/views.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -115,14 +116,8 @@
       <workItem from="1630792063862" duration="35000" />
       <workItem from="1630835632287" duration="16312000" />
       <workItem from="1630913407685" duration="25613000" />
-      <workItem from="1631043816487" duration="6623000" />
-    </task>
-    <task id="LOCAL-00015" summary="Update">
-      <created>1623244407540</created>
-      <option name="number" value="00015" />
-      <option name="presentableId" value="LOCAL-00015" />
-      <option name="project" value="LOCAL" />
-      <updated>1623244407540</updated>
+      <workItem from="1631043816487" duration="6652000" />
+      <workItem from="1631120306980" duration="5061000" />
     </task>
     <task id="LOCAL-00016" summary="Update">
       <created>1623249854048</created>
@@ -460,7 +455,14 @@
       <option name="project" value="LOCAL" />
       <updated>1630964589865</updated>
     </task>
-    <option name="localTasksCounter" value="64" />
+    <task id="LOCAL-00064" summary="Update">
+      <created>1631052682522</created>
+      <option name="number" value="00064" />
+      <option name="presentableId" value="LOCAL-00064" />
+      <option name="project" value="LOCAL" />
+      <updated>1631052682522</updated>
+    </task>
+    <option name="localTasksCounter" value="65" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">

@@ -137,10 +137,10 @@ def getScheme(regScheme):
         return {'errMsg': str(e)}, 500
 
 ''' Returns the information of the selected courses. '''
-def getCourseData(academicYear, courses):
+def getTeachingOfCourse(academicYear, courses):
     try:
         acts=[]
-        flash(getCoursesInfo(courses))
+
         for cdsId in courses:
             scheme = getScheme(getRegScheme(cdsId))
             response = requests.request('GET', url+'offerta-service-v1/offerte/'+str(academicYear)+'/'+str(cdsId)+'/attivita', headers=getHeaders(), timeout=60)
@@ -247,8 +247,19 @@ def getTeachers(teachings):
         except requests.exceptions.RequestException as e:
             return {'errMsg': str(e)}, 500
 
+    return teachers, teachersAct
+
+def getAllData(academicYear,courses):
+    coursesInfo=getCoursesInfo(courses)
+    teachings=getTeachingOfCourse(academicYear,courses)
+    teachers, teachersAct=getTeachers(teachings)
+
+    flash(coursesInfo)
+    flash(teachings)
     flash(teachers)
     flash(teachersAct)
-    return teachers, teachersAct
+
+def import_data():
+    return 0
 
 
