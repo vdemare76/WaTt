@@ -3,7 +3,7 @@ from flask_appbuilder import ModelView, BaseView, expose, has_access, action
 from flask_appbuilder.models.sqla.interface import SQLAInterface
 from sqlalchemy.exc import SQLAlchemyError
 from .import db
-from .models import AnnoAccademico
+from .models import AnnoAccademico, CorsoDiStudio
 
 import requests, base64
 from .util import getLdapToken
@@ -261,14 +261,31 @@ def importData(academicYear,courses):
     flash(teachers)
     flash(teachersAct)'''
 
-    years=db.session.query(AnnoAccademico).filter(AnnoAccademico.anno==int(academicYear)).first()
-    if years is None:
+    ''' Insertion in the table of the academic years. '''
+    year=db.session.query(AnnoAccademico).filter(AnnoAccademico.anno==int(academicYear)).first()
+    if year is None:
         row = AnnoAccademico(anno=academicYear, anno_esteso=academicYear+'/'+str(int(academicYear)+1))
         db.session.add(row)
         db.session.flush()
-        flash(row.id)
-
+        idYear=row.id
     db.session.commit()
 
+    size = len(coursesInfo)
+    for c in range(0, size, 1):
+        global idCourse
+        course=db.session.query(CorsoDiStudio).filter(CorsoDiStudio.codice==coursesInfo[c]['cdsCod']).first()
+        if course is None:
+            flash('NO')
+            row = CorsoDiStudio(codice=c['cdsCod'],descrizione=c['cdsDes'],cfu=c['cfu'],durata_legale=c['duration'])
+            db.session.add(row)
+            db.session.flush()
+            idCourse=row.id
+        else:
+            flash('SI')
+            idCourse=course.id
+
+        coursesInfo[c]['id']=idCourse
+        flash(coursesInfo)
+    db.session.commit()
 
 
