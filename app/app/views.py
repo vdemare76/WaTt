@@ -14,7 +14,7 @@ from .models import AnnoAccademico, CorsoDiStudio, AttivitaDidattica, Docente, A
 
 from flask.templating import render_template
 from .util import caricaDatiTest, svuotaDb, getColori
-from .esse3_to_watt import getAcademicYears, getEducationalOffer, importData
+from .esse3_to_watt import getAnniAccademici, getCorsiInOfferta, importDatiEsse3
 from .solver import AlgoritmoCompleto
 from datetime import timedelta
 
@@ -270,58 +270,60 @@ class UtilitaView(BaseView):
     @has_access
     def srv_util(self):
         target=request.form.get("target")
-        if target=="initdb":
+        if target=="inizializzaDB":
             if caricaDatiTest()==0:
                 flash('Inizializzazione del db effettuata correttamente!','success')
             else:    
                 flash('Errore nella fase di inizializzazione del db.','danger')
 
-        elif target=="emptydb":
+        elif target=="svuotaDB":
             if svuotaDb()==0:
                 flash('Db svuotato correttamente!','success')
             else:    
                 flash('Errore nella fase di svuotamento del db.','danger')
 
-        elif target == "load_academic_years":
-            session['academicYears']=getAcademicYears()
+        elif target == "caricaAnniAccademici":
+            session['anniAccademici']=getAnniAccademici()
             return render_template("utility.html",
                                    base_template=appbuilder.base_template,
                                    appbuilder=appbuilder,
-                                   selectedAcademicYear=1000,
-                                   academicYears=session['academicYears'])
+                                   annoAccademicoSelezionato=1000,
+                                   anniAccademici=session['anniAccademici'])
 
-        elif target == "load_educational_offer":
+        elif target == "caricaCorsiOffertaFormativa":
             try:
-                ay=session['academicYears']
-                session['educationalOffer']=getEducationalOffer(request.form.get("academicYears"))
+                anniAccademici=session['anniAccademici']
+                session['corsiInOfferta']=getCorsiInOfferta(request.form.get("anniAccademici"))
                 return render_template("utility.html",
                                    base_template=appbuilder.base_template,
                                    appbuilder=appbuilder,
-                                   academicYears=session['academicYears'],
-                                   selectedAcademicYear=request.form.get('academicYears'),
-                                   educationalOffer=session['educationalOffer'])
+                                   anniAccademici=anniAccademici,
+                                   annoAccademicoSelezionato=request.form.get('anniAccademici'),
+                                   corsiInOfferta=session['corsiInOfferta'])
             except:
                 flash('The available academic years have not been loaded!','wanrning')
 
-        elif target == "load_course_data":
+        elif target == "caricaDatiCorsi":
             try:
-                ay=session['academicYears']
-                eo=session['educationalOffer']
-                cc=request.form.getlist('courses')
+                anniAccademici=session['anniAccademici']
+                corsiInOfferta=session['corsiInOfferta']
+                corsi=request.form.getlist('corsi')
 
-                if len(cc)>0:
-                    importData(request.form.get('academicYears'),request.form.getlist('courses'))
+                if len(corsi)>0:
+                    importDatiEsse3(request.form.get('anniAccademici'),request.form.getlist('corsi'),
+                                    request.form.get('cbSovrDatiCorsi'),request.form.get('cbSovrDatiAD'),
+                                    request.form.get('cbSovrDatiDocenti'),request.form.get('cbSovrDatiOfferta'))
                 else:
-                    flash('No course has been selected!', 'warning')
+                    flash('Selezionare almeno un corso da importare!', 'warning')
 
                 return render_template("utility.html",
                                        base_template=appbuilder.base_template,
                                        appbuilder=appbuilder,
-                                       academicYears=session['academicYears'],
-                                       selectedAcademicYear=request.form.get('academicYears'),
-                                       educationalOffer=session['educationalOffer'])
+                                       anniAccademici=anniAccademici,
+                                       annoAccademicoSelezionato=request.form.get('anniAccademici'),
+                                       corsiInOfferta=corsiInOfferta)
             except:
-                flash('The set of courses to import has not been selected!','warning')
+                flash('Bisogna effettuare almeno una selezione nelle precedenti sezioni!','warning')
 
         return render_template("utility.html", base_template=appbuilder.base_template, appbuilder=appbuilder)
 

@@ -15,26 +15,26 @@
     <div class="container">
 		<form method="post" id="form_post" method="post" action="{{url_for('UtilitaView.srv_util')}}">
 			<div id="loader" class="loader" style="display:none"></div>
-			<h4>Utility functions</h4>
+			<h4>Funzioni di utilità</h4>
 			<div>
-				<button type="button" class="btn btn-primary" onclick="empty_db()">Empty the db</button>
+				<button type="button" class="btn btn-primary" onclick="svuotaDB()">Svuota il DB</button>
 			</div>
 			<br>
-			<h4>Empty the db and load the test data</h4>
+			<h4>Svuota il DB e carica dati di test</h4>
 			<div>
-				<button type="button" class="btn btn-primary" onclick="init_db()">Empty and load data</button>
+				<button type="button" class="btn btn-primary" onclick="inizializzaDB()">Svuota il DB e carica di test</button>
 			</div>
 			<br>
-			<h4>Upload data from the student career management procedure (Esse3)</h4>
+			<h4>Carica i dati dalla procedura di gestione delle carriere studenti (Esse3)</h4>
 			<div>
-				<button type="button" class="btn btn-primary" onclick="load_academic_years()">
-					Load the academic years for which there is a training offer in the database
+				<button type="button" class="btn btn-primary" onclick="caricaAnniAccademici()">
+					Carica gli A.A. per cui è disponibile un'offerta formativa
 				</button>
 				<br><br>
-				<select name="academicYears" id="academicYears">
-					$('#academicYears).empty()
-					{% for a in academicYears %}
-						{% if a == selectedAcademicYear|int %}
+				<select name="anniAccademici" id="anniAccademici">
+					$('#anniAccademici).empty()
+					{% for a in anniAccademici %}
+						{% if a == annoAccademicoSelezionato|int %}
 							<option selected="selected" value={{a}}>{{a}}/{{a+1}}</option>
 						{% else %}
 							<option value={{a}}>{{a}}/{{a+1}}</option>
@@ -44,20 +44,35 @@
 			</div>
 			<br>
 			<div>
-				<button type="button" class="btn btn-primary" onclick="load_educational_offer()">
-					Load the educational offer for the selected year
+				<button type="button" class="btn btn-primary" onclick="caricaCorsiInOfferta()">
+					Carica i corsi in offerta formativa per l'A.A. selezionato
 				</button>
 				<br><br>
-				<select name="courses" id="courses" class="selectpicker" multiple data-live-search="true">
-					{% for e in educationalOffer %}
-						<option value={{e["courseId"]}}>{{e["courseCod"]}} - {{e["courseDes"]}}</option>
+				<select name="corsi" id="corsi" class="selectpicker" multiple data-live-search="true">
+					{% for c in corsiInOfferta %}
+						<option value={{c["idCorso"]}}>{{c["codCorso"]}} - {{c["desCorso"]}}</option>
 					{% endfor %}
 				</select>
 			</div>
 			<br>
+			<h4>Effettua le seguenti scelte prima di caricare i dati dei corsi (Esse3)</h4>
 			<div>
-				<button type="button" class="btn btn-primary" onclick="load_course_data()">
-					Upload the data of the selected courses
+				<input type="checkbox" name="cbSovrDatiCorsi" id="cbSovrDatiCorsi" value="1">
+				<label for = "cbSovrDatiCorsi"> Aggiorna i dati dei corsi già presenti in DB </label>
+				<br>
+				<input type="checkbox" name="cbSovrDatiAD" id="cbSovrDatiAD" value="1">
+				<label for = "cbSovrDatiAD"> Aggiorna i dati delle attività didattiche già presenti in DB </label>
+				<br>
+				<input type="checkbox" name="cbSovrDatiDocenti" id="cbSovrDatiDocenti" value="1">
+				<label for = "cbSovrDatiDocenti"> Aggiorna i dati dei docenti già presenti in DB </label>
+				<br>
+				<input type="checkbox" name="cbSovrDatiOfferta" id="cbSovrDatiOfferta" value="1">
+				<label for = "cbSovrDatiOfferta"> Aggiorna i dati di offerta già presenti in DB per l'A.A. selezionato </label>
+			</div>
+			<br>
+			<div>
+				<button type="button" class="btn btn-primary" onclick="caricaDatiCorsi()">
+					Carica i dati per i corsi selezionati
 				</button>
 			</div>
 			<input type="text" id="target" name="target" value="" style="display:none">
@@ -65,41 +80,41 @@
 	</div>
 	
 	<script>	
-	function init_db() {
+	function inizializzaDB() {
 		$('#title').html('Richiesta di conferma');
 		$('#msg').html('Si intende realmente inizializzare il database con i dati di test?');
 		$(document).on('click', '#modal-confirm-ok', function () {
-			$('#target').val('initdb');
+			$('#target').val('inizializzaDB');
 			$('#loader').css({'display':'block'});
 			$('#form_post').submit();
         });
 		$('#modal-confirm-w').modal('show');
 	}	
 	
-	function empty_db() {
+	function svuotaDB() {
 		$('#title').html('Richiesta di conferma');
 		$('#msg').html('Si intende realmente svuotare il database?');
 		$(document).on('click', '#modal-confirm-ok', function () {
-			$('#target').val('emptydb');
+			$('#target').val('svuotaDB');
 			$('#form_post').submit();
         });
 		$('#modal-confirm-w').modal('show');
 	}
 
-	function load_academic_years() {
-		$('#target').val('load_academic_years');
+	function caricaAnniAccademici() {
+		$('#target').val('caricaAnniAccademici');
 		$('#loader').css({'display':'block'});
 		$('#form_post').submit();
 	}
 
-	function load_educational_offer() {
-		$('#target').val('load_educational_offer');
+	function caricaCorsiInOfferta() {
+		$('#target').val('caricaCorsiOffertaFormativa');
 		$('#loader').css({'display':'block'});
 		$('#form_post').submit();
 	}
 
-	function load_course_data() {
-		$('#target').val('load_course_data');
+	function caricaDatiCorsi() {
+		$('#target').val('caricaDatiCorsi');
 		$('#loader').css({'display':'block'});
 		$('#form_post').submit();
 	}
