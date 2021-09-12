@@ -311,6 +311,7 @@ class UtilitaView(BaseView):
 
                 if len(corsi)>0:
                     importDatiEsse3(request.form.get('anniAccademici'),request.form.getlist('corsi'),
+                                    request.form.getlist('semestre'),
                                     request.form.get('cbSovrDatiCorsi'),request.form.get('cbSovrDatiAD'),
                                     request.form.get('cbSovrDatiDocenti'),request.form.get('cbSovrDatiOfferta'))
                 else:

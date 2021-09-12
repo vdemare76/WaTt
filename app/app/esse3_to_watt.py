@@ -3,7 +3,8 @@ from flask_appbuilder import ModelView, BaseView, expose, has_access, action
 from flask_appbuilder.models.sqla.interface import SQLAInterface
 from sqlalchemy.exc import SQLAlchemyError
 from .import db
-from .models import AnnoAccademico, CorsoDiStudio
+from .util import getColori
+from .models import AnnoAccademico, CorsoDiStudio, AttivitaDidattica
 
 import requests, base64
 from .util import getLdapToken
@@ -139,7 +140,7 @@ def getSchema(regSchema):
         return {'errMsg': str(e)}, 500
 
 ''' Restituisce le attività didattiche dei corsi nell'ambito dell'offerta formativa selezionata '''
-def getAttivitaDidattiche(annoAccademico, corsi):
+def getAttivitaDidattiche(annoAccademico, corsi, semestre):
     attivitaDidattiche=[]
     try:
         for cdsId in corsi:
@@ -153,28 +154,29 @@ def getAttivitaDidattiche(annoAccademico, corsi):
                     response = requests.request('GET', url+'logistica-service-v1/logistica?aaOffId='+str(annoAccademico)+'&adId='+str(ad_id), headers=getHeaders(), timeout=60)
                     dataLog = response.json()
 
-                if len(dataLog) > 0:
-                    adLogId = dataLog[0]['chiavePartizione']['adLogId']
-                    if dataLog[0]['chiavePartizione']['partCod'] in ['S2','Q2']:
-                        semestre=2
-                    else:
-                        semestre=1
-                    try:
-                        annoCorso=schema[dataOff[i]['chiaveAdContestualizzata']['adId']]['yearOfCourse']
-                        cfu=schema[dataOff[i]['chiaveAdContestualizzata']['adId']]['cfu']
-                    except:
-                        annoCorso=-1
-                        cfu=-1
-                    attivitaDidattiche.append({'cdsId': dataLog[0]['chiaveADFisica']['cdsId'],
-                                 'adId': dataOff[i]['chiaveAdContestualizzata']['adId'],
-                                 'adCod': dataOff[i]['chiaveAdContestualizzata']['adCod'],
-                                 'adDes': dataOff[i]['chiaveAdContestualizzata']['adDes'],
-                                 'adLogId': str(adLogId),
-                                 'semestre': str(semestre),
-                                 'tipo': dataOff[i]['tipoInsCod'],
-                                 'annoCorso': annoCorso,
-                                 'cfu': cfu
-                                })
+                    if len(dataLog) > 0:
+                        adLogId = dataLog[0]['chiavePartizione']['adLogId']
+                        if dataLog[0]['chiavePartizione']['partCod'] in ['S2','Q2']:
+                            semestreAttivita=2
+                        else:
+                            semestreAttivita=1
+                        try:
+                            annoCorso=schema[dataOff[i]['chiaveAdContestualizzata']['adId']]['yearOfCourse']
+                            cfu=schema[dataOff[i]['chiaveAdContestualizzata']['adId']]['cfu']
+                        except:
+                            annoCorso=-1
+                            cfu=-1
+                        if semestreAttivita==int(semestre[0]):
+                            attivitaDidattiche.append({'cdsId': dataLog[0]['chiaveADFisica']['cdsId'],
+                                         'adId': dataOff[i]['chiaveAdContestualizzata']['adId'],
+                                         'adCod': dataOff[i]['chiaveAdContestualizzata']['adCod'],
+                                         'adDes': dataOff[i]['chiaveAdContestualizzata']['adDes'],
+                                         'adLogId': str(adLogId),
+                                         'semestre': str(semestreAttivita),
+                                         'tipo': dataOff[i]['tipoInsCod'],
+                                         'annoCorso': annoCorso,
+                                         'cfu': cfu
+                                        })
 
     except requests.exceptions.Timeout as e:
         return {'errMsg': 'Timeout Error!'}, 500
@@ -182,7 +184,6 @@ def getAttivitaDidattiche(annoAccademico, corsi):
         return {'errMsg': str(e)}, 500
     except requests.exceptions.RequestException as e:
         return {'errMsg': str(e)}, 500
-    getDocenti(attivitaDidattiche)
     return attivitaDidattiche
 
 ''' Returns the information of the selected courses to be loaded into the database. '''
@@ -225,23 +226,23 @@ def getDocenti(attivitaDidattiche):
         docentiPerAttivita={}
 
         for t in attivitaDidattiche:
-                response=requests.request('GET', url+'logistica-service-v1/logistica/'+str(t['adLogId'])+'/udLogConDettagli/', headers=getHeaders(), timeout=60)
-                data=response.json()
+            response=requests.request('GET', url+'logistica-service-v1/logistica/'+str(t['adLogId'])+'/udLogConDettagli/', headers=getHeaders(), timeout=60)
+            data=response.json()
 
-        adLogId = str(t['adLogId'])
-        size = len(data)
-        for i in range(0, size, 1):
-            for cd in data[i]['CaricoDocenti']:
-                matricola = cd['docenteMatricola']
-                nomeDocente = cd['docenteNome']
-                cognomeDocente = cd['docenteCognome']
-                if matricola not in docenti:
-                    docenti[matricola] = {'name': nomeDocente, 'surname': cognomeDocente}
-                if adLogId not in docentiPerAttivita:
-                    docentiPerAttivita[adLogId] = [matricola]
-                else:
-                    if matricola not in docentiPerAttivita[adLogId]:
-                        docentiPerAttivita[adLogId].append(matricola)
+            adLogId = str(t['adLogId'])
+            size = len(data)
+            for i in range(0, size, 1):
+                for cd in data[i]['CaricoDocenti']:
+                    matricola = cd['docenteMatricola']
+                    nomeDocente = cd['docenteNome']
+                    cognomeDocente = cd['docenteCognome']
+                    if matricola not in docenti:
+                        docenti[matricola] = {'nome': nomeDocente, 'cognome': cognomeDocente}
+                    if adLogId not in docentiPerAttivita:
+                        docentiPerAttivita[adLogId] = [matricola]
+                    else:
+                        if matricola not in docentiPerAttivita[adLogId]:
+                            docentiPerAttivita[adLogId].append(matricola)
 
         return docenti, docentiPerAttivita
 
@@ -252,9 +253,15 @@ def getDocenti(attivitaDidattiche):
     except requests.exceptions.RequestException as e:
         return {'errMsg': str(e)}, 500
 
-def importDatiEsse3(annoAccademico,corsi,flgSovrDatiCorsi,flgSovrDatiAD,flgSovrDatiDocenti,flgSovrDatiOfferta):
-    datiCorsi=getDatiCorsi(corsi)
-    attivitaDidattiche=getAttivitaDidattiche(annoAccademico,corsi)
+def myFunc(e):
+    return e['cdsId','annoCorso']
+
+def importDatiEsse3(annoAccademico,corsiDiStudio,semestre,flgSovrDatiCorsi,flgSovrDatiAD,flgSovrDatiDocenti,flgSovrDatiOfferta):
+    from operator import itemgetter
+
+    colori=getColori()
+    corsi=getDatiCorsi(corsiDiStudio)
+    attivitaDidattiche=getAttivitaDidattiche(annoAccademico,corsiDiStudio,semestre)
     docenti, docentiPerAttivita=getDocenti(attivitaDidattiche)
 
     ''' Inserimento dell'anno accademico selezionato in DB se già non esiste '''
@@ -267,11 +274,11 @@ def importDatiEsse3(annoAccademico,corsi,flgSovrDatiCorsi,flgSovrDatiAD,flgSovrD
     db.session.commit()
 
     ''' Inserimento dei dati dei corsi di studio selezionati in DB '''
-    size = len(datiCorsi)
+    size = len(corsi)
     for c in range(0, size, 1):
         global idCorso
-        corso=db.session.query(CorsoDiStudio).filter(CorsoDiStudio.codice==datiCorsi[c]['cdsCod']).first()
-        row = CorsoDiStudio(codice=datiCorsi[c]['cdsCod'], descrizione=datiCorsi[c]['cdsDes'], cfu=datiCorsi[c]['cfu'], durata_legale=datiCorsi[c]['durataLegale'])
+        corso=db.session.query(CorsoDiStudio).filter(CorsoDiStudio.codice==corsi[c]['cdsCod']).first()
+        row = CorsoDiStudio(codice=corsi[c]['cdsCod'], descrizione=corsi[c]['cdsDes'], cfu=corsi[c]['cfu'], durata_legale=corsi[c]['durataLegale'])
         if corso is None:
             db.session.add(row)
             db.session.flush()
@@ -280,13 +287,39 @@ def importDatiEsse3(annoAccademico,corsi,flgSovrDatiCorsi,flgSovrDatiAD,flgSovrD
             if flgSovrDatiCorsi is None:
                 idCorso=corso.id
             else:
-                db.session.query(CorsoDiStudio).filter(CorsoDiStudio.codice==datiCorsi[c]['cdsCod']).delete()
+                db.session.query(CorsoDiStudio).filter(CorsoDiStudio.codice==corsi[c]['cdsCod']).delete()
                 db.session.add(row)
                 db.session.flush()
                 idCorso = row.id
-        datiCorsi[c]['id']=idCorso
+        corsi[c]['id']=idCorso
     db.session.commit()
 
+    ''' Inserimento dei dati delle attività didattiche relative ai corsi di studio selezionati in DB '''
+    attivitaDidattiche = sorted(attivitaDidattiche, key=lambda k: (k['cdsId'], k['annoCorso']))
+    size = len(attivitaDidattiche)
 
+    clr=1
+    for c in range(0, size, 1):
+        global idAD
+        ad=db.session.query(AttivitaDidattica).filter(AttivitaDidattica.codice==attivitaDidattiche[c]['adCod']).first()
+        row = AttivitaDidattica(codice=attivitaDidattiche[c]['adCod'], descrizione=attivitaDidattiche[c]['adDes'], cfu=attivitaDidattiche[c]['cfu'], colore=colori[clr])
+        if ad is None:
+            db.session.add(row)
+            db.session.flush()
+            idAD=row.id
+        else:
+            if flgSovrDatiAD is None:
+                idAD=ad.id
+            else:
+                db.session.query(AttivitaDidattica).filter(AttivitaDidattica.codice==attivitaDidattiche[c]['adCod']).delete()
+                db.session.add(row)
+                db.session.flush()
+                idAD = row.id
+        if clr==10:
+            clr=1
+        else:
+            clr+=1
+        attivitaDidattiche[c]['id']=idAD
+    db.session.commit()
 
 

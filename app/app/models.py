@@ -50,7 +50,7 @@ class AttivitaDidattica(Model):
     codice = Column(String(15))
     descrizione = Column(String(150))
     cfu = Column(Integer)
-    offerta = relationship("Offerta", back_populates="attivita_didattica")
+    #offerta = relationship("Offerta", back_populates="attivita_didattica")
     colore = Column(String(7))
 
     def __repr__(self):
