@@ -447,7 +447,7 @@ appbuilder.add_view(LogisticaDocentiView, "Logistica docenti", icon="fa-hand-o-u
 
 appbuilder.add_view(UtilitaView, "Funzioni utilità",  icon="fa-briefcase", category="Utilità")
 
-appbuilder.add_view(UtilitaView, "Funzioni utilità",  icon="fa-briefcase", category="Connettore Esse3")
+appbuilder.add_view(UtilitaEsse3View, "Connettore Esse3",  icon="fa-briefcase", category="Utilità")
 
 appbuilder.add_view(PreferenzeView, "Elaborazione orario",  icon="fa-cogs", category="Orario")
 
@@ -459,5 +459,3 @@ appbuilder.add_view(SchemaSettimanaleView, "Schema settimanale",  icon="fa-calen
 
 appbuilder.add_view(CalendarioView, "Calendario orario",  icon="fa-clipboard", category="Orario")
 
-# Inizializza il db con i dati di base
-#inizializza_db()

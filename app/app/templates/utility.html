@@ -24,64 +24,6 @@
 			<div>
 				<button type="button" class="btn btn-primary" onclick="inizializzaDB()">Svuota il DB e carica di test</button>
 			</div>
-			<br>
-			<h4>Carica i dati dalla procedura di gestione delle carriere studenti (Esse3)</h4>
-			<div>
-				<button type="button" class="btn btn-primary" onclick="caricaAnniAccademici()">
-					Carica gli A.A. per cui è disponibile un'offerta formativa
-				</button>
-				<br><br>
-				<select name="anniAccademici" id="anniAccademici">
-					$('#anniAccademici).empty()
-					{% for a in anniAccademici %}
-						{% if a == annoAccademicoSelezionato|int %}
-							<option selected="selected" value={{a}}>{{a}}/{{a+1}}</option>
-						{% else %}
-							<option value={{a}}>{{a}}/{{a+1}}</option>
-						{% endif %}
-					{% endfor %}
-				</select>
-			</div>
-			<br>
-			<div>
-				<button type="button" class="btn btn-primary" onclick="caricaCorsiInOfferta()">
-					Carica i corsi in offerta formativa per l'A.A. selezionato
-				</button>
-				<br><br>
-				<select name="corsi" id="corsi" class="selectpicker" multiple data-live-search="true">
-					{% for c in corsiInOfferta %}
-						<option value={{c["idCorso"]}}>{{c["codCorso"]}} - {{c["desCorso"]}}</option>
-					{% endfor %}
-				</select>
-			</div>
-			<br>
-			<h4>Effettua le seguenti scelte prima di caricare i dati dei corsi (Esse3)</h4>
-			<div>
-				<label>Seleziona il semestre di riferimento</label><br>
-				<input type="radio" id="semestre1" name="semestre" value=1 checked>
-				<label for="semestre1">Primo semestre</label>
-				<input type="radio" id="semestre2" name="semestre" value=2>
-				<label for="semestre2">Secondo semestre</label>
-				<br><br>
-				<label>Selezionare la politica di gestione per i dati già presenti in DB</label><br>
-				<input type="checkbox" name="cbSovrDatiCorsi" id="cbSovrDatiCorsi" value="1">
-				<label for = "cbSovrDatiCorsi"> Aggiorna i dati dei corsi già presenti in DB </label>
-				<br>
-				<input type="checkbox" name="cbSovrDatiAD" id="cbSovrDatiAD" value="1">
-				<label for = "cbSovrDatiAD"> Aggiorna i dati delle attività didattiche già presenti in DB </label>
-				<br>
-				<input type="checkbox" name="cbSovrDatiDocenti" id="cbSovrDatiDocenti" value="1">
-				<label for = "cbSovrDatiDocenti"> Aggiorna i dati dei docenti già presenti in DB </label>
-				<br>
-				<input type="checkbox" name="cbSovrDatiOfferta" id="cbSovrDatiOfferta" value="1">
-				<label for = "cbSovrDatiOfferta"> Aggiorna i dati di offerta già presenti in DB per l'A.A. selezionato </label>
-			</div>
-			<br>
-			<div>
-				<button type="button" class="btn btn-primary" onclick="caricaDatiCorsi()">
-					Carica i dati per i corsi selezionati
-				</button>
-			</div>
 			<input type="text" id="target" name="target" value="" style="display:none">
 		</form>
 	</div>
