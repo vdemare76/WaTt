@@ -282,9 +282,24 @@ class UtilitaView(BaseView):
             else:    
                 flash('Errore nella fase di svuotamento del db.','danger')
 
-        elif target == "caricaAnniAccademici":
+        return render_template("utility.html", base_template=appbuilder.base_template, appbuilder=appbuilder)
+
+class UtilitaEsse3View(BaseView):
+    default_view = 'srv_esse3_home'
+
+    @expose('/srv_esse3_home/')
+    @has_access
+    def srv_esse3_home(self, name=None):
+        return render_template("utility_esse3.html", base_template=appbuilder.base_template, appbuilder=appbuilder)
+
+    @expose('/srv_esse3_util', methods=['GET','POST'])
+    @has_access
+    def srv_esse3_util(self):
+        target=request.form.get("target")
+
+        if target == "caricaAnniAccademici":
             session['anniAccademici']=getAnniAccademici()
-            return render_template("utility.html",
+            return render_template("utility_esse3.html",
                                    base_template=appbuilder.base_template,
                                    appbuilder=appbuilder,
                                    annoAccademicoSelezionato=1000,
@@ -294,12 +309,12 @@ class UtilitaView(BaseView):
             try:
                 anniAccademici=session['anniAccademici']
                 session['corsiInOfferta']=getCorsiInOfferta(request.form.get("anniAccademici"))
-                return render_template("utility.html",
-                                   base_template=appbuilder.base_template,
-                                   appbuilder=appbuilder,
-                                   anniAccademici=anniAccademici,
-                                   annoAccademicoSelezionato=request.form.get('anniAccademici'),
-                                   corsiInOfferta=session['corsiInOfferta'])
+                return render_template("utility_esse3.html",
+                                       base_template=appbuilder.base_template,
+                                       appbuilder=appbuilder,
+                                       anniAccademici=anniAccademici,
+                                       annoAccademicoSelezionato=request.form.get('anniAccademici'),
+                                       corsiInOfferta=session['corsiInOfferta'])
             except:
                 flash('The available academic years have not been loaded!','wanrning')
 
@@ -317,7 +332,7 @@ class UtilitaView(BaseView):
                 else:
                     flash('Selezionare almeno un corso da importare!', 'warning')
 
-                return render_template("utility.html",
+                return render_template("utility_esse3.html",
                                        base_template=appbuilder.base_template,
                                        appbuilder=appbuilder,
                                        anniAccademici=anniAccademici,
@@ -326,7 +341,7 @@ class UtilitaView(BaseView):
             except:
                 flash('Bisogna effettuare almeno una selezione nelle precedenti sezioni!','warning')
 
-        return render_template("utility.html", base_template=appbuilder.base_template, appbuilder=appbuilder)
+        return render_template("utility_esse.html", base_template=appbuilder.base_template, appbuilder=appbuilder)
 
 class PreferenzeView(BaseView):
     default_view = 'prf_home'
@@ -431,6 +446,8 @@ appbuilder.add_view(ModuliView, "Moduli", icon="fa-puzzle-piece", category="Offe
 appbuilder.add_view(LogisticaDocentiView, "Logistica docenti", icon="fa-hand-o-up", category="Offerta didattica")
 
 appbuilder.add_view(UtilitaView, "Funzioni utilità",  icon="fa-briefcase", category="Utilità")
+
+appbuilder.add_view(UtilitaView, "Funzioni utilità",  icon="fa-briefcase", category="Connettore Esse3")
 
 appbuilder.add_view(PreferenzeView, "Elaborazione orario",  icon="fa-cogs", category="Orario")
 

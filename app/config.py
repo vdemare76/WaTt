@@ -140,6 +140,7 @@ FAB_ROLES = {
 
         ["Funzioni utilità", "menu_access"],
         ["UtilitaView", "can_srv_home"], ["UtilitaView", "can_srv_util"],
+        ["UtilitaEsse3View", "can_esse3_home"], ["UtilitaEsse3View", "can_esse3_util"],
         ["Elaborazione orario", "menu_access"],   
         ["PreferenzeView", "can_prf_home"], ["PreferenzeView", "can_prf_calc"],
         ["Schema settimanale", "menu_access"],

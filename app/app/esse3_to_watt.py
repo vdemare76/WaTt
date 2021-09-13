@@ -320,6 +320,8 @@ def importDatiEsse3(annoAccademico,corsiDiStudio,semestre,flgSovrDatiCorsi,flgSo
         else:
             clr+=1
         attivitaDidattiche[c]['id']=idAD
+    for c in attivitaDidattiche:
+        flash(c)
     db.session.commit()
 
 
