@@ -4,7 +4,7 @@ from flask_appbuilder.models.sqla.interface import SQLAInterface
 from sqlalchemy.exc import SQLAlchemyError
 from .import db
 from .util import getColori
-from .models import AnnoAccademico, CorsoDiStudio, AttivitaDidattica
+from .models import AnnoAccademico, CorsoDiStudio, AttivitaDidattica, Docente
 
 import requests, base64
 from .util import getLdapToken
@@ -320,8 +320,24 @@ def importDatiEsse3(annoAccademico,corsiDiStudio,semestre,flgSovrDatiCorsi,flgSo
         else:
             clr+=1
         attivitaDidattiche[c]['id']=idAD
-    for c in attivitaDidattiche:
-        flash(c)
     db.session.commit()
 
-
+    ''' Inserimento dei docenti nel db '''
+    for d in docenti:
+        global idDocente
+        docente=db.session.query(Docente).filter(Docente.matricola==d).first()
+        row = Docente(codice_fiscale=d, matricola=d, cognome=docenti[d]['cognome'], nome=docenti[d]['nome'])
+        if docente is None:
+            db.session.add(row)
+            db.session.flush()
+            idDocente=row.id
+        else:
+            if flgSovrDatiDocenti is None:
+                idDocente=docente.id
+            else:
+                db.session.query(Docente).filter(Docente.matricola==d).delete()
+                db.session.add(row)
+                db.session.flush()
+                idDocente = row.id
+        docenti[d]['id']=idDocente
+    db.session.commit()

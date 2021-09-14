@@ -13,7 +13,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.2/js/bootstrap-select.min.js"></script>
 
 <div class="container">
-    <form method="post" id="form_post" method="post" action="{{url_for('UtilitaEsse3View.srv_util')}}">
+    <form method="post" id="form_post" method="post" action="{{url_for('UtilitaEsse3View.srv_esse3_util')}}">
         <div id="loader" class="loader" style="display:none"></div>
         <h4>Carica i dati dalla procedura di gestione delle carriere studenti (Esse3)</h4>
         <div>
@@ -64,7 +64,7 @@
             <label for = "cbSovrDatiDocenti"> Aggiorna i dati dei docenti già presenti in DB </label>
             <br>
             <input type="checkbox" name="cbSovrDatiOfferta" id="cbSovrDatiOfferta" value="1">
-            <label for = "cbSovrDatiOfferta"> Aggiorna i dati di offerta già presenti in DB per l'A.A. selezionato </label>
+            <label for = "cbSovrDatiOfferta"> Aggiorna i dati di offerta già presenti in DB per i corsi di studio e l'anno accademico selezionati </label>
         </div>
         <br>
         <div>
