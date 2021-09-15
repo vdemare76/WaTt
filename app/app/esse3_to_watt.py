@@ -4,7 +4,7 @@ from flask_appbuilder.models.sqla.interface import SQLAInterface
 from sqlalchemy.exc import SQLAlchemyError
 from .import db
 from .util import getColori
-from .models import AnnoAccademico, CorsoDiStudio, AttivitaDidattica, Docente
+from .models import AnnoAccademico, CorsoDiStudio, AttivitaDidattica, Docente, Offerta, Modulo
 
 import requests, base64
 from .util import getLdapToken
@@ -345,7 +345,13 @@ def importDatiEsse3(annoAccademico,corsiDiStudio,semestre,flgSovrDatiCorsi,flgSo
         docenti[d]['id']=idDocente
     db.session.commit()
 
-    size = len(corsi)
-    for c in range(0, size, 1):
-        db.session.query(Offerta).filter(Offerta.anno_accademico_id==idAnnoAccademico).delete()
-    db.session.commit()
+    if flgSovrDatiOfferta:
+        size = len(corsi)
+        ''' Cancellazione delle offerte e dei moduli collegati relativi ai corsi e all'A.A. selezionato '''
+        for c in range(0, size, 1):
+            off_id = db.session.query(Offerta.id).filter(Offerta.anno_accademico_id==int(idAnnoAccademico)).filter(Offerta.corso_di_studio_id==corsi[c]["id"]).subquery()
+            db.session.query(Modulo).filter(Modulo.offerta_id.in_(off_id)).delete(synchronize_session='fetch')
+            db.session.query(Offerta).filter(Offerta.anno_accademico_id==int(idAnnoAccademico)).filter(Offerta.corso_di_studio_id==corsi[c]["id"]).delete()
+            db.session.commit()
+            ''' Inserimento delle offerte dei corsi selezionati '''
+

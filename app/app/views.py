@@ -323,23 +323,23 @@ class UtilitaEsse3View(BaseView):
                 anniAccademici=session['anniAccademici']
                 corsiInOfferta=session['corsiInOfferta']
                 corsi=request.form.getlist('corsi')
-
-                if len(corsi)>0:
-                    importDatiEsse3(request.form.get('anniAccademici'),request.form.getlist('corsi'),
-                                    request.form.getlist('semestre'),
-                                    request.form.get('cbSovrDatiCorsi'),request.form.get('cbSovrDatiAD'),
-                                    request.form.get('cbSovrDatiDocenti'),request.form.get('cbSovrDatiOfferta'))
-                else:
-                    flash('Selezionare almeno un corso da importare!', 'warning')
-
-                return render_template("utility_esse3.html",
-                                       base_template=appbuilder.base_template,
-                                       appbuilder=appbuilder,
-                                       anniAccademici=anniAccademici,
-                                       annoAccademicoSelezionato=request.form.get('anniAccademici'),
-                                       corsiInOfferta=corsiInOfferta)
             except:
-                flash('Bisogna effettuare almeno una selezione nelle precedenti sezioni!','warning')
+                flash('Bisogna effettuare almeno una selezione nelle precedenti sezioni!', 'warning')
+
+            if len(corsi)>0:
+                importDatiEsse3(request.form.get('anniAccademici'),request.form.getlist('corsi'),
+                                request.form.getlist('semestre'),
+                                request.form.get('cbSovrDatiCorsi'),request.form.get('cbSovrDatiAD'),
+                                request.form.get('cbSovrDatiDocenti'),request.form.get('cbSovrDatiOfferta'))
+            else:
+                flash('Selezionare almeno un corso da importare!', 'warning')
+
+            return render_template("utility_esse3.html",
+                                   base_template=appbuilder.base_template,
+                                   appbuilder=appbuilder,
+                                   anniAccademici=anniAccademici,
+                                   annoAccademicoSelezionato=request.form.get('anniAccademici'),
+                                   corsiInOfferta=corsiInOfferta)
 
         return render_template("utility_esse3.html", base_template=appbuilder.base_template, appbuilder=appbuilder)
 
