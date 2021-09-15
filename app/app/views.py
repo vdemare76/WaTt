@@ -316,7 +316,7 @@ class UtilitaEsse3View(BaseView):
                                        annoAccademicoSelezionato=request.form.get('anniAccademici'),
                                        corsiInOfferta=session['corsiInOfferta'])
             except:
-                flash('The available academic years have not been loaded!','wanrning')
+                flash("Non sono stati caricati gli anni accademici per cui è disponibile un'offerta didattica!",'danger')
 
         elif target == "caricaDatiCorsi":
             try:

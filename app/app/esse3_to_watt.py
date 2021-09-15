@@ -257,6 +257,7 @@ def myFunc(e):
     return e['cdsId','annoCorso']
 
 def importDatiEsse3(annoAccademico,corsiDiStudio,semestre,flgSovrDatiCorsi,flgSovrDatiAD,flgSovrDatiDocenti,flgSovrDatiOfferta):
+    global idAnnoAccademico
     from operator import itemgetter
 
     colori=getColori()
@@ -265,12 +266,14 @@ def importDatiEsse3(annoAccademico,corsiDiStudio,semestre,flgSovrDatiCorsi,flgSo
     docenti, docentiPerAttivita=getDocenti(attivitaDidattiche)
 
     ''' Inserimento dell'anno accademico selezionato in DB se già non esiste '''
-    year=db.session.query(AnnoAccademico).filter(AnnoAccademico.anno==int(annoAccademico)).first()
-    if year is None:
+    annoAccademico=db.session.query(AnnoAccademico).filter(AnnoAccademico.anno==int(annoAccademico)).first()
+    if annoAccademico is None:
         row = AnnoAccademico(anno=annoAccademico, anno_esteso=annoAccademico+'/'+str(int(annoAccademico)+1))
         db.session.add(row)
         db.session.flush()
-        idAnno=row.id
+        idAnnoAccademico=row.id
+    else:
+        idAnnoAccademico=annoAccademico.id
     db.session.commit()
 
     ''' Inserimento dei dati dei corsi di studio selezionati in DB '''
@@ -340,4 +343,9 @@ def importDatiEsse3(annoAccademico,corsiDiStudio,semestre,flgSovrDatiCorsi,flgSo
                 db.session.flush()
                 idDocente = row.id
         docenti[d]['id']=idDocente
+    db.session.commit()
+
+    size = len(corsi)
+    for c in range(0, size, 1):
+        db.session.query(Offerta).filter(Offerta.anno_accademico_id==idAnnoAccademico).delete()
     db.session.commit()

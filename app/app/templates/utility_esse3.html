@@ -15,7 +15,9 @@
 <div class="container">
     <form method="post" id="form_post" method="post" action="{{url_for('UtilitaEsse3View.srv_esse3_util')}}">
         <div id="loader" class="loader" style="display:none"></div>
-        <h4>Carica i dati dalla procedura di gestione delle carriere studenti (Esse3)</h4>
+        <h3>Carica i dati dalla procedura di gestione delle carriere studenti (Esse3)</h3>
+        <br>
+        <h4 class="par_title">Step 1</h4>
         <div>
             <button type="button" class="btn btn-primary" onclick="caricaAnniAccademici()">
                 Carica gli A.A. per cui è disponibile un'offerta formativa
@@ -33,18 +35,20 @@
             </select>
         </div>
         <br>
+        <h4 class="par_title">Step 2</h4>
         <div>
             <button type="button" class="btn btn-primary" onclick="caricaCorsiInOfferta()">
                 Carica i corsi in offerta formativa per l'A.A. selezionato
             </button>
             <br><br>
-            <select name="corsi" id="corsi" class="selectpicker" multiple data-live-search="true">
+            <select name="corsi" id="corsi" class="selectpicker" data-none-selected-text="Nessun corso selezionato" multiple data-live-search="true">
                 {% for c in corsiInOfferta %}
                 <option value={{c["idCorso"]}}>{{c["codCorso"]}} - {{c["desCorso"]}}</option>
                 {% endfor %}
             </select>
         </div>
         <br>
+        <h4 class="par_title">Step 3</h4>
         <h4>Effettua le seguenti scelte prima di caricare i dati dei corsi (Esse3)</h4>
         <div>
             <label>Seleziona il semestre di riferimento</label><br>
@@ -62,11 +66,13 @@
             <br>
             <input type="checkbox" name="cbSovrDatiDocenti" id="cbSovrDatiDocenti" value="1">
             <label for = "cbSovrDatiDocenti"> Aggiorna i dati dei docenti già presenti in DB </label>
-            <br>
+            <br><br>
             <input type="checkbox" name="cbSovrDatiOfferta" id="cbSovrDatiOfferta" value="1">
-            <label for = "cbSovrDatiOfferta"> Aggiorna i dati di offerta già presenti in DB per i corsi di studio e l'anno accademico selezionati </label>
+            <label for = "cbSovrDatiOfferta"> Sostuisci l'offerta formativa per i corsi selezionati eventualmente già presente in DB</label>
+            <label>(Nel caso non sia selezionata questa opzione offerte per i corsi selezionati eventualmente già presenti in DB non saranno assolutamente modificate)</label>
         </div>
         <br>
+        <h4 class="par_title">Step 4</h4>
         <div>
             <button type="button" class="btn btn-primary" onclick="caricaDatiCorsi()">
                 Carica i dati per i corsi selezionati
