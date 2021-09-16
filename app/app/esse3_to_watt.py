@@ -229,20 +229,30 @@ def getDocenti(attivitaDidattiche):
             response=requests.request('GET', url+'logistica-service-v1/logistica/'+str(t['adLogId'])+'/udLogConDettagli/', headers=getHeaders(), timeout=60)
             data=response.json()
 
-            adLogId = str(t['adLogId'])
-            size = len(data)
+            adLogId=str(t['adLogId'])
+            size=len(data)
             for i in range(0, size, 1):
                 for cd in data[i]['CaricoDocenti']:
-                    matricola = cd['docenteMatricola']
-                    nomeDocente = cd['docenteNome']
-                    cognomeDocente = cd['docenteCognome']
+                    matricola=cd['docenteMatricola']
+                    nomeDocente=cd['docenteNome']
+                    cognomeDocente=cd['docenteCognome']
                     if matricola not in docenti:
-                        docenti[matricola] = {'nome': nomeDocente, 'cognome': cognomeDocente}
+                        docenti[matricola]={'nome': nomeDocente, 'cognome': cognomeDocente}
                     if adLogId not in docentiPerAttivita:
-                        docentiPerAttivita[adLogId] = [matricola]
+                        try:
+                            carico=cd['frazioneCarico']
+                        except:
+                            carico=0
+                        if carico>=50:
+                            docentiPerAttivita[adLogId]=[{"matricola": matricola, "titolare": "SI"}]
+                        else:
+                            docentiPerAttivita[adLogId]=[{"matricola": matricola, "titolare": "NO"}]
                     else:
                         if matricola not in docentiPerAttivita[adLogId]:
-                            docentiPerAttivita[adLogId].append(matricola)
+                            if carico>=50:
+                                docentiPerAttivita[adLogId].append({"matricola": matricola, "titolare":"SI"})
+                            else:
+                                docentiPerAttivita[adLogId].append({"matricola": matricola, "titolare": "NO"})
 
         return docenti, docentiPerAttivita
 
@@ -252,9 +262,6 @@ def getDocenti(attivitaDidattiche):
         return {'errMsg': str(e)}, 500
     except requests.exceptions.RequestException as e:
         return {'errMsg': str(e)}, 500
-
-def myFunc(e):
-    return e['cdsId','annoCorso']
 
 def importDatiEsse3(annoAccademico,corsiDiStudio,semestre,flgSovrDatiCorsi,flgSovrDatiAD,flgSovrDatiDocenti,flgSovrDatiOfferta):
     global idAnnoAccademico
@@ -266,14 +273,14 @@ def importDatiEsse3(annoAccademico,corsiDiStudio,semestre,flgSovrDatiCorsi,flgSo
     docenti, docentiPerAttivita=getDocenti(attivitaDidattiche)
 
     ''' Inserimento dell'anno accademico selezionato in DB se già non esiste '''
-    annoAccademico=db.session.query(AnnoAccademico).filter(AnnoAccademico.anno==int(annoAccademico)).first()
-    if annoAccademico is None:
+    aa=db.session.query(AnnoAccademico).filter(AnnoAccademico.anno==int(annoAccademico)).first()
+    if aa is None:
         row = AnnoAccademico(anno=annoAccademico, anno_esteso=annoAccademico+'/'+str(int(annoAccademico)+1))
         db.session.add(row)
         db.session.flush()
         idAnnoAccademico=row.id
     else:
-        idAnnoAccademico=annoAccademico.id
+        idAnnoAccademico=aa.id
     db.session.commit()
 
     ''' Inserimento dei dati dei corsi di studio selezionati in DB '''
@@ -355,3 +362,15 @@ def importDatiEsse3(annoAccademico,corsiDiStudio,semestre,flgSovrDatiCorsi,flgSo
             db.session.commit()
             ''' Inserimento delle offerte dei corsi selezionati '''
 
+        size = len(attivitaDidattiche)
+        for c in range(0, size, 1):
+            doc=filter(lambda dpa: dpa['titolare']=='SI', docentiPerAttivita[attivitaDidattiche[c]["adLogId"]])
+            #row=Offerta(anno_accademico_id=idAnnoAccademico, corso_di_studio_id=corsi[c]["id"], attivita_didattica_id=attivitaDidattiche[c]["id"],
+            #            docente_id=docenti[doc['matricola']]["id"]  , anno_di_corso=attivitaDidattiche[c]["annoCorso"], semestre=attivitaDidattiche[c]["semestre"], max_studenti=0)
+            flash(doc)
+    '''flash(corsi)
+    flash(attivitaDidattiche)
+    flash(docenti)
+    for d in docentiPerAttivita:
+        flash(d)
+        flash(docentiPerAttivita[d])'''

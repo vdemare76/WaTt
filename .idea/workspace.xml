@@ -4,7 +4,6 @@
     <list default="true" id="4bd4ca69-5fab-4bca-9aae-55bf4e9525ff" name="Default Changelist" comment="Update">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/app/esse3_to_watt.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/app/esse3_to_watt.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/app/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/app/views.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -119,6 +118,8 @@
       <workItem from="1631561534440" duration="6411000" />
       <workItem from="1631631415157" duration="2888000" />
       <workItem from="1631735305717" duration="5967000" />
+      <workItem from="1631775636689" duration="4698000" />
+      <workItem from="1631801591710" duration="7574000" />
     </task>
     <task id="LOCAL-00018" summary="Update">
       <created>1623303320900</created>
