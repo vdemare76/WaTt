@@ -364,13 +364,21 @@ def importDatiEsse3(annoAccademico,corsiDiStudio,semestre,flgSovrDatiCorsi,flgSo
 
         size = len(attivitaDidattiche)
         for c in range(0, size, 1):
-            doc=filter(lambda dpa: dpa['titolare']=='SI', docentiPerAttivita[attivitaDidattiche[c]["adLogId"]])
-            #row=Offerta(anno_accademico_id=idAnnoAccademico, corso_di_studio_id=corsi[c]["id"], attivita_didattica_id=attivitaDidattiche[c]["id"],
-            #            docente_id=docenti[doc['matricola']]["id"]  , anno_di_corso=attivitaDidattiche[c]["annoCorso"], semestre=attivitaDidattiche[c]["semestre"], max_studenti=0)
+            try:
+                doc = list(filter(lambda dpa: dpa['titolare']=='SI', docentiPerAttivita[attivitaDidattiche[c]["adLogId"]]))[0]['matricola']
+            except:
+                doc = list(filter(lambda dpa: dpa['titolare']=='NO', docentiPerAttivita[attivitaDidattiche[c]["adLogId"]]))[0]['matricola']
+            flash(docenti[str(doc)])
+            row=Offerta(anno_accademico_id=idAnnoAccademico, corso_di_studio_id=corsi[c]["id"], attivita_didattica_id=attivitaDidattiche[c]["id"],
+                        docente_id=docenti[doc]["id"]  , anno_di_corso=attivitaDidattiche[c]["annoCorso"], semestre=attivitaDidattiche[c]["semestre"], max_studenti=0)
+            db.session.add(row)
+            db. session.flush()
+            idOfferta=row.id
+            flash(attivitaDidattiche[c]["adLogId"])
             flash(doc)
-    '''flash(corsi)
+    flash(corsi)
     flash(attivitaDidattiche)
     flash(docenti)
     for d in docentiPerAttivita:
         flash(d)
-        flash(docentiPerAttivita[d])'''
+        flash(docentiPerAttivita[d])

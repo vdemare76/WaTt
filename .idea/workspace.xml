@@ -115,11 +115,34 @@
       <workItem from="1630792063862" duration="35000" />
       <workItem from="1630835632287" duration="16312000" />
       <workItem from="1630913407685" duration="24848000" />
-      <workItem from="1631561534440" duration="6411000" />
-      <workItem from="1631631415157" duration="2888000" />
-      <workItem from="1631735305717" duration="5967000" />
-      <workItem from="1631775636689" duration="4698000" />
-      <workItem from="1631801591710" duration="7574000" />
+    </task>
+    <task id="LOCAL-00014" summary="Update">
+      <created>1623242088045</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1623242088045</updated>
+    </task>
+    <task id="LOCAL-00015" summary="Update">
+      <created>1623244407540</created>
+      <option name="number" value="00015" />
+      <option name="presentableId" value="LOCAL-00015" />
+      <option name="project" value="LOCAL" />
+      <updated>1623244407540</updated>
+    </task>
+    <task id="LOCAL-00016" summary="Update">
+      <created>1623249854048</created>
+      <option name="number" value="00016" />
+      <option name="presentableId" value="LOCAL-00016" />
+      <option name="project" value="LOCAL" />
+      <updated>1623249854048</updated>
+    </task>
+    <task id="LOCAL-00017" summary="Update">
+      <created>1623303271130</created>
+      <option name="number" value="00017" />
+      <option name="presentableId" value="LOCAL-00017" />
+      <option name="project" value="LOCAL" />
+      <updated>1623303271131</updated>
     </task>
     <task id="LOCAL-00018" summary="Update">
       <created>1623303320900</created>
@@ -436,35 +459,7 @@
       <option name="project" value="LOCAL" />
       <updated>1630964224651</updated>
     </task>
-    <task id="LOCAL-00063" summary="Update">
-      <created>1631563866561</created>
-      <option name="number" value="00063" />
-      <option name="presentableId" value="LOCAL-00063" />
-      <option name="project" value="LOCAL" />
-      <updated>1631563866562</updated>
-    </task>
-    <task id="LOCAL-00064" summary="Update">
-      <created>1631566154795</created>
-      <option name="number" value="00064" />
-      <option name="presentableId" value="LOCAL-00064" />
-      <option name="project" value="LOCAL" />
-      <updated>1631566154795</updated>
-    </task>
-    <task id="LOCAL-00065" summary="Update">
-      <created>1631566916408</created>
-      <option name="number" value="00065" />
-      <option name="presentableId" value="LOCAL-00065" />
-      <option name="project" value="LOCAL" />
-      <updated>1631566916408</updated>
-    </task>
-    <task id="LOCAL-00066" summary="Update">
-      <created>1631655474202</created>
-      <option name="number" value="00066" />
-      <option name="presentableId" value="LOCAL-00066" />
-      <option name="project" value="LOCAL" />
-      <updated>1631655474203</updated>
-    </task>
-    <option name="localTasksCounter" value="67" />
+    <option name="localTasksCounter" value="63" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -485,5 +480,15 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Update" />
     <option name="LAST_COMMIT_MESSAGE" value="Update" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/app/app/solver.py</url>
+          <option name="timeStamp" value="1" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
 </project>
