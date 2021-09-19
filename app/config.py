@@ -112,6 +112,10 @@ FAB_ROLES = {
         ["DocentiView", "can_list"],["DocentiView", "can_show"],["DocentiView", "can_add"],
         ["DocentiView", "can_edit"],["DocentiView", "can_delete"],["DocentiView", "can_download"],
         ["Docenti", "menu_access"],
+
+        ["NumerositaAnniCorsoView", "can_list"], ["NumerositaAnniCorsoView", "can_show"], ["NumerositaAnniCorsoView", "can_add"],
+        ["NumerositaAnniCorsoView", "can_edit"], ["NumerositaAnniCorsoView", "can_delete"], ["NumerositaAnniCorsoView", "can_download"],
+        ["Numerosità anni corso", "menu_access"],
            
         ["AttivitaDidatticheView", "can_list"],["AttivitaDidatticheView", "can_show"],["AttivitaDidatticheView", "can_add"],
         ["AttivitaDidatticheView", "can_edit"],["AttivitaDidatticheView", "can_delete"],["AttivitaDidatticheView", "can_download"],

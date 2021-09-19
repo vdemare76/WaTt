@@ -9,7 +9,7 @@ from wtforms import validators
 
 from .import appbuilder, db
 import requests
-from .models import AnnoAccademico, CorsoDiStudio, AttivitaDidattica, Docente, Aula, Offerta, \
+from .models import AnnoAccademico, CorsoDiStudio, AttivitaDidattica, Docente, Aula, NumerositaAnniCorso, Offerta, \
                     LogisticaDocente, Modulo, Giorno, Slot, Orario, OrarioTestata, OrarioDettaglio, Chiusura
 
 from flask.templating import render_template
@@ -24,17 +24,20 @@ class AnniAccademiciView(ModelView):
                      "anno_esteso":"Anno accademico esteso"}
     list_columns = ["anno", 
                     "anno_esteso"]
-        
+
+
 class SlotView(ModelView):
     datamodel = SQLAInterface(Slot)
     label_columns = {"descrizione":"Descrizione"}
     list_columns = ["descrizione"]
-    
+
+
 class GiorniView(ModelView):
     datamodel = SQLAInterface(Giorno)
     label_columns = {"descrizione":"Descrizione"}
     list_columns = ["descrizione"]
-    
+
+
 class CorsiDiStudioView(ModelView):
     datamodel = SQLAInterface(CorsoDiStudio)
     label_columns = {"codice":"Codice CdS",
@@ -46,6 +49,7 @@ class CorsiDiStudioView(ModelView):
                     "cfu", 
                     "durata_legale"]
 
+
 class AttivitaDidatticheView(ModelView):
     datamodel = SQLAInterface(AttivitaDidattica)
     label_columns = {"codice":"Codice AD",
@@ -56,7 +60,8 @@ class AttivitaDidatticheView(ModelView):
                     "descrizione", 
                     "cfu",
                     "colore"]
-    
+
+
 class AuleView(ModelView):
     datamodel = SQLAInterface(Aula)
     label_columns = {"codice":"Codice aula",
@@ -67,6 +72,17 @@ class AuleView(ModelView):
                     "descrizione", 
                     "capienza",
                     "tipo_aula"]
+
+
+class NumerositaAnniCorsoView(ModelView):
+    datamodel = SQLAInterface(NumerositaAnniCorso)
+    label_columns = {"corso_di_studio.descrizione":"Corso di studio",
+                     "anno_di_corso":"Anno di corso",
+                     "numerosita":"Numerosità"}
+    list_columns = ["corso_di_studio.descrizione",
+                    "anno_di_corso",
+                    "numerosita"]
+
 
 class DocentiView(ModelView):
     datamodel = SQLAInterface(Docente)
@@ -79,7 +95,8 @@ class DocentiView(ModelView):
     search_filters = ["codice_fiscale", 
                     "cognome", 
                     "nome"] 
-    
+
+
 class OffertaView(ModelView):
     datamodel = SQLAInterface(Offerta)
     label_columns = {"anno_accademico.anno_esteso":"Anno accademico",
@@ -97,7 +114,8 @@ class OffertaView(ModelView):
                     "anno_di_corso",
                     "semestre",
                     "max_studenti"]
-    
+
+
 class ModuliView(ModelView):
     datamodel = SQLAInterface(Modulo)
     label_columns = {"codice":"Codice modulo",
@@ -131,6 +149,7 @@ class ModuliView(ModelView):
                     "durata_sessioni",
                     "max_studenti"]
 
+
 class ChiusuraView(ModelView):
     datamodel = SQLAInterface(Chiusura)
     label_columns = {"orario_testata.descrizione":"Descrizione orario",
@@ -141,6 +160,7 @@ class ChiusuraView(ModelView):
                     "data_inizio",
                     "data_fine",
                     "nota"]
+
 
 class LogisticaDocentiView(ModelView):
     datamodel = SQLAInterface(LogisticaDocente)
@@ -177,6 +197,7 @@ class LogisticaDocentiView(ModelView):
     }
     
     edit_form_extra_fields = add_form_extra_fields 
+
 
 class OrariGeneratiView(ModelView):
     datamodel = SQLAInterface(OrarioTestata)
@@ -258,6 +279,7 @@ class OrariGeneratiView(ModelView):
             return -1
         return redirect(self.get_redirect())
 
+
 class UtilitaView(BaseView):
     default_view = 'srv_home'
 
@@ -289,6 +311,7 @@ class UtilitaView(BaseView):
                 flash('Errore nella fase di inizializzazione del db.','danger')
 
         return render_template("utility.html", base_template=appbuilder.base_template, appbuilder=appbuilder)
+
 
 class UtilitaEsse3View(BaseView):
     default_view = 'srv_esse3_home'
@@ -348,6 +371,7 @@ class UtilitaEsse3View(BaseView):
 
         return render_template("utility_esse3.html", base_template=appbuilder.base_template, appbuilder=appbuilder)
 
+
 class PreferenzeView(BaseView):
     default_view = 'prf_home'
 
@@ -373,6 +397,7 @@ class PreferenzeView(BaseView):
                                     request.form.get('txt_desc_orario'))
         return redirect(url_for('PreferenzeView.prf_home'));  
 
+
 class SchemaSettimanaleView(BaseView):
     default_view = 'wsk_home'
 
@@ -386,6 +411,7 @@ class SchemaSettimanaleView(BaseView):
                                appbuilder=appbuilder,
                                slot=slot,
                                orario=orario)
+
 
 class CalendarioView(BaseView):
     default_view = 'cld_home'
@@ -440,6 +466,8 @@ appbuilder.add_view(AuleView, "Aule", icon="fa-th", category="Tabelle di base")
 
 appbuilder.add_view(CorsiDiStudioView, "Corsi di Studio", icon="fa-pencil", category="Didattica")
 
+appbuilder.add_view(NumerositaAnniCorsoView, "Numerosità anni corso", icon="fa-users", category="Didattica")
+
 appbuilder.add_view(DocentiView, "Docenti", icon="fa-user-circle", category="Didattica")
 
 appbuilder.add_view(AttivitaDidatticheView, "Attività didattiche", icon="fa-book", category="Didattica")
@@ -452,7 +480,7 @@ appbuilder.add_view(LogisticaDocentiView, "Logistica docenti", icon="fa-hand-o-u
 
 appbuilder.add_view(UtilitaView, "Funzioni utilità",  icon="fa-briefcase", category="Utilità")
 
-appbuilder.add_view(UtilitaEsse3View, "Connettore Esse3",  icon="fa-briefcase", category="Utilità")
+appbuilder.add_view(UtilitaEsse3View, "Connettore Esse3",  icon="fa-share-square", category="Utilità")
 
 appbuilder.add_view(PreferenzeView, "Elaborazione orario",  icon="fa-cogs", category="Orario")
 
