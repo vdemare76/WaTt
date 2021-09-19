@@ -1,6 +1,6 @@
 from .models import AnnoAccademico, CorsoDiStudio, AttivitaDidattica, \
     Docente, Aula, Offerta, LogisticaDocente, Modulo, Giorno, Slot, \
-    OrarioTestata, OrarioDettaglio, Orario, StatoOrario
+    OrarioTestata, OrarioDettaglio, Orario, StatoOrario, NumerositaAnniCorso
 from .import db
 from flask import flash
 from sqlalchemy.exc import SQLAlchemyError
@@ -10,7 +10,7 @@ from ldap3 import Server, Connection, ALL, SUBTREE
 from ldap3.core.exceptions import LDAPException, LDAPBindError, LDAPSocketOpenError
 import config
 
-colori = {
+colori={
     1:"#FF0000",
     2:"#4169E1",
     3:"#228B22",
@@ -23,17 +23,19 @@ colori = {
     10:"#9292d4"
 }
 
-giorni = []
-slot = []
-anni_accademici = []
-corsi_di_studio = []
-attivita_didattiche = []
-aule = []
-docenti = []
-offerta = [] 
-moduli = [] 
-logistica_docenti = []
-   
+giorni=[]
+slot=[]
+anni_accademici=[]
+corsi_di_studio=[]
+attivita_didattiche=[]
+aule=[]
+numerosita_anni_corso=[]
+docenti=[]
+offerta=[] 
+moduli=[] 
+logistica_docenti=[]
+
+
 def __svuotaTabelle():
     db.session.query(OrarioDettaglio).delete()
     db.session.query(OrarioTestata).delete()
@@ -49,178 +51,200 @@ def __svuotaTabelle():
     db.session.query(Slot).delete()
     db.session.query(Aula).delete()
        
-    db.session.execute('ALTER TABLE modulo AUTO_INCREMENT = 1')
-    db.session.execute('ALTER TABLE offerta AUTO_INCREMENT = 1')
-    db.session.execute('ALTER TABLE corso_di_studio AUTO_INCREMENT = 1')
-    db.session.execute('ALTER TABLE attivita_didattica AUTO_INCREMENT = 1')   
-    db.session.execute('ALTER TABLE docente AUTO_INCREMENT = 1')
-    db.session.execute('ALTER TABLE giorno AUTO_INCREMENT = 1')
-    db.session.execute('ALTER TABLE anno_accademico AUTO_INCREMENT = 1')
-    db.session.execute('ALTER TABLE slot AUTO_INCREMENT = 1')
-    db.session.execute('ALTER TABLE aula AUTO_INCREMENT = 1')
-    db.session.execute('ALTER TABLE logistica_docente AUTO_INCREMENT = 1')
-    db.session.execute('ALTER TABLE orario AUTO_INCREMENT = 1')
-    db.session.execute('ALTER TABLE orario_testata AUTO_INCREMENT = 1')
-    db.session.execute('ALTER TABLE orario_dettaglio AUTO_INCREMENT = 1')
+    db.session.execute("ALTER TABLE modulo AUTO_INCREMENT=1")
+    db.session.execute("ALTER TABLE offerta AUTO_INCREMENT=1")
+    db.session.execute("ALTER TABLE corso_di_studio AUTO_INCREMENT=1")
+    db.session.execute("ALTER TABLE attivita_didattica AUTO_INCREMENT=1")   
+    db.session.execute("ALTER TABLE docente AUTO_INCREMENT=1")
+    db.session.execute("ALTER TABLE giorno AUTO_INCREMENT=1")
+    db.session.execute("ALTER TABLE anno_accademico AUTO_INCREMENT=1")
+    db.session.execute("ALTER TABLE slot AUTO_INCREMENT=1")
+    db.session.execute("ALTER TABLE aula AUTO_INCREMENT=1")
+    db.session.execute("ALTER TABLE logistica_docente AUTO_INCREMENT=1")
+    db.session.execute("ALTER TABLE orario AUTO_INCREMENT=1")
+    db.session.execute("ALTER TABLE orario_testata AUTO_INCREMENT=1")
+    db.session.execute("ALTER TABLE orario_dettaglio AUTO_INCREMENT=1")
     db.session.commit()
 
 
 def __impostaDatiMinimi():
-    giorni_i = ['Lunedì', 'Martedì', 'Mercoledì', 'Giovedì', 'Venerdì']
+    giorni_i=["Lunedì", "Martedì", "Mercoledì", "Giovedì", "Venerdì"]
     giorni.extend(giorni_i)
 
-    slot_i = ['09:00-10:00', '10:00-11:00', '11:00-12:00', '12:00-13:00',
-              '14:00-15:00', '15:00-16:00', '16:00-17:00', '17:00-18:00']
+    slot_i=["09:00-10:00", "10:00-11:00", "11:00-12:00", "12:00-13:00",
+              "14:00-15:00", "15:00-16:00", "16:00-17:00", "17:00-18:00"]
     slot.extend(slot_i)
 
-    anni_accademici_i = [
-        [2018,'2018-19'],
-        [2019,'2019-20'],
-        [2020,'2020-21'],
-        [2021,'2021-22']
+    anni_accademici_i=[
+        [2018,"2018-19"],
+        [2019,"2019-20"],
+        [2020,"2020-21"],
+        [2021,"2021-22"]
     ]
     anni_accademici.extend(anni_accademici_i)
 
-    aule_i = [
-        ['AN1', 'Aula 1', 150, 'N'],
-        ['AN2', 'Aula 2', 100, 'N'],
-        ['AN3', 'Aula 3', 70, 'N'],
-        ['AN4', 'Aula 4', 50, 'N'],
-        ['AN5', 'Aula 5', 35, 'N'],
-        ['AN6', 'Aula 6', 35, 'N'],
-        ['AN7', 'Aula 7', 150, 'N'],
-        ['AL1', 'Aula LAB1', 50, 'L'],
-        ['AL2', 'Aula LAB2', 40, 'L'],
-        ['AL3', 'Aula LAB3', 35, 'L']
+    aule_i=[
+        ["AN1", "Aula 1", 260, "N"],
+        ["AN2", "Aula 2", 132, "N"],
+        ["AN3", "Aula 3", 132, "N"],
+        ["AN4", "Aula 4", 117, "N"],
+        ["AN5", "Aula 5", 44, "N"],
+        ["AN6", "Aula 6", 24, "N"],
+        ["AN7", "Aula 7", 44, "N"],
+        ["AN8", "Aula 8", 117, "N"],
+        ["AN9", "Aula 9", 24, "N"],
+        ["AN10", "Aula 10", 44, "N"],
+        ["AN11", "Aula 11", 117, "N"],
+        ["AN12", "Aula 12", 24, "N"],
+        ["AN13", "Aula 13", 44, "N"],
+        ["AN14", "Aula 14", 115, "N"],
+        ["AN15", "Aula 15", 44, "N"],
+        ["AN16", "Aula 16", 117, "N"],
+        ["AN17", "Aula 17", 44, "N"],
+        ["AN18", "Aula 18", 117, "N"],
+        ["AL1", "Aula LAB1", 36, "L"],
+        ["AL2", "Aula LAB2", 36, "L"],
+        ["AL3", "Aula LAB3", 36, "L"],
+        ["AL4", "Aula LAB4", 36, "L"]
     ]
     aule.extend(aule_i)
 
-def __impostaNumerositaTest():
-    numerosita_i = [
-        ['0124', 1, 100],
-        ['0124', 2, 70],
-        ['0124', 2, 50]
+    numerosita_anni_corso_i=[
+        ["0122", 1, 50],
+        ["0122", 2, 30],
+        ["0122", 3, 30],
+        ["0123", 1, 60],
+        ["0123", 2, 45],
+        ["0123", 3, 25],
+        ["0124", 1, 100],
+        ["0124", 2, 70],
+        ["0124", 3, 50],
+        ["0125", 1, 40],
+        ["0125", 2, 20],
+        ["0125", 3, 15]
     ]
+    numerosita_anni_corso.extend(numerosita_anni_corso_i)
+
 
 def __impostaDatiIniziali():
-    giorni_i = ['Lunedì','Martedì','Mercoledì','Giovedì','Venerdì']
+    giorni_i=["Lunedì","Martedì","Mercoledì","Giovedì","Venerdì"]
     giorni.extend(giorni_i)
     
-    slot_i = ['09:00-10:00','10:00-11:00','11:00-12:00','12:00-13:00',
-            '14:00-15:00','15:00-16:00','16:00-17:00','17:00-18:00']
+    slot_i=["09:00-10:00","10:00-11:00","11:00-12:00","12:00-13:00",
+            "14:00-15:00","15:00-16:00","16:00-17:00","17:00-18:00"]
     slot.extend(slot_i)
     
-    anni_accademici_i = [
-        [2018,'2018-19'],
-        [2019,'2019-20'],
-        [2020,'2020-21'],
-        [2021,'2021-22']
+    anni_accademici_i=[
+        [2018,"2018-19"],
+        [2019,"2019-20"],
+        [2020,"2020-21"],
+        [2021,"2021-22"]
     ]
     anni_accademici.extend(anni_accademici_i)
     
-    corsi_di_studio_i = [
-        ['A08','INFORMATICA',180,3],
-        ['A09','INFORMATICA APPLICATA',120,2],
-        ['A10','SCIENZE BIOLOGICHE',180,3]
+    corsi_di_studio_i=[
+        ["A08","INFORMATICA",180,3],
+        ["A09","INFORMATICA APPLICATA",120,2],
+        ["A10","SCIENZE BIOLOGICHE",180,3]
     ]
     corsi_di_studio.extend(corsi_di_studio_i)
 
-    aule_i = [
-        ['AN1','Aula 1',150,'N'],
-        ['AN2','Aula 2',100,'N'],
-        ['AN3','Aula 3',70,'N'],
-        ['AN4','Aula 4',50,'N'],
-        ['AN5','Aula 5',35,'N'],
-        ['AN6','Aula 6',35,'N'],
-        ['AN7','Aula 7',150,'N'],
-        ['AL1','Aula LAB1',50,'L'],
-        ['AL2','Aula LAB2',40,'L'],
-        ['AL3','Aula LAB3',35,'L']
+    aule_i=[
+        ["AN1","Aula 1",150,"N"],
+        ["AN2","Aula 2",100,"N"],
+        ["AN3","Aula 3",70,"N"],
+        ["AN4","Aula 4",50,"N"],
+        ["AN5","Aula 5",35,"N"],
+        ["AN6","Aula 6",35,"N"],
+        ["AN7","Aula 7",150,"N"],
+        ["AL1","Aula LAB1",50,"L"],
+        ["AL2","Aula LAB2",40,"L"],
+        ["AL3","Aula LAB3",35,"L"]
     ]
     aule.extend(aule_i)
 
-    attivita_didattiche_i = [ 
+    attivita_didattiche_i=[ 
         # PRIMO SEMESTRE INFORMATICA
-        ['MAT1-1S','Matematica 1',9,'#E0FFFF'],
-        ['ARCL','Architettura dei calcolatori e Laboratorio',12,'#FFFFE0'],
-        ['PG1L','Programmazione 1 e Laboratorio',12,'#E6E6FA'],
-        ['MAT2','Matematica 2',6,'#D8BFD8'],
-        ['ECOA','Economia ed organizzazione aziendale',6,'#7FFFD4'],
-        ['ASDL','Algoritmi e strutture dati e Laboratorio',12,'#FFA07A'],
-        ['PG3L','Programmazione 3 e Laboratorio',9,'#E0FFFF'],
-        ['RETL','Reti di calcolatori e Laboratorio',9,'#FFE4C4'],
-        ['GISL','Sistemi informativi geografici e Laboratorio',6,'#F5F5F5'],
+        ["MAT1-1S","Matematica 1",9,"#E0FFFF"],
+        ["ARCL","Architettura dei calcolatori e Laboratorio",12,"#FFFFE0"],
+        ["PG1L","Programmazione 1 e Laboratorio",12,"#E6E6FA"],
+        ["MAT2","Matematica 2",6,"#D8BFD8"],
+        ["ECOA","Economia ed organizzazione aziendale",6,"#7FFFD4"],
+        ["ASDL","Algoritmi e strutture dati e Laboratorio",12,"#FFA07A"],
+        ["PG3L","Programmazione 3 e Laboratorio",9,"#E0FFFF"],
+        ["RETL","Reti di calcolatori e Laboratorio",9,"#FFE4C4"],
+        ["GISL","Sistemi informativi geografici e Laboratorio",6,"#F5F5F5"],
         # PRIMO SEMESTRE INFORMATICA APPLICATA
-        ['SCCP-1S','Scientific computer',6,'#E0FFFF'],
-        ['PHQU','Physic and Quantum',6,'#FFFFE0'],
-        ['MACL-1S','Machine Learning',6,'#E6E6FA'],
-        ['CPGR','Computer Graphics',6,'#D8BFD8'],
-        ['HPCP','High Performance Computing',6,'#7FFFD4'],
-        ['MMLE','Multimodal Machine Learning',6,'#FFA07A'],
-        ['IOTH-1S','Internet of Things',6,'#E0FFFF'],
+        ["SCCP-1S","Scientific computer",6,"#E0FFFF"],
+        ["PHQU","Physic and Quantum",6,"#FFFFE0"],
+        ["MACL-1S","Machine Learning",6,"#E6E6FA"],
+        ["CPGR","Computer Graphics",6,"#D8BFD8"],
+        ["HPCP","High Performance Computing",6,"#7FFFD4"],
+        ["MMLE","Multimodal Machine Learning",6,"#FFA07A"],
+        ["IOTH-1S","Internet of Things",6,"#E0FFFF"],
         # SECONDO SEMESTRE INFORMATICA
-        ['LING','Lingua Inglese',3,'#E0FFFF'],
-        ['MAT1-2S','Matematica 1',9,'#FFFFE0'],
-        ['PG2L','Programmazione 2 e Laboratorio',12,'#E6E6FA'],
-        ['FISI','Fisica',6,'#D8BFD8'],
-        ['BASD','Base di dati e Laboratorio',9,'#7FFFD4'],
-        ['SISO','Sistemi operativi e Laboratorio',12,'#FFA07A'],
-        ['CNUM','Calcolo numerico',6,'#E0FFFF'],
-        ['CPAR','Calcolo parallelo',9,'#FFE4C4'],
-        ['ELAB','Elaborazione delle immagini',6,'#F5F5F5'],
+        ["LING","Lingua Inglese",3,"#E0FFFF"],
+        ["MAT1-2S","Matematica 1",9,"#FFFFE0"],
+        ["PG2L","Programmazione 2 e Laboratorio",12,"#E6E6FA"],
+        ["FISI","Fisica",6,"#D8BFD8"],
+        ["BASD","Base di dati e Laboratorio",9,"#7FFFD4"],
+        ["SISO","Sistemi operativi e Laboratorio",12,"#FFA07A"],
+        ["CNUM","Calcolo numerico",6,"#E0FFFF"],
+        ["CPAR","Calcolo parallelo",9,"#FFE4C4"],
+        ["ELAB","Elaborazione delle immagini",6,"#F5F5F5"],
         # SECONDO SEMESTRE INFORMATICA APPLICATA
-        ['SCCP-2S','Scientific Computing PII',12,'#E0FFFF'],
-        ['ITSP','Intelligent Signal Processing',12,'#FFFFE0'],
-        ['MACL-2S','Machine Learning PII',12,'#E6E6FA'],
-        ['DSTC','Data Science Technology',12,'#D8BFD8'],
-        ['CLCP','Cloud Computing',12,'#7FFFD4'],
-        ['IOTH-2S','Internet of Things PII',12,'#FFA07A'],
+        ["SCCP-2S","Scientific Computing PII",12,"#E0FFFF"],
+        ["ITSP","Intelligent Signal Processing",12,"#FFFFE0"],
+        ["MACL-2S","Machine Learning PII",12,"#E6E6FA"],
+        ["DSTC","Data Science Technology",12,"#D8BFD8"],
+        ["CLCP","Cloud Computing",12,"#7FFFD4"],
+        ["IOTH-2S","Internet of Things PII",12,"#FFA07A"],
         # SECONDO SEMESTRE SCIENZE BIOLOGICHE
-        ['BIOA','Biologia animale',3,'#E0FFFF'],
-        ['BFVE','Biologia e Fisiologia vegetale',9,'#FFFFE0'],
-        ['CHOR','Chimica organica e laboratorio',12,'#E6E6FA'],
-        ['FISC','Fisica e laboratorio',6,'#D8BFD8'],
-        ['MICB','Microbiologia e laboratorio',9,'#7FFFD4'],
-        ['INDB','Indicatori biologici',12,'#FFA07A'],
-        ['BFAN','Biologia e fisiologia animale',6,'#E0FFFF'],
-        ['ACVI','Analisi ciclo di vita',9,'#FFE4C4'],
-        ['FTOS','Farmacologia e tossicologia',6,'#F5F5F5']
+        ["BIOA","Biologia animale",3,"#E0FFFF"],
+        ["BFVE","Biologia e Fisiologia vegetale",9,"#FFFFE0"],
+        ["CHOR","Chimica organica e laboratorio",12,"#E6E6FA"],
+        ["FISC","Fisica e laboratorio",6,"#D8BFD8"],
+        ["MICB","Microbiologia e laboratorio",9,"#7FFFD4"],
+        ["INDB","Indicatori biologici",12,"#FFA07A"],
+        ["BFAN","Biologia e fisiologia animale",6,"#E0FFFF"],
+        ["ACVI","Analisi ciclo di vita",9,"#FFE4C4"],
+        ["FTOS","Farmacologia e tossicologia",6,"#F5F5F5"]
     ]
     attivita_didattiche.extend(attivita_didattiche_i)
 
-    docenti_i = [
-        ['DNFLGU76D11F839P','DOC001','D\'Onofrio','Luigi'],
-        ['MNTRFL76D11F839P','DOC002','Montella','Raffaele'],
-        ['SLVGPP76D11F839P','DOC003','Salvi','Giuseppe'],
-        ['GNTGLU76D11F839P','DOC004','Giunta','Giulio'],
-        ['CRMNGL76D11F839P','DOC005','Ciaramella','Angelo'],
-        ['VLZBRN76D11F839P','DOC006','Volzone','Bruno'],
-        ['MTLCNT76D11F839P','DOC007','Metallo','Concetta'],
-        ['CMTFRN76D11F839P','DOC008','Camastra','Francesco'],
-        ['SCFRTO76D11F839P','DOC009','Scafuri','Umberto'],
-        ['PRNCLD76D11F839P','DOC010','Parente','Claudio'],
-        ['RTNLSS76D11F839P','DOC011','Rotundi','Alessandra'],
-        ['DNNMRZ76D11F839P','DOC012','De Nino','Maurizio'],
-        ['MRCLVA76D11F839P','DOC013','Marcellino','Livia'],
-        ['DCPMHL76D11F839P','DOC014','Di Capua','Michele'],    
-        ['RIZMRS76D11F839P','DOC015','Rizzardi','MariaRosaria'],
-        ['MRTNTN76D11F839P','DOC016','Maratea','Antonio'],
-        ['CSTNLL76D11F839P','DOC017','Castiglione','Aniello'],
-        ['STNNTN76D11F839P','DOC018','Staiano','Antonino'],
-        ['DMRMLI76D11F839P','DOC019','Di Martino','Emilia'],
-        ['FRNLSS76D11F839P','DOC020','Ferone','Alessio'],
-        ['MRCLVA76D11F839P','DOC021','Sandulli','Roberto'],
-        ['DCPMHL76D11F839P','DOC022','Casoria','Paolo'],    
-        ['RIZMRS76D11F839P','DOC023','Chianese','Elena'],
-        ['MRTNTN76D11F839P','DOC024','Riccio','Angelo'],
-        ['CSTNLL76D11F839P','DOC025','Pasquale','Vincenzo'],
-        ['STNNTN76D11F839P','DOC026','Dumoulet','Stefano'],
-        ['DMRMLI76D11F839P','DOC027','Franzese','Pier Paolo'],
-        ['FRNLSS76D11F839P','DOC028','Mazzeo','Giovanni']
+    docenti_i=[
+        ["DNFLGU76D11F839P","DOC001","D\"Onofrio","Luigi"],
+        ["MNTRFL76D11F839P","DOC002","Montella","Raffaele"],
+        ["SLVGPP76D11F839P","DOC003","Salvi","Giuseppe"],
+        ["GNTGLU76D11F839P","DOC004","Giunta","Giulio"],
+        ["CRMNGL76D11F839P","DOC005","Ciaramella","Angelo"],
+        ["VLZBRN76D11F839P","DOC006","Volzone","Bruno"],
+        ["MTLCNT76D11F839P","DOC007","Metallo","Concetta"],
+        ["CMTFRN76D11F839P","DOC008","Camastra","Francesco"],
+        ["SCFRTO76D11F839P","DOC009","Scafuri","Umberto"],
+        ["PRNCLD76D11F839P","DOC010","Parente","Claudio"],
+        ["RTNLSS76D11F839P","DOC011","Rotundi","Alessandra"],
+        ["DNNMRZ76D11F839P","DOC012","De Nino","Maurizio"],
+        ["MRCLVA76D11F839P","DOC013","Marcellino","Livia"],
+        ["DCPMHL76D11F839P","DOC014","Di Capua","Michele"],    
+        ["RIZMRS76D11F839P","DOC015","Rizzardi","MariaRosaria"],
+        ["MRTNTN76D11F839P","DOC016","Maratea","Antonio"],
+        ["CSTNLL76D11F839P","DOC017","Castiglione","Aniello"],
+        ["STNNTN76D11F839P","DOC018","Staiano","Antonino"],
+        ["DMRMLI76D11F839P","DOC019","Di Martino","Emilia"],
+        ["FRNLSS76D11F839P","DOC020","Ferone","Alessio"],
+        ["MRCLVA76D11F839P","DOC021","Sandulli","Roberto"],
+        ["DCPMHL76D11F839P","DOC022","Casoria","Paolo"],    
+        ["RIZMRS76D11F839P","DOC023","Chianese","Elena"],
+        ["MRTNTN76D11F839P","DOC024","Riccio","Angelo"],
+        ["CSTNLL76D11F839P","DOC025","Pasquale","Vincenzo"],
+        ["STNNTN76D11F839P","DOC026","Dumoulet","Stefano"],
+        ["DMRMLI76D11F839P","DOC027","Franzese","Pier Paolo"],
+        ["FRNLSS76D11F839P","DOC028","Mazzeo","Giovanni"]
     ]
     docenti.extend(docenti_i)
     
-    offerta_i = [
+    offerta_i=[
         # PRIMO SEMESTRE INFORMATICA
         [4, 1, 1, 1, 1, 1, 130],
         [4, 1, 2, 2, 1, 1, 130],
@@ -269,60 +293,60 @@ def __impostaDatiIniziali():
     ]
     offerta.extend(offerta_i)
         
-    moduli_i = [
+    moduli_i=[
         # PRIMO SEMESTRE INFORMATICA
-        ['MU','Teoria',1,1,'N',4,3,0],
-        ['MT','Teoria',2,2,'N',2,2,0],
-        ['ML','Laboratorio',2,3,'L',2,2,50],
-        ['MU','Teoria',3,4,'N',2,2,0],
-        ['ML','Laboratorio',3,5,'L',2,2,50],
-        ['MU','Teoria',4,6,'N',3,2,0],
-        ['MU','Teoria',5,7,'N',2,4,0],
-        ['MU','Teoria',6,3,'N',2,2,0],
-        ['ML','Laboratorio',6,7,'L',2,2,35],
-        ['MU','Teoria',7,5,'N',1,2,0],
-        ['ML','Laboratorio',7,2,'L',1,2,35],   
-        ['MU','Teoria',8,9,'N',3,2,0],
-        ['MU','Teoria',9,10,'N',2,2,0],
-        ['ML','Laboratorio',9,10,'L',1,2,35],      
+        ["MU","Teoria",1,1,"N",4,3,0],
+        ["MT","Teoria",2,2,"N",2,2,0],
+        ["ML","Laboratorio",2,3,"L",2,2,50],
+        ["MU","Teoria",3,4,"N",2,2,0],
+        ["ML","Laboratorio",3,5,"L",2,2,50],
+        ["MU","Teoria",4,6,"N",3,2,0],
+        ["MU","Teoria",5,7,"N",2,4,0],
+        ["MU","Teoria",6,3,"N",2,2,0],
+        ["ML","Laboratorio",6,7,"L",2,2,35],
+        ["MU","Teoria",7,5,"N",1,2,0],
+        ["ML","Laboratorio",7,2,"L",1,2,35],   
+        ["MU","Teoria",8,9,"N",3,2,0],
+        ["MU","Teoria",9,10,"N",2,2,0],
+        ["ML","Laboratorio",9,10,"L",1,2,35],      
         # PRIMO SEMESTRE INFORMATICA APPLICATA
-        ['MU','Teoria',10,4,'N',2,2,0],
-        ['MU','Teoria',11,11,'N',2,2,0],
-        ['MU','Teoria',12,8,'N',2,2,0],
-        ['MU','Teoria',13,12,'N',2,2,0],
-        ['MU','Teoria',14,13,'N',2,2,0],
-        ['MU','Teoria',15,8,'N',2,2,0],
-        ['MU','Teoria',16,14,'N',2,2,0],
+        ["MU","Teoria",10,4,"N",2,2,0],
+        ["MU","Teoria",11,11,"N",2,2,0],
+        ["MU","Teoria",12,8,"N",2,2,0],
+        ["MU","Teoria",13,12,"N",2,2,0],
+        ["MU","Teoria",14,13,"N",2,2,0],
+        ["MU","Teoria",15,8,"N",2,2,0],
+        ["MU","Teoria",16,14,"N",2,2,0],
         # SECONDO SEMESTRE INFORMATICA
-        ['MU','Teoria',17,19,'N',2,2,0],
-        ['MU','Teoria',18,18,'N',2,2,0],
-        ['MU','Teoria',19,15,'N',1,2,0],        
-        ['ML','Laboratorio',19,15,'L',2,2,50],
-        ['MU','Teoria',20,11,'N',2,2,0],
-        ['MU','Teoria',21,16,'N',1,2,0],        
-        ['ML','Laboratorio',21,16,'L',2,2,50],
-        ['MU','Teoria',22,17,'N',1,2,0],
-        ['ML','Laboratorio',22,18,'L',2,2,50],
-        ['MU','Teoria',23,4,'N',2,2,0],       
-        ['MU','Teoria',24,13,'N',2,2,0],
-        ['MU','Teoria',25,18,'N',2,2,0],
+        ["MU","Teoria",17,19,"N",2,2,0],
+        ["MU","Teoria",18,18,"N",2,2,0],
+        ["MU","Teoria",19,15,"N",1,2,0],        
+        ["ML","Laboratorio",19,15,"L",2,2,50],
+        ["MU","Teoria",20,11,"N",2,2,0],
+        ["MU","Teoria",21,16,"N",1,2,0],        
+        ["ML","Laboratorio",21,16,"L",2,2,50],
+        ["MU","Teoria",22,17,"N",1,2,0],
+        ["ML","Laboratorio",22,18,"L",2,2,50],
+        ["MU","Teoria",23,4,"N",2,2,0],       
+        ["MU","Teoria",24,13,"N",2,2,0],
+        ["MU","Teoria",25,18,"N",2,2,0],
         # SECONDO SEMESTRE INFORMATICA APPLICATA
-        ['MU','Teoria',26,15,'N',2,2,0],
-        ['MU','Teoria',27,5,'N',2,2,0],
-        ['MU','Teoria',28,5,'N',2,2,0],
-        ['MU','Teoria',29,16,'N',2,2,0],
-        ['MU','Teoria',30,2,'N',2,2,0],
-        ['MU','Teoria',31,20,'N',2,2,0],
+        ["MU","Teoria",26,15,"N",2,2,0],
+        ["MU","Teoria",27,5,"N",2,2,0],
+        ["MU","Teoria",28,5,"N",2,2,0],
+        ["MU","Teoria",29,16,"N",2,2,0],
+        ["MU","Teoria",30,2,"N",2,2,0],
+        ["MU","Teoria",31,20,"N",2,2,0],
         # SECONDO SEMESTRE SCIENZE BIOLOGICHE
-        ['MU','Teoria',32,21,'N',2,2,0],
-        ['MU','Teoria',33,22,'N',2,2,0],
-        ['MU','Teoria',34,23,'N',2,2,0],
-        ['MU','Teoria',35,24,'N',2,2,0],
-        ['MU','Teoria',36,25,'N',2,2,0],
-        ['MU','Teoria',37,26,'N',2,2,0],
-        ['MU','Teoria',38,21,'N',2,2,0],
-        ['MU','Teoria',39,27,'N',2,2,0],
-        ['MU','Teoria',40,28,'N',2,2,0]
+        ["MU","Teoria",32,21,"N",2,2,0],
+        ["MU","Teoria",33,22,"N",2,2,0],
+        ["MU","Teoria",34,23,"N",2,2,0],
+        ["MU","Teoria",35,24,"N",2,2,0],
+        ["MU","Teoria",36,25,"N",2,2,0],
+        ["MU","Teoria",37,26,"N",2,2,0],
+        ["MU","Teoria",38,21,"N",2,2,0],
+        ["MU","Teoria",39,27,"N",2,2,0],
+        ["MU","Teoria",40,28,"N",2,2,0]
     ]    
     moduli.extend(moduli_i)
     
@@ -333,112 +357,121 @@ def __impostaDatiIniziali():
 def __registraDatiMinimiInDb():
     try:
         for g in giorni:
-            row = Giorno(descrizione=g)
+            row=Giorno(descrizione=g)
             db.session.add(row)
         db.session.flush()
 
         for s in slot:
-            row = Slot(descrizione=s)
+            row=Slot(descrizione=s)
             db.session.add(row)
         db.session.flush()
 
         for a in anni_accademici:
-            row = AnnoAccademico(anno = a[0],
-                                 anno_esteso = a[1])
+            row=AnnoAccademico(anno=a[0],
+                                 anno_esteso=a[1])
             db.session.add(row)
         db.session.flush()
 
         for a in aule:
-            row = Aula(codice = a[0],
-                       descrizione = a[1],
-                       capienza = a[2],
-                       tipo_aula = a[3])
+            row=Aula(codice=a[0],
+                       descrizione=a[1],
+                       capienza=a[2],
+                       tipo_aula=a[3])
             db.session.add(row)
         db.session.flush()
+
+        for n in numerosita_anni_corso:
+            row = NumerositaAnniCorso(codice_corso=n[0],
+                       anno_di_corso=n[1],
+                       numerosita=n[2])
+            db.session.add(row)
+        db.session.flush()
+
         db.session.commit()
     except SQLAlchemyError:
         db.session.rollback()
         flash("Errore di caricamento dati minimi nel DB")
     return -1
 
+
 def __registraDatiInDb():
     try:
         for g in giorni:
-            row = Giorno(descrizione=g)
+            row=Giorno(descrizione=g)
             db.session.add(row)
         db.session.flush()
 
         for s in slot:
-            row = Slot(descrizione=s)
+            row=Slot(descrizione=s)
             db.session.add(row)
         db.session.flush()
 
         for a in anni_accademici:
-            row = AnnoAccademico(anno = a[0],
-                                 anno_esteso = a[1])
+            row=AnnoAccademico(anno=a[0],
+                                 anno_esteso=a[1])
             db.session.add(row)
         db.session.flush()
 
         for c in corsi_di_studio:
-            row = CorsoDiStudio(codice = c[0],
-                                descrizione = c[1],
-                                cfu = c[2],
-                                durata_legale = c[3])
+            row=CorsoDiStudio(codice=c[0],
+                                descrizione=c[1],
+                                cfu=c[2],
+                                durata_legale=c[3])
             db.session.add(row)
         db.session.flush()
 
         for a in attivita_didattiche:
-            row = AttivitaDidattica(codice = a[0],
-                                    descrizione = a[1],
-                                    cfu = a[2],
-                                    colore = a[3])
+            row=AttivitaDidattica(codice=a[0],
+                                    descrizione=a[1],
+                                    cfu=a[2],
+                                    colore=a[3])
             db.session.add(row)
         db.session.flush()
 
         for a in aule:
-            row = Aula(codice = a[0],
-                       descrizione = a[1],
-                       capienza = a[2],
-                       tipo_aula = a[3])
+            row=Aula(codice=a[0],
+                       descrizione=a[1],
+                       capienza=a[2],
+                       tipo_aula=a[3])
             db.session.add(row)
         db.session.flush()
 
         for d in docenti:
-            row = Docente(codice_fiscale = d[0],
-                          matricola = d[1],
-                          cognome = d[2],
-                          nome = d[3])
+            row=Docente(codice_fiscale=d[0],
+                          matricola=d[1],
+                          cognome=d[2],
+                          nome=d[3])
             db.session.add(row)
         db.session.flush()
 
         for o in offerta:
-            row = Offerta(anno_accademico_id = o[0],
-                          corso_di_studio_id = o[1],
-                          attivita_didattica_id = o[2],
-                          docente_id = o[3],
-                          anno_di_corso = o[4],
-                          semestre = o[5],
-                          max_studenti = o[6])
+            row=Offerta(anno_accademico_id=o[0],
+                          corso_di_studio_id=o[1],
+                          attivita_didattica_id=o[2],
+                          docente_id=o[3],
+                          anno_di_corso=o[4],
+                          semestre=o[5],
+                          max_studenti=o[6])
             db.session.add(row)
         db.session.flush()
 
         for m in moduli:
-            row = Modulo(codice = m[0],
-                         descrizione = m[1],
-                         offerta_id = m[2],
-                         docente_id = m[3],
-                         tipo_aula = m[4],
-                         numero_sessioni = m[5],
-                         durata_sessioni = m[6],
-                         max_studenti = m[7])
+            row=Modulo(codice=m[0],
+                         descrizione=m[1],
+                         offerta_id=m[2],
+                         docente_id=m[3],
+                         tipo_aula=m[4],
+                         numero_sessioni=m[5],
+                         durata_sessioni=m[6],
+                         max_studenti=m[7])
             db.session.add(row)
         db.session.flush()
 
         for l in logistica_docenti:
-            row = LogisticaDocente(offerta_id = l[0],
-                                   modulo_id = l[1],
-                                   slot_id = l[2],
-                                   giorno_id = l[3])
+            row=LogisticaDocente(offerta_id=l[0],
+                                   modulo_id=l[1],
+                                   slot_id=l[2],
+                                   giorno_id=l[3])
             db.session.add(row)
         db.session.flush()
 
@@ -447,6 +480,7 @@ def __registraDatiInDb():
         db.session.rollback()
         flash("Errore di caricamento dati nel DB")
     return -1
+
 
 def caricaDatiMinimi():
     try:
@@ -457,6 +491,7 @@ def caricaDatiMinimi():
     except SQLAlchemyError:
         return -1
 
+
 def caricaDatiTest():
     try:
         __svuotaTabelle()
@@ -466,12 +501,14 @@ def caricaDatiTest():
     except SQLAlchemyError:
         return -1
 
+
 def svuotaDb():
     try:
         __svuotaTabelle()
         return 0
     except SQLAlchemyError:
         return -1
+
 
 def caricaDatiDalDb(aa, semestre):
     try:
@@ -512,7 +549,7 @@ def caricaDatiDalDb(aa, semestre):
         
     try:
         moduli_tt=[]
-        # Recupero delle informazioni dal DB per la formazione degli oggetti Modulo da collocare nell'orario
+        # Recupero delle informazioni dal DB per la formazione degli oggetti Modulo da collocare nell"orario
         moduli=db.session.query(Modulo, Offerta, AttivitaDidattica, AnnoAccademico, CorsoDiStudio, Docente)\
         .join(Offerta, Modulo.offerta_id==Offerta.id)\
         .join(AttivitaDidattica, Offerta.attivita_didattica_id==AttivitaDidattica.id)\
@@ -542,40 +579,43 @@ def caricaDatiDalDb(aa, semestre):
     
     return corsi_tt, giorni_tt, slot_tt, aule_tt, moduli_tt, logistica_tt
 
+
 def getColori():
     return colori
+
 
 def inizializza_db():
     try:
         db.session.query(StatoOrario).delete()
-        db.session.execute('ALTER TABLE stato_orario AUTO_INCREMENT = 1')
-        row = StatoOrario(codice='P', descrizione='Pubblicato')
+        db.session.execute("ALTER TABLE stato_orario AUTO_INCREMENT=1")
+        row=StatoOrario(codice="P", descrizione="Pubblicato")
         db.session.add(row)
-        row = StatoOrario(codice='B', descrizione='Bozza')
+        row=StatoOrario(codice="B", descrizione="Bozza")
         db.session.add(row)
         db.session.commit()
     except SQLAlchemyError:
         flash("Errore di inizializzazione del db")
         return -1
 
+
 def getLdapToken(uid):
 
     try:
-        ldap_server = Server(config.AUTH_LDAP_SERVER+":"+config.AUTH_LDAP_PORT, get_info=ALL)
-        ldap_connection = Connection(ldap_server, user = 'cn=admin,dc=uniparthenope,dc=it',password='wattpw01')
+        ldap_server=Server(config.AUTH_LDAP_SERVER+":"+config.AUTH_LDAP_PORT, get_info=ALL)
+        ldap_connection=Connection(ldap_server, user="cn=admin,dc=uniparthenope,dc=it",password="wattpw01")
 
-        if ldap_connection.bind() == True:
-            if ldap_connection.search(search_base=config.AUTH_LDAP_SEARCH, search_filter=f'(uid={uid})',search_scope = SUBTREE, attributes=['token']) == True:
-                ent = ldap_connection.entries[0]
+        if ldap_connection.bind()==True:
+            if ldap_connection.search(search_base=config.AUTH_LDAP_SEARCH, search_filter=f"(uid={uid})",search_scope=SUBTREE, attributes=["token"])==True:
+                ent=ldap_connection.entries[0]
                 ldap_connection.unbind()
                 try:
-                    token = ent['token'][0]
+                    token=ent["token"][0]
                 except IndexError:
-                    token = None
+                    token=None
                 return token
             else:
                 return None
 
     except LDAPSocketOpenError:
-        print('Unabled to connect to the LDAP server!')
+        print("Unabled to connect to the LDAP server!")
         return None

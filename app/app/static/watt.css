@@ -31,3 +31,7 @@
 .par_title{
   color: red;
 }
+
+.bootstrap-select {
+  width: 500px !important;
+}

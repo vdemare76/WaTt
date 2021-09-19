@@ -41,7 +41,7 @@
                 Carica i corsi in offerta formativa per l'A.A. selezionato
             </button>
             <br><br>
-            <select name="corsi" id="corsi" class="selectpicker" data-none-selected-text="Nessun corso selezionato" multiple data-live-search="true">
+            <select name="corsi" id="corsi" class="selectpicker"  style="width: 1050px;" data-none-selected-text="Nessun corso selezionato" data-live-search="true">
                 {% for c in corsiInOfferta %}
                 <option value={{c["idCorso"]}}>{{c["codCorso"]}} - {{c["desCorso"]}}</option>
                 {% endfor %}
