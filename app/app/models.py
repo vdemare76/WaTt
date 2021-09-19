@@ -87,13 +87,12 @@ class Aula(Model):
 
 class NumerositaAnniCorso(Model):
     id=Column(Integer, primary_key=True)
-    corso_di_studio_id=Column(Integer, ForeignKey("corso_di_studio.id"), nullable=False)
-    corso_di_studio=relationship("CorsoDiStudio")
+    codice_corso = Column(String(15))
     anno_di_corso=Column(Integer)
     numerosita =Column(Integer)
 
     def __repr__(self):
-        return str(self.corso_di_studio_id)
+        return str(self.codice_corso)
 
 
 class Offerta(Model):

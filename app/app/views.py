@@ -76,10 +76,10 @@ class AuleView(ModelView):
 
 class NumerositaAnniCorsoView(ModelView):
     datamodel = SQLAInterface(NumerositaAnniCorso)
-    label_columns = {"corso_di_studio.descrizione":"Corso di studio",
+    label_columns = {"codice_corso":"Corso di studio",
                      "anno_di_corso":"Anno di corso",
                      "numerosita":"Numerosità"}
-    list_columns = ["corso_di_studio.descrizione",
+    list_columns = ["codice_corso",
                     "anno_di_corso",
                     "numerosita"]
 

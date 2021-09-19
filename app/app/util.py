@@ -95,6 +95,12 @@ def __impostaDatiMinimi():
     ]
     aule.extend(aule_i)
 
+def __impostaNumerositaTest():
+    numerosita_i = [
+        ['0124', 1, 100],
+        ['0124', 2, 70],
+        ['0124', 2, 50]
+    ]
 
 def __impostaDatiIniziali():
     giorni_i = ['Lunedì','Martedì','Mercoledì','Giovedì','Venerdì']
