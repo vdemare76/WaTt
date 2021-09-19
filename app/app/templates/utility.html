@@ -20,26 +20,20 @@
 				<button type="button" class="btn btn-primary" onclick="svuotaDB()">Svuota il DB</button>
 			</div>
 			<br>
-			<h4>Svuota il DB e carica dati di test</h4>
+			<h4>Carica dati di base minimi (Giorni, Slot, Aule) per l'acquisizione dati da procedura esterna</h4>
 			<div>
-				<button type="button" class="btn btn-primary" onclick="inizializzaDB()">Svuota il DB e carica di test</button>
+				<button type="button" class="btn btn-primary" onclick="inizializzaMinDB()">Svuota il DB e carica dati minimi</button>
+			</div>
+			<br>
+			<h4>Svuota il DB e carica dati di test (Giorni, Slot, AuleAttività Didattiche, Docenti, Offerta, Moduli) </h4>
+			<div>
+				<button type="button" class="btn btn-primary" onclick="inizializzaAllDB()">Svuota il DB e carica di test</button>
 			</div>
 			<input type="text" id="target" name="target" value="" style="display:none">
 		</form>
 	</div>
 	
-	<script>	
-	function inizializzaDB() {
-		$('#title').html('Richiesta di conferma');
-		$('#msg').html('Si intende realmente inizializzare il database con i dati di test?');
-		$(document).on('click', '#modal-confirm-ok', function () {
-			$('#target').val('inizializzaDB');
-			$('#loader').css({'display':'block'});
-			$('#form_post').submit();
-        });
-		$('#modal-confirm-w').modal('show');
-	}	
-	
+	<script>
 	function svuotaDB() {
 		$('#title').html('Richiesta di conferma');
 		$('#msg').html('Si intende realmente svuotare il database?');
@@ -50,6 +44,27 @@
 		$('#modal-confirm-w').modal('show');
 	}
 
+	function inizializzaMinDB() {
+		$('#title').html('Richiesta di conferma');
+		$('#msg').html("Si intende realmente inizializzare il database con i dati minimi per l'acquisizione dati da procedura esterna?");
+		$(document).on('click', '#modal-confirm-ok', function () {
+			$('#target').val('inizializzaMinDB');
+			$('#loader').css({'display':'block'});
+			$('#form_post').submit();
+        });
+		$('#modal-confirm-w').modal('show');
+	}
+
+	function inizializzaAllDB() {
+		$('#title').html('Richiesta di conferma');
+		$('#msg').html('Si intende realmente inizializzare il database con i dati completi di test?');
+		$(document).on('click', '#modal-confirm-ok', function () {
+			$('#target').val('inizializzaAllDB');
+			$('#loader').css({'display':'block'});
+			$('#form_post').submit();
+        });
+		$('#modal-confirm-w').modal('show');
+	}	
 	</script>
 
 {% endblock %}

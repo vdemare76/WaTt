@@ -57,7 +57,7 @@
             <input type="radio" id="semestre2" name="semestre" value=2>
             <label for="semestre2">Secondo semestre</label>
             <br><br>
-            <label>Selezionare la politica di gestione per i dati già presenti in DB</label><br>
+            <label>Politica di gestione per i dati già presenti in DB</label><br>
             <input type="checkbox" name="cbSovrDatiCorsi" id="cbSovrDatiCorsi" value="1">
             <label for = "cbSovrDatiCorsi"> Aggiorna i dati dei corsi già presenti in DB </label>
             <br>
@@ -66,10 +66,19 @@
             <br>
             <input type="checkbox" name="cbSovrDatiDocenti" id="cbSovrDatiDocenti" value="1">
             <label for = "cbSovrDatiDocenti"> Aggiorna i dati dei docenti già presenti in DB </label>
-            <br><br>
+            <br>
+            <input type="checkbox" name="cbImportaDatiIncompleti" id="cbImportaDatiIncompleti" value="1">
+            <label for = "cbImportaDatiIncompleti"> Importa anche le eventuali attività didattiche per le quali non è possibile recuperare anno di corso e semestre dall'offerta </label>
+            <br>
             <input type="checkbox" name="cbSovrDatiOfferta" id="cbSovrDatiOfferta" value="1">
             <label for = "cbSovrDatiOfferta"> Sostuisci l'offerta formativa per i corsi selezionati eventualmente già presente in DB</label>
-            <label>(Nel caso non sia selezionata questa opzione offerte per i corsi selezionati eventualmente già presenti in DB non saranno assolutamente modificate)</label>
+            <label>(Lasciando non selezionata questa opzione corsi selezionati eventualmente già presenti in DB per l'anno di offerta scelto non saranno )</label>
+            <br><br>
+            <label>Politica di creazione dei moduli</label><br>
+            <input type="radio" id="modulo1" name="moduli" value=1 checked>
+            <label for="modulo1">Crea un modulo per ogni attività didattica</label><br>
+            <input type="radio" id="modulo2" name="moduli" value=2>
+            <label for="modulo2">Crea un modulo per ogni docente associato ad ogni attività didattica</label>
         </div>
         <br>
         <h4 class="par_title">Step 4</h4>

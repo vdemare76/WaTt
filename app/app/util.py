@@ -63,7 +63,39 @@ def __svuotaTabelle():
     db.session.execute('ALTER TABLE orario_testata AUTO_INCREMENT = 1')
     db.session.execute('ALTER TABLE orario_dettaglio AUTO_INCREMENT = 1')
     db.session.commit()
-    
+
+
+def __impostaDatiMinimi():
+    giorni_i = ['Lunedì', 'Martedì', 'Mercoledì', 'Giovedì', 'Venerdì']
+    giorni.extend(giorni_i)
+
+    slot_i = ['09:00-10:00', '10:00-11:00', '11:00-12:00', '12:00-13:00',
+              '14:00-15:00', '15:00-16:00', '16:00-17:00', '17:00-18:00']
+    slot.extend(slot_i)
+
+    anni_accademici_i = [
+        [2018,'2018-19'],
+        [2019,'2019-20'],
+        [2020,'2020-21'],
+        [2021,'2021-22']
+    ]
+    anni_accademici.extend(anni_accademici_i)
+
+    aule_i = [
+        ['AN1', 'Aula 1', 150, 'N'],
+        ['AN2', 'Aula 2', 100, 'N'],
+        ['AN3', 'Aula 3', 70, 'N'],
+        ['AN4', 'Aula 4', 50, 'N'],
+        ['AN5', 'Aula 5', 35, 'N'],
+        ['AN6', 'Aula 6', 35, 'N'],
+        ['AN7', 'Aula 7', 150, 'N'],
+        ['AL1', 'Aula LAB1', 50, 'L'],
+        ['AL2', 'Aula LAB2', 40, 'L'],
+        ['AL3', 'Aula LAB3', 35, 'L']
+    ]
+    aule.extend(aule_i)
+
+
 def __impostaDatiIniziali():
     giorni_i = ['Lunedì','Martedì','Mercoledì','Giovedì','Venerdì']
     giorni.extend(giorni_i)
@@ -290,7 +322,39 @@ def __impostaDatiIniziali():
     
     logistica_docenti_i=[]
     logistica_docenti.extend(logistica_docenti_i)
-                   
+
+
+def __registraDatiMinimiInDb():
+    try:
+        for g in giorni:
+            row = Giorno(descrizione=g)
+            db.session.add(row)
+        db.session.flush()
+
+        for s in slot:
+            row = Slot(descrizione=s)
+            db.session.add(row)
+        db.session.flush()
+
+        for a in anni_accademici:
+            row = AnnoAccademico(anno = a[0],
+                                 anno_esteso = a[1])
+            db.session.add(row)
+        db.session.flush()
+
+        for a in aule:
+            row = Aula(codice = a[0],
+                       descrizione = a[1],
+                       capienza = a[2],
+                       tipo_aula = a[3])
+            db.session.add(row)
+        db.session.flush()
+        db.session.commit()
+    except SQLAlchemyError:
+        db.session.rollback()
+        flash("Errore di caricamento dati minimi nel DB")
+    return -1
+
 def __registraDatiInDb():
     try:
         for g in giorni:
@@ -377,6 +441,15 @@ def __registraDatiInDb():
         db.session.rollback()
         flash("Errore di caricamento dati nel DB")
     return -1
+
+def caricaDatiMinimi():
+    try:
+        __svuotaTabelle()
+        __impostaDatiMinimi()
+        __registraDatiMinimiInDb()
+        return 0
+    except SQLAlchemyError:
+        return -1
 
 def caricaDatiTest():
     try:

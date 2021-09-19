@@ -13,7 +13,7 @@ from .models import AnnoAccademico, CorsoDiStudio, AttivitaDidattica, Docente, A
                     LogisticaDocente, Modulo, Giorno, Slot, Orario, OrarioTestata, OrarioDettaglio, Chiusura
 
 from flask.templating import render_template
-from .util import caricaDatiTest, svuotaDb, getColori
+from .util import svuotaDb, caricaDatiTest, caricaDatiMinimi, getColori
 from .esse3_to_watt import getAnniAccademici, getCorsiInOfferta, importDatiEsse3
 from .solver import AlgoritmoCompleto
 from datetime import timedelta
@@ -270,17 +270,23 @@ class UtilitaView(BaseView):
     @has_access
     def srv_util(self):
         target=request.form.get("target")
-        if target=="inizializzaDB":
+        if target=="svuotaDB":
+            if svuotaDb()==0:
+                flash('Db svuotato correttamente!','success')
+            else:
+                flash('Errore nella fase di svuotamento del db.','danger')
+
+        elif target=="inizializzaMinDB":
+            if caricaDatiMinimi()==0:
+                flash('Inizializzazione del db effettuata correttamente!', 'success')
+            else:
+                flash('Errore nella fase di svuotamento del db.', 'danger')
+
+        elif target=="inizializzaAllDB":
             if caricaDatiTest()==0:
                 flash('Inizializzazione del db effettuata correttamente!','success')
             else:    
                 flash('Errore nella fase di inizializzazione del db.','danger')
-
-        elif target=="svuotaDB":
-            if svuotaDb()==0:
-                flash('Db svuotato correttamente!','success')
-            else:    
-                flash('Errore nella fase di svuotamento del db.','danger')
 
         return render_template("utility.html", base_template=appbuilder.base_template, appbuilder=appbuilder)
 
@@ -327,10 +333,9 @@ class UtilitaEsse3View(BaseView):
                 flash('Bisogna effettuare almeno una selezione nelle precedenti sezioni!', 'warning')
 
             if len(corsi)>0:
-                importDatiEsse3(request.form.get('anniAccademici'),request.form.getlist('corsi'),
-                                request.form.getlist('semestre'),
-                                request.form.get('cbSovrDatiCorsi'),request.form.get('cbSovrDatiAD'),
-                                request.form.get('cbSovrDatiDocenti'),request.form.get('cbSovrDatiOfferta'))
+                importDatiEsse3(request.form.get('anniAccademici'),request.form.getlist('corsi'), request.form.get('semestre'),
+                                request.form.get('cbSovrDatiCorsi'),request.form.get('cbSovrDatiAD'), request.form.get('cbSovrDatiDocenti'),
+                                request.form.get('cbSovrDatiOfferta'), request.form.get('cbImportaDatiIncompleti'), request.form.get('moduli'))
             else:
                 flash('Selezionare almeno un corso da importare!', 'warning')
 
