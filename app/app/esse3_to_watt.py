@@ -79,7 +79,7 @@ def getCorsiInOfferta(annoAccademico):
             corsi.append({'idCorso':data[i]["cdsOffId"],
                           'codCorso':data[i]["cdsCod"],
                           'desCorso':data[i]["cdsDes"]})
-        return corsi
+        return sorted(corsi, key=lambda k: (k["codCorso"]))
     except requests.exceptions.Timeout as e:
         return {"errMsg": "Timeout Error!"}, 500
     except requests.exceptions.TooManyRedirects as e:
@@ -95,21 +95,25 @@ def getRegSchema(cdsId):
         response=requests.request('GET', url+'regsce-service-v1/regsce?cdsId='+str(cdsId), headers=getHeaders(), timeout=60)
         dataRegSce=response.json()
 
-        size=len(dataRegSce)
-        if size > 0:
-            for i in range(0, size, 1):
+        sizeDataRegSce=len(dataRegSce)
+        if sizeDataRegSce > 0:
+            for i in range(0, sizeDataRegSce, 1):
                 try:
                     response=requests.request('GET',url+'/regsce-service-v1/regsce/'+str(dataRegSce[i]['regsceId'])+'/schemi', headers=getHeaders(), timeout=60)
                     dataScheme=response.json()
-                    try:
-                        if len(dataScheme) > 0 and dataScheme[0]['statutarioFlg']==1:
-                            schemeSet.append({'regSceId': dataRegSce[i]['regsceId'], 'schemeId': dataScheme[0]['schemaId']})
-                    except:
-                        None
+                    sizeDataScheme = len(dataScheme)
+                    for s in range(0, sizeDataScheme, 1):
+                        try:
+                            #if len(dataScheme) > 0:
+                            #and dataScheme[0]['statutarioFlg']==1:
+                            schemeSet.append({'regSceId': dataRegSce[i]['regsceId'], 'schemeId': dataScheme[s]['schemaId']})
+                        except:
+                            None
                 except:
                     None
         else:
             flash('regSceId could not be retrieved!','danger')
+        flash(schemeSet)
         return schemeSet
     except requests.exceptions.Timeout as e:
         return {"errMsg": "Timeout Error!"}, 500
@@ -127,7 +131,6 @@ def getSchema(regSchema):
             for i in range(0, size, 1):
                 response=requests.request('GET', url+'regsce-service-v1/regsce/'+str(regSchema[i]['regSceId'])+'/schemi/'+str(regSchema[i]['schemeId']), headers=getHeaders(), timeout=60)
                 data=response.json()
-
             try:
                 sizeReg=len(data['regoleDiScelta'])
                 for r in range(0, sizeReg, 1):
@@ -136,10 +139,11 @@ def getSchema(regSchema):
                         sizeAct=len(data['regoleDiScelta'][r]['blocchi'][b]['attivita'])
                         for a in range(0, sizeAct, 1):
                             schema[data['regoleDiScelta'][r]['blocchi'][b]['attivita'][a]['chiaveADContestualizzata']['adId']]=\
-                                {'yearOfCourse': data['regoleDiScelta'][r]['annoCorso'],
+                                {'annoDiCorso': data['regoleDiScelta'][r]['annoCorso'],
                                  'cfu': data['regoleDiScelta'][r]['blocchi'][b]['attivita'][a]['peso']}
             except:
                 None
+        flash(schema)
         return schema
     except requests.exceptions.Timeout as e:
         return {"errMsg": "Timeout Error!"}, 500
@@ -171,11 +175,14 @@ def getAttivitaDidattiche(annoAccademico, corsi, semestre, flgImportaDatiIncompl
                                     semestreAttivita=2
                                 else:
                                     semestreAttivita=1
+                                #schema(flash(dataOff[i]))
                                 try:
-                                    annoCorso=schema[dataOff[i]['chiaveAdContestualizzata']['adId']]['yearOfCourse']
-                                    cfu=schema[dataOff[i]['chiaveAdContestualizzata']['adId']]['cfu']
+                                    annoCorso=schema[dataOff[i]['chiaveAdContestualizzata']['adId']]['annoDiCorso']
                                 except:
                                     annoCorso=-1
+                                try:
+                                    cfu=schema[dataOff[i]['chiaveAdContestualizzata']['adId']]['cfu']
+                                except:
                                     cfu=-1
                                 if annoCorso>0 or flgImportaDatiIncompleti=="1":
                                     if semestreAttivita==int(semestre):
@@ -201,6 +208,8 @@ def getAttivitaDidattiche(annoAccademico, corsi, semestre, flgImportaDatiIncompl
         return {"errMsg": str(e)}, 500
     except requests.exceptions.RequestException as e:
         return {"errMsg": str(e)}, 500
+    for b in attivitaDidattiche:
+        flash(b)
     return attivitaDidattiche
 
 # Returns the information of the selected courses to be loaded into the database.
@@ -291,9 +300,10 @@ def importDatiEsse3(annoAccademico,corsiDiStudio,semestre,flgSovrDatiCorsi,flgSo
 
     colori=getColori()
     corsi=getDatiCorsi(corsiDiStudio)
+    #flash(corsi)
     attivitaDidattiche=getAttivitaDidattiche(annoAccademico,corsiDiStudio,semestre,flgImportaDatiIncompleti)
     docenti, docentiPerAttivita=getDocenti(attivitaDidattiche)
-    numerositaAnniCorso=db.session.query(NumerositaAnniCorso).all()
+    numerositaAnniCorso=db.session.query(NumerositaAnniCorso.id, NumerositaAnniCorso.codice_corso, NumerositaAnniCorso.anno_di_corso, NumerositaAnniCorso.numerosita).all()
 
     # Inserimento dell'anno accademico selezionato in DB se già non esiste
     aa=db.session.query(AnnoAccademico).filter(AnnoAccademico.anno==int(annoAccademico)).first()
@@ -391,8 +401,8 @@ def importDatiEsse3(annoAccademico,corsiDiStudio,semestre,flgSovrDatiCorsi,flgSo
                         found=False
                 if (found==True):
                     try:
-                        numAnnoCorso=list(filter(lambda nac: nac["codice_corso"]==corsi[c]["cdsCod"]  and
-                                                             nac["anno_corso"]==attivitaDidatticheCorso[a]["annoCorso"], numerositaAnniCorso))[0]["numerosita"]
+                        numAnnoCorso=list(filter(lambda nac: nac[1]==corsi[c]["cdsCod"]  and
+                                                         nac[2]==attivitaDidatticheCorso[a]["annoCorso"], numerositaAnniCorso))[0][3]
                     except:
                         numAnnoCorso=0
                     row=Offerta(anno_accademico_id=idAnnoAccademico, corso_di_studio_id=corsi[c]["id"], attivita_didattica_id=attivitaDidatticheCorso[a]["id"],
@@ -412,7 +422,7 @@ def importDatiEsse3(annoAccademico,corsiDiStudio,semestre,flgSovrDatiCorsi,flgSo
                         docAD=docentiPerAttivita[attivitaDidatticheCorso[a]["adLogId"]]
                         sizeDocAD=len(docAD)
                         for r in range(0, sizeDocAD, 1):
-                            row=Modulo(codice="MOD-"+str(r+1), descrizione="MOD"+str(r+1), offerta_id=idOfferta, docente_id=docenti[docAD[r]["matricola"]]["id"],
+                            row=Modulo(codice="MOD-"+str(r+1)+"/"+str(sizeDocAD), descrizione="MOD"+str(r+1)+str(sizeDocAD), offerta_id=idOfferta, docente_id=docenti[docAD[r]["matricola"]]["id"],
                                          tipo_aula="N", numero_sessioni=0, durata_sessioni=0, max_studenti=0)
                             db.session.add(row)
                             db.session.flush()
