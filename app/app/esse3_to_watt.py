@@ -160,22 +160,23 @@ def getAttivitaDidattiche(annoAccademico, corsi, semestre, flgImportaDatiIncompl
             schema=getSchema(getRegSchema(cdsId))
             response=requests.request('GET', url+'offerta-service-v1/offerte/'+str(annoAccademico)+'/'+str(cdsId)+'/attivita', headers=getHeaders(), timeout=60)
             dataOff=response.json()
-            size=len(dataOff)
-            for i in range(0, size, 1):
+            sizeDataOff=len(dataOff)
+            for i in range(0, sizeDataOff, 1):
                 try:
                     ad_id=dataOff[i]['chiaveAdContestualizzata']['adId']
                     if dataOff[i]['nonErogabileOdFlg']==0:
-                        response=requests.request('GET', url+'logistica-service-v1/logistica?aaOffId='+str(annoAccademico)+'&adId='+str(ad_id), headers=getHeaders(), timeout=60)
+                        #response=requests.request('GET', url+'logistica-service-v1/logistica?aaOffId='+str(annoAccademico)+'&adId='+str(ad_id), headers=getHeaders(), timeout=60)
+                        response=requests.request('GET', url+'logistica-service-v1/logistica?cdsId='+str(cdsId)+'&adId='+str(ad_id), headers=getHeaders(), timeout=60)
                         dataLog=response.json()
-
-                        if len(dataLog) > 0:
+                        sizeDataLog=len(dataLog)
+                        for d in range(0, sizeDataLog, 1):
+                        #if len(dataLog) > 0:
                             try:
-                                adLogId=dataLog[0]['chiavePartizione']['adLogId']
-                                if dataLog[0]['chiavePartizione']['partCod'] in ['S2','Q2']:
+                                adLogId=dataLog[d]['chiavePartizione']['adLogId']
+                                if dataLog[d]['chiavePartizione']['partCod'] in ['S2','Q2']:
                                     semestreAttivita=2
                                 else:
                                     semestreAttivita=1
-                                #schema(flash(dataOff[i]))
                                 try:
                                     annoCorso=schema[dataOff[i]['chiaveAdContestualizzata']['adId']]['annoDiCorso']
                                 except:
@@ -186,9 +187,9 @@ def getAttivitaDidattiche(annoAccademico, corsi, semestre, flgImportaDatiIncompl
                                     cfu=-1
                                 if annoCorso>0 or flgImportaDatiIncompleti=="1":
                                     if semestreAttivita==int(semestre):
-                                        ad=list(filter(lambda adc: adc["cdsId"]==dataLog[0]['chiaveADFisica']['cdsId'] and adc["adId"]==dataOff[i]['chiaveAdContestualizzata']['adId'], attivitaDidattiche))
+                                        ad=list(filter(lambda adc: adc["cdsId"]==dataLog[d]['chiaveADFisica']['cdsId'] and adc["adId"]==dataOff[i]['chiaveAdContestualizzata']['adId'], attivitaDidattiche))
                                         if len(ad)==0:
-                                            attivitaDidattiche.append({'cdsId': dataLog[0]['chiaveADFisica']['cdsId'],
+                                            attivitaDidattiche.append({'cdsId': dataLog[d]['chiaveADFisica']['cdsId'],
                                                          'adId': dataOff[i]['chiaveAdContestualizzata']['adId'],
                                                          'adCod': dataOff[i]['chiaveAdContestualizzata']['adCod'],
                                                          'adDes': dataOff[i]['chiaveAdContestualizzata']['adDes'],
