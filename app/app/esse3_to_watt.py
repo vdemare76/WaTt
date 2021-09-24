@@ -113,7 +113,6 @@ def getRegSchema(cdsId):
                     None
         else:
             flash('regSceId could not be retrieved!','danger')
-        flash(schemeSet)
         return schemeSet
     except requests.exceptions.Timeout as e:
         return {"errMsg": "Timeout Error!"}, 500
@@ -143,7 +142,6 @@ def getSchema(regSchema):
                                  'cfu': data['regoleDiScelta'][r]['blocchi'][b]['attivita'][a]['peso']}
             except:
                 None
-        flash(schema)
         return schema
     except requests.exceptions.Timeout as e:
         return {"errMsg": "Timeout Error!"}, 500
@@ -164,43 +162,41 @@ def getAttivitaDidattiche(annoAccademico, corsi, semestre, flgImportaDatiIncompl
             for i in range(0, sizeDataOff, 1):
                 try:
                     ad_id=dataOff[i]['chiaveAdContestualizzata']['adId']
+
                     if dataOff[i]['nonErogabileOdFlg']==0:
-                        #response=requests.request('GET', url+'logistica-service-v1/logistica?aaOffId='+str(annoAccademico)+'&adId='+str(ad_id), headers=getHeaders(), timeout=60)
-                        response=requests.request('GET', url+'logistica-service-v1/logistica?cdsId='+str(cdsId)+'&adId='+str(ad_id), headers=getHeaders(), timeout=60)
-                        dataLog=response.json()
-                        sizeDataLog=len(dataLog)
-                        for d in range(0, sizeDataLog, 1):
-                        #if len(dataLog) > 0:
+                        response = requests.request('GET', url+'logistica-service-v1/logistica?adId='+str(ad_id), headers=getHeaders(), timeout=60)
+                        maxRow = max(response.json(), key=lambda x: x['chiaveADFisica']['aaOffId'])
+                        try:
+                            adLogId=maxRow['chiavePartizione']['adLogId']
+                            if maxRow['chiavePartizione']['partCod'] in ['S2','Q2']:
+                                semestreAttivita=2
+                            else:
+                                semestreAttivita=1
                             try:
-                                adLogId=dataLog[d]['chiavePartizione']['adLogId']
-                                if dataLog[d]['chiavePartizione']['partCod'] in ['S2','Q2']:
-                                    semestreAttivita=2
-                                else:
-                                    semestreAttivita=1
-                                try:
-                                    annoCorso=schema[dataOff[i]['chiaveAdContestualizzata']['adId']]['annoDiCorso']
-                                except:
-                                    annoCorso=-1
-                                try:
-                                    cfu=schema[dataOff[i]['chiaveAdContestualizzata']['adId']]['cfu']
-                                except:
-                                    cfu=-1
-                                if annoCorso>0 or flgImportaDatiIncompleti=="1":
-                                    if semestreAttivita==int(semestre):
-                                        ad=list(filter(lambda adc: adc["cdsId"]==dataLog[d]['chiaveADFisica']['cdsId'] and adc["adId"]==dataOff[i]['chiaveAdContestualizzata']['adId'], attivitaDidattiche))
-                                        if len(ad)==0:
-                                            attivitaDidattiche.append({'cdsId': dataLog[d]['chiaveADFisica']['cdsId'],
-                                                         'adId': dataOff[i]['chiaveAdContestualizzata']['adId'],
-                                                         'adCod': dataOff[i]['chiaveAdContestualizzata']['adCod'],
-                                                         'adDes': dataOff[i]['chiaveAdContestualizzata']['adDes'],
-                                                         'adLogId': str(adLogId),
-                                                         'semestre': str(semestreAttivita),
-                                                         'tipo': dataOff[i]['tipoInsCod'],
-                                                         'annoCorso': annoCorso,
-                                                         'cfu': cfu
-                                                        })
+                                annoCorso=schema[dataOff[i]['chiaveAdContestualizzata']['adId']]['annoDiCorso']
                             except:
-                                None
+                                annoCorso=-1
+                            try:
+                                cfu=schema[dataOff[i]['chiaveAdContestualizzata']['adId']]['cfu']
+                            except:
+                                cfu=-1
+                            if annoCorso>0 or flgImportaDatiIncompleti=="1":
+                                if semestreAttivita==int(semestre):
+                                    ad=list(filter(lambda adc: adc["cdsId"]==maxRow['chiaveADFisica']['cdsId'] and adc["adId"]==dataOff[i]['chiaveAdContestualizzata']['adId'], attivitaDidattiche))
+                                    if len(ad)==0:
+                                        attivitaDidattiche.append({'cdsId': maxRow['chiaveADFisica']['cdsId'],
+                                                     'adId': dataOff[i]['chiaveAdContestualizzata']['adId'],
+                                                     'adCod': dataOff[i]['chiaveAdContestualizzata']['adCod'],
+                                                     'adDes': dataOff[i]['chiaveAdContestualizzata']['adDes'],
+                                                     'adLogId': str(adLogId),
+                                                     'semestre': str(semestreAttivita),
+                                                     'tipo': dataOff[i]['tipoInsCod'],
+                                                     'annoCorso': annoCorso,
+                                                     'cfu': cfu
+                                                    })
+                        except:
+                            None
+
                 except:
                     None
     except requests.exceptions.Timeout as e:
@@ -209,8 +205,6 @@ def getAttivitaDidattiche(annoAccademico, corsi, semestre, flgImportaDatiIncompl
         return {"errMsg": str(e)}, 500
     except requests.exceptions.RequestException as e:
         return {"errMsg": str(e)}, 500
-    for b in attivitaDidattiche:
-        flash(b)
     return attivitaDidattiche
 
 # Returns the information of the selected courses to be loaded into the database.
@@ -284,7 +278,7 @@ def getDocenti(attivitaDidattiche):
                                     docentiPerAttivita[adLogId].append({"matricola": matricola, "titolare": "NO"})
                 except:
                     None
-
+        flash(docentiPerAttivita)
         return docenti, docentiPerAttivita
 
     except requests.exceptions.Timeout as e:
@@ -297,11 +291,9 @@ def getDocenti(attivitaDidattiche):
 def importDatiEsse3(annoAccademico,corsiDiStudio,semestre,flgSovrDatiCorsi,flgSovrDatiAD,flgSovrDatiDocenti,flgSovrDatiOfferta,flgImportaDatiIncompleti,flgGenModuli):
     global idAnnoAccademico
     global found;
-    from operator import itemgetter
 
     colori=getColori()
     corsi=getDatiCorsi(corsiDiStudio)
-    #flash(corsi)
     attivitaDidattiche=getAttivitaDidattiche(annoAccademico,corsiDiStudio,semestre,flgImportaDatiIncompleti)
     docenti, docentiPerAttivita=getDocenti(attivitaDidattiche)
     numerositaAnniCorso=db.session.query(NumerositaAnniCorso.id, NumerositaAnniCorso.codice_corso, NumerositaAnniCorso.anno_di_corso, NumerositaAnniCorso.numerosita).all()
@@ -386,8 +378,8 @@ def importDatiEsse3(annoAccademico,corsiDiStudio,semestre,flgSovrDatiCorsi,flgSo
             db.session.query(Offerta).filter(Offerta.anno_accademico_id==int(idAnnoAccademico)).filter(Offerta.corso_di_studio_id==corsi[c]["id"]).delete()
             db.session.commit()
 
-            attivitaDidatticheCorso=list(filter(lambda adc: adc["cdsId"]==corsi[c]["cdsId"], attivitaDidattiche))
-
+            #attivitaDidatticheCorso=list(filter(lambda adc: adc["cdsId"]==corsi[c]["cdsId"], attivitaDidattiche))
+            attivitaDidatticheCorso=attivitaDidattiche
             #Inserimento delle offerte dei corsi selezionati
             sizeAD=len(attivitaDidatticheCorso)
             for a in range(0, sizeAD, 1):
@@ -402,8 +394,7 @@ def importDatiEsse3(annoAccademico,corsiDiStudio,semestre,flgSovrDatiCorsi,flgSo
                         found=False
                 if (found==True):
                     try:
-                        numAnnoCorso=list(filter(lambda nac: nac[1]==corsi[c]["cdsCod"]  and
-                                                         nac[2]==attivitaDidatticheCorso[a]["annoCorso"], numerositaAnniCorso))[0][3]
+                        numAnnoCorso=list(filter(lambda nac: nac[1]==corsi[c]["cdsCod"] and nac[2]==attivitaDidatticheCorso[a]["annoCorso"], numerositaAnniCorso))[0][3]
                     except:
                         numAnnoCorso=0
                     row=Offerta(anno_accademico_id=idAnnoAccademico, corso_di_studio_id=corsi[c]["id"], attivita_didattica_id=attivitaDidatticheCorso[a]["id"],
