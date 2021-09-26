@@ -69,7 +69,7 @@ def __svuotaTabelle():
     db.session.commit()
 
 
-def __impostaDatiMinimi():
+def __impostaDatiBase():
     giorni_i=["Lunedì", "Martedì", "Mercoledì", "Giovedì", "Venerdì"]
     giorni.extend(giorni_i)
 
@@ -78,10 +78,10 @@ def __impostaDatiMinimi():
     slot.extend(slot_i)
 
     anni_accademici_i=[
-        [2018,"2018-19"],
-        [2019,"2019-20"],
-        [2020,"2020-21"],
-        [2021,"2021-22"]
+        [2018,"2018-2019"],
+        [2019,"2019-2020"],
+        [2020,"2020-2021"],
+        [2021,"2021-2022"]
     ]
     anni_accademici.extend(anni_accademici_i)
 
@@ -112,6 +112,12 @@ def __impostaDatiMinimi():
     aule.extend(aule_i)
 
     numerosita_anni_corso_i=[
+        ["0120", 1, 30],
+        ["0120", 2, 15],
+        ["0120", 3, 15],
+        ["0121", 1, 40],
+        ["0121", 2, 20],
+        ["0121", 3, 15],
         ["0122", 1, 50],
         ["0122", 2, 30],
         ["0122", 3, 30],
@@ -123,12 +129,207 @@ def __impostaDatiMinimi():
         ["0124", 3, 50],
         ["0125", 1, 40],
         ["0125", 2, 20],
-        ["0125", 3, 15]
+        ["0125", 3, 15],
+        ["0126", 1, 50],
+        ["0126", 2, 30],
+        ["0126", 3, 25]
     ]
     numerosita_anni_corso.extend(numerosita_anni_corso_i)
 
 
-def __impostaDatiIniziali():
+def __impostaDati7Cds1Mod():
+    __impostaDatiBase()
+
+    corsi_di_studio_i=[
+        ["0120", "INFORMATICA APPLICATA (MACHINE LEARNING E BIG DATA) ", 120, 2],
+        ["0124", "INFORMATICA", 180, 3],
+        ["0123", "SCIENZE BIOLOGICHE", 180, 3],
+        ["0122", "SCIENZE NAUTICHE, AERONAUTICHE E METEO-OCEANOGRAFICHE", 180, 3],
+        ["0121", "SCIENZE E TECNOLOGIE DELLA NAVIGAZIONE", 120, 2],
+        ["0125", "CONDUZIONE DEL MEZZO NAVALE", 180, 3],
+        ["0126", "BIOLOGIA PER LA SOSTENIBILITA'", 120, 2]
+    ]
+    corsi_di_studio.extend(corsi_di_studio_i)
+
+    attivita_didattiche_i=[
+        ["A001018", "SCIENTIFIC COMPUTING", 12, "#FF0000"],
+        ["A001019", "PHYSICS AND QUANTUM COMPUTING", 6, "#4169E1"],
+        ["A001020", "MACHINE LEARNING", 12, "#228B22"],
+        ["A001027", "COMPUTER GRAPHICS: ANIMATION AND SIMULATION", 6, "#FFD800"],
+        ["A001022", "HIGH PERFORMANCE COMPUTING", 6, "#993300"],
+        ["A001024", "INTERNET OF THINGS AND IOT LAB", 12, "#d4bf02"],
+        ["A001025", "MULTIMODAL MACHINE LEARNING", 6, "#fa2d9a"],
+        ["771", "MATEMATICA I", 12, "#FF0000"],
+        ["ARC12", "ARCHITETTURA DEI CALCOLATORI E LABORATORIO DI ARCHITETTURA DEI CALCOLATORI CFU12", 12, "#4169E1"],
+        ["PROGR12", "PROGRAMMAZIONE I E LABORATORIO DI PROGRAMMAZIONE I  CFU 12", 12, "#228B22"],
+        ["ALGSTD12", "ALGORITMI E STRUTTURE DATI E LABORATORIO DI ALGORITMI E STRUTTURE DATI CFU 12", 12, "#FFD800"],
+        ["INFO03", "ECONOMIA E ORGANIZZAZIONE AZIENDALE", 9, "#993300"],
+        ["MATII9", "MATEMATICA II CFU 9", 9, "#d4bf02"],
+        ["A001195", "INGEGNERIA DEL SOFTWARE E INTERAZIONE UOMO-MACCHINA", 9, "#fa2d9a"],
+        ["PRGRIII9", "PROGRAMMAZIONE III E LABORATORIO DI PROGRAMMAZIONE III", 6, "#92b09e"],
+        ["RCLRC9", "RETI DI CALCOLATORI E LABORATORIO DI RETI DI CALCOLATORI CFU 9", 9, "#7ec4ba"],
+        ["0115021", "MATEMATICA E STATISTICA", 9, "#FF0000"],
+        ["012301", "CHIMICA GENERALE ED INORGANICA CON LABORATORIO", 9, "#4169E1"],
+        ["01230444", "BIOLOGIA E FISIOLOGIA VEGETALE CON LABORATORIO", 12, "#228B22"],
+        ["01230445", "CITOLOGIA ED ISTOLOGIA CON LABORATORIO", 6, "#FFD800"],
+        ["012305", "BIOCHIMICA CON LABORATORIO", 9, "#993300"],
+        ["0115007", "ECOLOGIA", 9, "#d4bf02"],
+        ["012340", "IGIENE", 9, "#fa2d9a"],
+        ["01230004", "FISIOLOGIA GENERALE", 6, "#92b09e"],
+        ["186", "GENETICA", 6, "#7ec4ba"],
+        ["A000733", "INFORMATICA DI BASE E LABORATORIO", 6, "#FF0000"],
+        ["ITL030", "TEORIA DEI SEGNALI", 9, "#4169E1"],
+        ["A001004", "ANALISI MATEMATICA II", 9, "#228B22"],
+        ["FISI26", "FISICA II CFU 6", 6, "#FFD800"],
+        ["01200008", "APPLICAZIONI DI CALCOLO SCIENTIFICO E LAB. A.C.S.", 12, "#FF0000"],
+        ["IT06", "RADAR", 6, "#4169E1"],
+        ["CLIMA", "CLIMATOLOGIA", 6, "#228B22"],
+        ["NAVSAT", "NAVIGAZIONE SATELLITARE", 6, "#FFD800"],
+        ["TRASP", "TRASPORTO E DIFFUSIONE NELL'OCEANO E NELL'ATMOSFERA", 6, "#993300"],
+        ["012105", "ECONOMIA ED ORGANIZZAZIONE AZIENDALE", 6, "#d4bf02"],
+        ["A000984", "TENUTA DELLA GUARDIA E LABORATORIO", 6, "#4169E1"],
+        ["526", "ANALISI MATEMATICA", 9, "#228B22"],
+        ["A000982", "INGLESE TECNICO E LABORATORIO", 6, "#FFD800"],
+        ["012109", "TECNOLOGIE DELLE COSTRUZIONI ED ALLESTIMENTO NAVALE", 6, "#993300"],
+        ["A001367", "IGIENE DELL'AMBIENTE E DEL TERRITORIO", 6, "#FF0000"],
+        ["A001368", "BIOCHIMICA APPLICATA", 6, "#4169E1"],
+        ["A001369", "ECONOMIA DELL'AMBIENTE ED ECONOMIA CIRCOLARE", 6, "#228B22"],
+        ["A001375", "ECOLOGIA SISTEMICA E VALUTAZIONE AMBIENTALE", 9, "#FFD800"],
+        ["A001376", "ZOOLOGIA APPLICATA", 9, "#993300"]
+    ]
+    attivita_didattiche.extend(attivita_didattiche_i)
+
+    docenti_i=[
+        ["CF001903", "001903", "MARCELLINO", "LIVIA"],
+        ["CF002347", "002347", "FERONE", "ALESSIO"],
+        ["CF001854", "001854", "CAMASTRA", "FRANCESCO"],
+        ["CF000292", "000292", "RIZZARDI", "MARIAROSARIA"],
+        ["CF000296", "000296", "GIUNTA", "GIULIO"],
+        ["CF000768", "000768", "ROTUNDI", "ALESSANDRA"],
+        ["CF001969", "001969", "CIARAMELLA", "ANGELO"],
+        ["CF001971", "001971", "STAIANO", "ANTONINO"],
+        ["CF001713", "001713", "MONTELLA", "RAFFAELE"],
+        ["CF001412", "001412", "METALLO", "CONCETTA"],
+        ["CF002025", "002025", "VOLZONE", "BRUNO"],
+        ["CF001708", "001708", "D'ONOFRIO", "LUIGI"],
+        ["CF002006", "002006", "SALVI", "GIUSEPPE"],
+        ["CF000716", "000716", "RUSSO", "GIOVANNI, FULVIO"],
+        ["CF002602", "002602", "DI ONOFRIO", "VALERIA"],
+        ["CF005922", "005922", "NAPOLITANO", "GAETANA"],
+        ["CF002138", "002138", "DI DONATO", "PAOLA"],
+        ["CF002318", "002318", "PASQUALE", "VINCENZO"],
+        ["CF002159", "002159", "GALLETTI", "ARDELIO"],
+        ["CF001954", "001954", "OLIVA", "ROMINA"],
+        ["CF001528", "001528", "CASORIA", "PAOLO"],
+        ["CF004015", "004015", "SIMONIELLO", "PALMA"],
+        ["CF001871", "001871", "FERRAIOLI", "GIAMPAOLO"],
+        ["CF001132", "001132", "PREZIOSO", "GIUSEPPINA"],
+        ["CF000337", "000337", "ZAMBIANCHI", "ENRICO"],
+        ["CF001141", "001141", "FUSCO", "GIANNETTA"],
+        ["CF002844", "002844", "PISCOPO", "VINCENZO"],
+        ["CF001711", "001711", "AMADORI", "ANNA LISA"],
+        ["CF004663", "004663", "NISCO", "MARIA CRISTINA"],
+        ["CF001909", "001909", "FRANZESE", "PIER PAOLO"],
+        ["CF002651", "002651", "BUONOCORE", "ELVIRA"],
+        ["CF002069", "002069", "SANDULLI", "ROBERTO"]
+    ]
+    docenti.extend(docenti_i)
+
+    offerta_i=[
+        [4, 1, 1, 4, 1, 1, 0],
+        [4, 1, 2, 6, 1, 1, 0],
+        [4, 1, 3, 3, 1, 1, 0],
+        [4, 1, 5, 1, 2, 1, 0],
+        [4, 1, 6, 2, 2, 1, 0],
+        [4, 1, 7, 3, 2, 1, 0],
+        [4, 2, 8, 12, 1, 1, 100],
+        [4, 2, 9, 13, 1, 1, 100],
+        [4, 2, 10, 7, 1, 1, 100],
+        [4, 2, 11, 3, 2, 1, 70],
+        [4, 2, 12, 10, 2, 1, 70],
+        [4, 2, 13, 11, 2, 1, 70],
+        [4, 2, 14, 8, 3, 1, 50],
+        [4, 2, 15, 9, 3, 1, 50],
+        [4, 2, 16, 2, 3, 1, 50],
+        [4, 3, 17, 19, 1, 1, 60],
+        [4, 3, 18, 20, 1, 1, 60],
+        [4, 3, 19, 21, 1, 1, 60],
+        [4, 3, 20, 22, 1, 1, 60],
+        [4, 3, 21, 17, 2, 1, 45],
+        [4, 3, 22, 14, 3, 1, 25],
+        [4, 3, 23, 15, 3, 1, 25],
+        [4, 3, 24, 16, 3, 1, 25],
+        [4, 3, 25, 18, 3, 1, 25],
+        [4, 4, 26, 13, 1, 1, 50],
+        [4, 4, 27, 23, 2, 1, 30],
+        [4, 4, 28, 12, 2, 1, 30],
+        [4, 4, 29, 6, 2, 1, 30],
+        [4, 5, 30, 4, 1, 1, 0],
+        [4, 5, 31, 23, 1, 1, 0],
+        [4, 5, 32, 26, 1, 1, 0],
+        [4, 5, 33, 24, 2, 1, 0],
+        [4, 5, 34, 25, 2, 1, 0],
+        [4, 5, 35, 10, 2, 1, 0],
+        [4, 6, 26, 13, 2, 1, 20],
+        [4, 6, 36, 24, 1, 1, 40],
+        [4, 6, 37, 28, 1, 1, 40],
+        [4, 6, 38, 29, 1, 1, 40],
+        [4, 6, 39, 27, 2, 1, 20],
+        [4, 7, 40, 15, 1, 1, 0],
+        [4, 7, 41, 17, 1, 1, 0],
+        [4, 7, 43, 30, 2, 1, 0],
+        [4, 7, 44, 32, 2, 1, 0]
+    ]
+    offerta.extend(offerta_i)
+
+    modulo_i=[
+        ["MOD-1", "MOD-1", 1, 4, "N", 2, 2, 0],
+        ["MOD-1", "MOD-1", 2, 6, "N", 2, 2, 0],
+        ["MOD-1", "MOD-1", 3, 3, "N", 2, 2, 0],
+        ["MOD-1", "MOD-1", 4, 1, "N", 2, 2, 0],
+        ["MOD-1", "MOD-1", 5, 2, "N", 2, 2, 0],
+        ["MOD-1", "MOD-1", 6, 3, "N", 2, 2, 0],
+        ["MOD-1", "MOD-1", 7, 12, "N", 2, 2, 0],
+        ["MOD-1", "MOD-1", 8, 13, "N", 2, 2, 0],
+        ["MOD-1", "MOD-1", 9, 7, "N", 2, 2, 0],
+        ["MOD-1", "MOD-1", 10, 3, "N", 2, 2, 0],
+        ["MOD-1", "MOD-1", 11, 10, "N", 2, 2, 0],
+        ["MOD-1", "MOD-1", 12, 11, "N", 2, 2, 0],
+        ["MOD-1", "MOD-1", 13, 8, "N", 2, 2, 0],
+        ["MOD-1", "MOD-1", 14, 9, "N", 2, 2, 0],
+        ["MOD-1", "MOD-1", 15, 2, "N", 2, 2, 0],
+        ["MOD-1", "MOD-1", 16, 19, "N", 2, 2, 0],
+        ["MOD-1", "MOD-1", 17, 20, "N", 2, 2, 0],
+        ["MOD-1", "MOD-1", 18, 21, "N", 2, 2, 0],
+        ["MOD-1", "MOD-1", 19, 22, "N", 2, 2, 0],
+        ["MOD-1", "MOD-1", 20, 17, "N", 2, 2, 0],
+        ["MOD-1", "MOD-1", 21, 14, "N", 2, 2, 0],
+        ["MOD-1", "MOD-1", 22, 15, "N", 2, 2, 0],
+        ["MOD-1", "MOD-1", 23, 16, "N", 2, 2, 0],
+        ["MOD-1", "MOD-1", 24, 18, "N", 2, 2, 0],
+        ["MOD-1", "MOD-1", 25, 13, "N", 2, 2, 0],
+        ["MOD-1", "MOD-1", 26, 23, "N", 2, 2, 0],
+        ["MOD-1", "MOD-1", 27, 12, "N", 2, 2, 0],
+        ["MOD-1", "MOD-1", 28, 6, "N", 2, 2, 0],
+        ["MOD-1", "MOD-1", 29, 4, "N", 2, 2, 0],
+        ["MOD-1", "MOD-1", 30, 23, "N", 2, 2, 0],
+        ["MOD-1", "MOD-1", 31, 26, "N", 2, 2, 0],
+        ["MOD-1", "MOD-1", 32, 24, "N", 2, 2, 0],
+        ["MOD-1", "MOD-1", 33, 25, "N", 2, 2, 0],
+        ["MOD-1", "MOD-1", 34, 10, "N", 2, 2, 0],
+        ["MOD-1", "MOD-1", 35, 13, "N", 2, 2, 0],
+        ["MOD-1", "MOD-1", 36, 24, "N", 2, 2, 0],
+        ["MOD-1", "MOD-1", 37, 28, "N", 2, 2, 0],
+        ["MOD-1", "MOD-1", 38, 29, "N", 2, 2, 0],
+        ["MOD-1", "MOD-1", 39, 27, "N", 2, 2, 0],
+        ["MOD-1", "MOD-1", 40, 15, "N", 2, 2, 0],
+        ["MOD-1", "MOD-1", 41, 17, "N", 2, 2, 0],
+        ["MOD-1", "MOD-1", 42, 30, "N", 2, 2, 0],
+        ["MOD-1", "MOD-1", 43, 32, "N", 2, 2, 0],
+    ]
+    moduli.extend(modulo_i)
+
+def __impostaDatiTest():
     giorni_i=["Lunedì","Martedì","Mercoledì","Giovedì","Venerdì"]
     giorni.extend(giorni_i)
     
@@ -137,10 +338,10 @@ def __impostaDatiIniziali():
     slot.extend(slot_i)
     
     anni_accademici_i=[
-        [2018,"2018-19"],
-        [2019,"2019-20"],
-        [2020,"2020-21"],
-        [2021,"2021-22"]
+        [2018,"2018-2019"],
+        [2019,"2019-2020"],
+        [2020,"2020-2021"],
+        [2021,"2021-2022"]
     ]
     anni_accademici.extend(anni_accademici_i)
     
@@ -291,7 +492,7 @@ def __impostaDatiIniziali():
         [4, 3, 37, 26, 2, 2, 50],
         [4, 3, 38, 21, 2, 2, 50],
         [4, 3, 39, 27, 3, 2, 40],
-        [4, 3, 40, 28, 3, 2, 40],
+        [4, 3, 40, 28, 3, 2, 40]
     ]
     offerta.extend(offerta_i)
         
@@ -356,7 +557,7 @@ def __impostaDatiIniziali():
     logistica_docenti.extend(logistica_docenti_i)
 
 
-def __registraDatiMinimiInDb():
+def __registraDatiBaseInDb():
     try:
         for g in giorni:
             row=Giorno(descrizione=g)
@@ -483,12 +684,77 @@ def __registraDatiInDb():
         flash("Errore di caricamento dati nel DB")
     return -1
 
+def __registraDatiSupplementariDb():
+    try:
+        for c in corsi_di_studio:
+            row=CorsoDiStudio(codice=c[0],
+                                descrizione=c[1],
+                                cfu=c[2],
+                                durata_legale=c[3])
+            db.session.add(row)
+        db.session.flush()
 
-def caricaDatiMinimi():
+        for a in attivita_didattiche:
+            row=AttivitaDidattica(codice=a[0],
+                                    descrizione=a[1],
+                                    cfu=a[2],
+                                    colore=a[3])
+            db.session.add(row)
+        db.session.flush()
+
+        for d in docenti:
+            row=Docente(codice_fiscale=d[0],
+                          matricola=d[1],
+                          cognome=d[2],
+                          nome=d[3])
+            db.session.add(row)
+        db.session.flush()
+
+        for o in offerta:
+            row=Offerta(anno_accademico_id=o[0],
+                          corso_di_studio_id=o[1],
+                          attivita_didattica_id=o[2],
+                          docente_id=o[3],
+                          anno_di_corso=o[4],
+                          semestre=o[5],
+                          max_studenti=o[6])
+            db.session.add(row)
+        db.session.flush()
+
+        for m in moduli:
+            row=Modulo(codice=m[0],
+                         descrizione=m[1],
+                         offerta_id=m[2],
+                         docente_id=m[3],
+                         tipo_aula=m[4],
+                         numero_sessioni=m[5],
+                         durata_sessioni=m[6],
+                         max_studenti=m[7])
+            db.session.add(row)
+        db.session.flush()
+
+        db.session.commit()
+    except SQLAlchemyError:
+        db.session.rollback()
+        flash("Errore di caricamento dati nel DB")
+    return -1
+
+
+def caricaDati7Cds1Mod():
     try:
         __svuotaTabelle()
-        __impostaDatiMinimi()
-        __registraDatiMinimiInDb()
+        __impostaDati7Cds1Mod()
+        __registraDatiSupplementariDb()
+        return 0
+    except SQLAlchemyError:
+        return -1
+
+
+def caricaDatiBase():
+    try:
+        __svuotaTabelle()
+        __impostaDatiBase()
+        __registraDatiBaseInDb()
         return 0
     except SQLAlchemyError:
         return -1
@@ -497,7 +763,7 @@ def caricaDatiMinimi():
 def caricaDatiTest():
     try:
         __svuotaTabelle()
-        __impostaDatiIniziali()
+        __impostaDatiTest()
         __registraDatiInDb()
         return 0
     except SQLAlchemyError:

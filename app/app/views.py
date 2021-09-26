@@ -13,7 +13,7 @@ from .models import AnnoAccademico, CorsoDiStudio, AttivitaDidattica, Docente, A
                     LogisticaDocente, Modulo, Giorno, Slot, Orario, OrarioTestata, OrarioDettaglio, Chiusura
 
 from flask.templating import render_template
-from .util import svuotaDb, caricaDatiTest, caricaDatiMinimi, getColori
+from .util import svuotaDb, caricaDatiTest, caricaDatiBase, caricaDati7Cds1Mod, getColori
 from .esse3_to_watt import getAnniAccademici, getCorsiInOfferta, importDatiEsse3
 from .solver import AlgoritmoCompleto
 from datetime import timedelta
@@ -298,11 +298,17 @@ class UtilitaView(BaseView):
             else:
                 flash('Errore nella fase di svuotamento del db.','danger')
 
-        elif target=="inizializzaMinDB":
-            if caricaDatiMinimi()==0:
-                flash('Inizializzazione del db effettuata correttamente!', 'success')
+        elif target=="caricaDatiBase":
+            if caricaDatiBase()==0:
+                flash('Caricamento effettuato correttamente!', 'success')
             else:
-                flash('Errore nella fase di svuotamento del db.', 'danger')
+                flash('Errore nella fase di caricamento dei dati di base.', 'danger')
+
+        elif target=="carica7Cds1Mod":
+            if caricaDati7Cds1Mod()==0:
+                flash('Caricamento effettuato correttamente!', 'success')
+            else:
+                flash('Errore nella fase di caricamento dei dati supplementari.', 'danger')
 
         elif target=="inizializzaAllDB":
             if caricaDatiTest()==0:
@@ -358,7 +364,8 @@ class UtilitaEsse3View(BaseView):
             if len(corsi)>0:
                 importDatiEsse3(request.form.get('anniAccademici'),request.form.getlist('corsi'), request.form.get('semestre'),
                                 request.form.get('cbSovrDatiCorsi'),request.form.get('cbSovrDatiAD'), request.form.get('cbSovrDatiDocenti'),
-                                request.form.get('cbSovrDatiOfferta'), request.form.get('cbImportaDatiIncompleti'), request.form.get('moduli'))
+                                request.form.get('cbSovrDatiOfferta'),request.form.get('cbImportaADObbligatorie'),request.form.get('cbImportaDatiIncompleti'),
+                                request.form.get('moduli'))
             else:
                 flash('Selezionare almeno un corso da importare!', 'warning')
 
@@ -377,7 +384,7 @@ class PreferenzeView(BaseView):
 
     @expose('/prf_home/', methods=['GET','POST'])
     @has_access
-    def prf_home(self, name=None):
+    def prf_home(self):
         anni_accademici=db.session.query(AnnoAccademico.id, AnnoAccademico.anno, AnnoAccademico.anno_esteso)\
         .join(Offerta, Offerta.anno_accademico_id==AnnoAccademico.id).distinct()
         semestri=db.session.query(Offerta.semestre).distinct()
@@ -387,9 +394,10 @@ class PreferenzeView(BaseView):
                                 anni_accademici=anni_accademici, 
                                 semestri=semestri)
     
-    @expose('/prf_calc/<target>', methods=['GET','POST'])
+    @expose('/prf_calc/', methods=['GET','POST'])
     @has_access
-    def prf_calc(self, target=None):
+    def prf_calc(self):
+        target = request.form.get("target")
         if target=="genera_orario" :
             algoritmo=AlgoritmoCompleto()
             algoritmo.genera_orario(request.form.get('aa'),

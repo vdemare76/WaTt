@@ -25,6 +25,11 @@
 				<button type="button" class="btn btn-primary" onclick="inizializzaMinDB()">Svuota il DB e carica dati minimi</button>
 			</div>
 			<br>
+			<h4>Carica dati di test supplementari (7 Corsi di Studio e 1 Modulo per ogni Attivitià Didattica)</h4>
+			<div>
+				<button type="button" class="btn btn-primary" onclick="caricaDatiTest7Cds1Mod()">Svuota il DB e carica dati minimi</button>
+			</div>
+			<br>
 			<h4>Svuota il DB e carica dati di test (Giorni, Slot, AuleAttività Didattiche, Docenti, Offerta, Moduli) </h4>
 			<div>
 				<button type="button" class="btn btn-primary" onclick="inizializzaAllDB()">Svuota il DB e carica di test</button>
@@ -48,7 +53,18 @@
 		$('#title').html('Richiesta di conferma');
 		$('#msg').html("Si intende realmente inizializzare il database con i dati minimi per l'acquisizione dati da procedura esterna?");
 		$(document).on('click', '#modal-confirm-ok', function () {
-			$('#target').val('inizializzaMinDB');
+			$('#target').val('caricaDatiBase');
+			$('#loader').css({'display':'block'});
+			$('#form_post').submit();
+        });
+		$('#modal-confirm-w').modal('show');
+	}
+
+	function caricaDatiTest7Cds1Mod() {
+		$('#title').html('Richiesta di conferma');
+		$('#msg').html("Si intende realmente inizializzare il database con i dati di test con 7 cds e 1 modulo per attività didattica offerta?");
+		$(document).on('click', '#modal-confirm-ok', function () {
+			$('#target').val('carica7Cds1Mod');
 			$('#loader').css({'display':'block'});
 			$('#form_post').submit();
         });

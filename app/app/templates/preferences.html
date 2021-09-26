@@ -70,7 +70,8 @@
 			</div><br>
 			<label for="txt_desc_orario">Descrizione orario:</label>
   			<input type="text" id="txt_desc_orario" name="txt_desc_orario" size="80"><br><br>
-			<button type="button" id="form_post" name="form_post" onclick="calcola_orario()" class="btn btn-primary">Calcola schema orario </button>  	  	
+			<button type="button" id="form_post" name="form_post" onclick="calcola_orario()" class="btn btn-primary">Calcola schema orario </button>
+			<input type="text" id="target" name="target" value="" style="display:none">
 		</form>
 	</div>
 	
@@ -78,6 +79,7 @@
 		function calcola_orario() {
 			if ($('#txt_desc_orario').val().length > 0) {
 				$('#loader').css({'display':'block'});
+				$('#target').val('genera_orario');
 				$('#form_post').submit();				
 			}
 			else {
