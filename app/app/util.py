@@ -16,25 +16,12 @@ colori={
     3:"#228B22",
     4:"#FFD800",
     5:"#993300",
-    6:"#d4bf02",
+    6:"#66ff33",
     7:"#fa2d9a",
     8:"#92b09e",
     9:"#7ec4ba",
     10:"#9292d4"
 }
-
-giorni=[]
-slot=[]
-anni_accademici=[]
-corsi_di_studio=[]
-attivita_didattiche=[]
-aule=[]
-numerosita_anni_corso=[]
-docenti=[]
-offerta=[] 
-moduli=[] 
-logistica_docenti=[]
-
 
 def __svuotaTabelle():
     db.session.query(OrarioDettaglio).delete()
@@ -70,20 +57,17 @@ def __svuotaTabelle():
 
 
 def __impostaDatiBase():
+    giorni=[]
+    slot=[]
+    aule=[]
+    numerosita=[]
+
     giorni_i=["Lunedì", "Martedì", "Mercoledì", "Giovedì", "Venerdì"]
     giorni.extend(giorni_i)
 
     slot_i=["09:00-10:00", "10:00-11:00", "11:00-12:00", "12:00-13:00",
-              "14:00-15:00", "15:00-16:00", "16:00-17:00", "17:00-18:00"]
+            "14:00-15:00", "15:00-16:00", "16:00-17:00", "17:00-18:00"]
     slot.extend(slot_i)
-
-    anni_accademici_i=[
-        [2018,"2018-2019"],
-        [2019,"2019-2020"],
-        [2020,"2020-2021"],
-        [2021,"2021-2022"]
-    ]
-    anni_accademici.extend(anni_accademici_i)
 
     aule_i=[
         ["AN1", "Aula 1", 260, "N"],
@@ -111,7 +95,7 @@ def __impostaDatiBase():
     ]
     aule.extend(aule_i)
 
-    numerosita_anni_corso_i=[
+    numerosita_i=[
         ["0120", 1, 30],
         ["0120", 2, 15],
         ["0120", 3, 15],
@@ -134,11 +118,25 @@ def __impostaDatiBase():
         ["0126", 2, 30],
         ["0126", 3, 25]
     ]
-    numerosita_anni_corso.extend(numerosita_anni_corso_i)
+    numerosita.extend(numerosita_i)
+
+    return giorni, slot, aule, numerosita
 
 
 def __impostaDati7Cds1Mod():
-    __impostaDatiBase()
+    anni_accademici = []
+    corsi_di_studio = []
+    attivita_didattiche = []
+    docenti = []
+    offerta = []
+    moduli = []
+
+    giorni, slot, aule, numerosita = __impostaDatiBase()
+
+    anni_accademici_i=[
+        [2021,"2021-2022"]
+    ]
+    anni_accademici.extend(anni_accademici_i)
 
     corsi_di_studio_i=[
         ["0120", "INFORMATICA APPLICATA (MACHINE LEARNING E BIG DATA) ", 120, 2],
@@ -236,49 +234,49 @@ def __impostaDati7Cds1Mod():
     docenti.extend(docenti_i)
 
     offerta_i=[
-        [4, 1, 1, 4, 1, 1, 0],
-        [4, 1, 2, 6, 1, 1, 0],
-        [4, 1, 3, 3, 1, 1, 0],
-        [4, 1, 5, 1, 2, 1, 0],
-        [4, 1, 6, 2, 2, 1, 0],
-        [4, 1, 7, 3, 2, 1, 0],
-        [4, 2, 8, 12, 1, 1, 100],
-        [4, 2, 9, 13, 1, 1, 100],
-        [4, 2, 10, 7, 1, 1, 100],
-        [4, 2, 11, 3, 2, 1, 70],
-        [4, 2, 12, 10, 2, 1, 70],
-        [4, 2, 13, 11, 2, 1, 70],
-        [4, 2, 14, 8, 3, 1, 50],
-        [4, 2, 15, 9, 3, 1, 50],
-        [4, 2, 16, 2, 3, 1, 50],
-        [4, 3, 17, 19, 1, 1, 60],
-        [4, 3, 18, 20, 1, 1, 60],
-        [4, 3, 19, 21, 1, 1, 60],
-        [4, 3, 20, 22, 1, 1, 60],
-        [4, 3, 21, 17, 2, 1, 45],
-        [4, 3, 22, 14, 3, 1, 25],
-        [4, 3, 23, 15, 3, 1, 25],
-        [4, 3, 24, 16, 3, 1, 25],
-        [4, 3, 25, 18, 3, 1, 25],
-        [4, 4, 26, 13, 1, 1, 50],
-        [4, 4, 27, 23, 2, 1, 30],
-        [4, 4, 28, 12, 2, 1, 30],
-        [4, 4, 29, 6, 2, 1, 30],
-        [4, 5, 30, 4, 1, 1, 0],
-        [4, 5, 31, 23, 1, 1, 0],
-        [4, 5, 32, 26, 1, 1, 0],
-        [4, 5, 33, 24, 2, 1, 0],
-        [4, 5, 34, 25, 2, 1, 0],
-        [4, 5, 35, 10, 2, 1, 0],
-        [4, 6, 26, 13, 2, 1, 20],
-        [4, 6, 36, 24, 1, 1, 40],
-        [4, 6, 37, 28, 1, 1, 40],
-        [4, 6, 38, 29, 1, 1, 40],
-        [4, 6, 39, 27, 2, 1, 20],
-        [4, 7, 40, 15, 1, 1, 0],
-        [4, 7, 41, 17, 1, 1, 0],
-        [4, 7, 43, 30, 2, 1, 0],
-        [4, 7, 44, 32, 2, 1, 0]
+        [1, 1, 1, 4, 1, 1, 0],
+        [1, 1, 2, 6, 1, 1, 0],
+        [1, 1, 3, 3, 1, 1, 0],
+        [1, 1, 5, 1, 2, 1, 0],
+        [1, 1, 6, 2, 2, 1, 0],
+        [1, 1, 7, 3, 2, 1, 0],
+        [1, 2, 8, 4, 1, 1, 0],
+        [1, 2, 9, 9, 1, 1, 0],
+        [1, 2, 10, 12, 1, 1, 0],
+        [1, 2, 11, 8, 2, 1, 0],
+        [1, 2, 12, 10, 2, 1, 0],
+        [1, 2, 13, 11, 2, 1, 0],
+        [1, 3, 14, 14, 1, 1, 0],
+        [1, 3, 15, 9, 2, 1, 0],
+        [1, 3, 16, 13, 2, 1, 0],
+        [1, 3, 17, 6, 2, 1, 0],
+        [1, 4, 18, 20, 1, 1, 0],
+        [1, 4, 19, 21, 1, 1, 0],
+        [1, 4, 20, 22, 1, 1, 0],
+        [1, 4, 21, 23, 1, 1, 0],
+        [1, 4, 22, 18, 2, 1, 0],
+        [1, 4, 23, 15, 3, 1, 0],
+        [1, 4, 24, 16, 3, 1, 0],
+        [1, 4, 25, 17, 3, 1, 0],
+        [1, 4, 26, 19, 3, 1, 0],
+        [1, 5, 27, 13, 1, 1, 0],
+        [1, 5, 28, 14, 1, 1, 0],
+        [1, 5, 29, 7, 1, 1, 0],
+        [1, 5, 30, 3, 2, 1, 0],
+        [1, 5, 31, 11, 2, 1, 0],
+        [1, 5, 32, 26, 2, 1, 0],
+        [1, 5, 33, 24, 3, 1, 0],
+        [1, 5, 34, 25, 3, 1, 0],
+        [1, 5, 35, 2, 3, 1, 0],
+        [1, 6, 14, 14, 2, 1, 0],
+        [1, 6, 36, 8, 1, 1, 0],
+        [1, 6, 37, 28, 1, 1, 0],
+        [1, 6, 38, 29, 1, 1, 0],
+        [1, 6, 39, 27, 2, 1, 0],
+        [1, 7, 40, 16, 1, 1, 0],
+        [1, 7, 41, 18, 1, 1, 0],
+        [1, 7, 43, 30, 2, 1, 0],
+        [1, 7, 44, 32, 2, 1, 0]
     ]
     offerta.extend(offerta_i)
 
@@ -289,47 +287,61 @@ def __impostaDati7Cds1Mod():
         ["MOD-1", "MOD-1", 4, 1, "N", 2, 2, 0],
         ["MOD-1", "MOD-1", 5, 2, "N", 2, 2, 0],
         ["MOD-1", "MOD-1", 6, 3, "N", 2, 2, 0],
-        ["MOD-1", "MOD-1", 7, 12, "N", 2, 2, 0],
-        ["MOD-1", "MOD-1", 8, 13, "N", 2, 2, 0],
-        ["MOD-1", "MOD-1", 9, 7, "N", 2, 2, 0],
-        ["MOD-1", "MOD-1", 10, 3, "N", 2, 2, 0],
+        ["MOD-1", "MOD-1", 7, 4, "N", 2, 2, 0],
+        ["MOD-1", "MOD-1", 8, 9, "N", 2, 2, 0],
+        ["MOD-1", "MOD-1", 9, 12, "N", 2, 2, 0],
+        ["MOD-1", "MOD-1", 10, 8, "N", 2, 2, 0],
         ["MOD-1", "MOD-1", 11, 10, "N", 2, 2, 0],
         ["MOD-1", "MOD-1", 12, 11, "N", 2, 2, 0],
-        ["MOD-1", "MOD-1", 13, 8, "N", 2, 2, 0],
+        ["MOD-1", "MOD-1", 13, 14, "N", 2, 2, 0],
         ["MOD-1", "MOD-1", 14, 9, "N", 2, 2, 0],
-        ["MOD-1", "MOD-1", 15, 2, "N", 2, 2, 0],
-        ["MOD-1", "MOD-1", 16, 19, "N", 2, 2, 0],
+        ["MOD-1", "MOD-1", 15, 13, "N", 2, 2, 0],
+        ["MOD-1", "MOD-1", 16, 6, "N", 2, 2, 0],
         ["MOD-1", "MOD-1", 17, 20, "N", 2, 2, 0],
         ["MOD-1", "MOD-1", 18, 21, "N", 2, 2, 0],
         ["MOD-1", "MOD-1", 19, 22, "N", 2, 2, 0],
-        ["MOD-1", "MOD-1", 20, 17, "N", 2, 2, 0],
-        ["MOD-1", "MOD-1", 21, 14, "N", 2, 2, 0],
+        ["MOD-1", "MOD-1", 20, 23, "N", 2, 2, 0],
+        ["MOD-1", "MOD-1", 21, 18, "N", 2, 2, 0],
         ["MOD-1", "MOD-1", 22, 15, "N", 2, 2, 0],
         ["MOD-1", "MOD-1", 23, 16, "N", 2, 2, 0],
-        ["MOD-1", "MOD-1", 24, 18, "N", 2, 2, 0],
-        ["MOD-1", "MOD-1", 25, 13, "N", 2, 2, 0],
-        ["MOD-1", "MOD-1", 26, 23, "N", 2, 2, 0],
-        ["MOD-1", "MOD-1", 27, 12, "N", 2, 2, 0],
-        ["MOD-1", "MOD-1", 28, 6, "N", 2, 2, 0],
-        ["MOD-1", "MOD-1", 29, 4, "N", 2, 2, 0],
-        ["MOD-1", "MOD-1", 30, 23, "N", 2, 2, 0],
+        ["MOD-1", "MOD-1", 24, 17, "N", 2, 2, 0],
+        ["MOD-1", "MOD-1", 25, 19, "N", 2, 2, 0],
+        ["MOD-1", "MOD-1", 26, 13, "N", 2, 2, 0],
+        ["MOD-1", "MOD-1", 27, 14, "N", 2, 2, 0],
+        ["MOD-1", "MOD-1", 28, 7, "N", 2, 2, 0],
+        ["MOD-1", "MOD-1", 29, 3, "N", 2, 2, 0],
+        ["MOD-1", "MOD-1", 30, 11, "N", 2, 2, 0],
         ["MOD-1", "MOD-1", 31, 26, "N", 2, 2, 0],
         ["MOD-1", "MOD-1", 32, 24, "N", 2, 2, 0],
         ["MOD-1", "MOD-1", 33, 25, "N", 2, 2, 0],
-        ["MOD-1", "MOD-1", 34, 10, "N", 2, 2, 0],
-        ["MOD-1", "MOD-1", 35, 13, "N", 2, 2, 0],
-        ["MOD-1", "MOD-1", 36, 24, "N", 2, 2, 0],
+        ["MOD-1", "MOD-1", 34, 2, "N", 2, 2, 0],
+        ["MOD-1", "MOD-1", 35, 14, "N", 2, 2, 0],
+        ["MOD-1", "MOD-1", 36, 8, "N", 2, 2, 0],
         ["MOD-1", "MOD-1", 37, 28, "N", 2, 2, 0],
         ["MOD-1", "MOD-1", 38, 29, "N", 2, 2, 0],
         ["MOD-1", "MOD-1", 39, 27, "N", 2, 2, 0],
-        ["MOD-1", "MOD-1", 40, 15, "N", 2, 2, 0],
-        ["MOD-1", "MOD-1", 41, 17, "N", 2, 2, 0],
+        ["MOD-1", "MOD-1", 40, 16, "N", 2, 2, 0],
+        ["MOD-1", "MOD-1", 41, 18, "N", 2, 2, 0],
         ["MOD-1", "MOD-1", 42, 30, "N", 2, 2, 0],
-        ["MOD-1", "MOD-1", 43, 32, "N", 2, 2, 0],
+        ["MOD-1", "MOD-1", 43, 32, "N", 2, 2, 0]
     ]
     moduli.extend(modulo_i)
 
+    return giorni, slot, anni_accademici, aule, corsi_di_studio, numerosita,  attivita_didattiche, docenti, offerta, moduli, None
+
+
 def __impostaDatiTest():
+    giorni = []
+    slot = []
+    anni_accademici = []
+    corsi_di_studio = []
+    attivita_didattiche = []
+    aule = []
+    docenti = []
+    offerta = []
+    moduli = []
+    logistica_docenti = []
+
     giorni_i=["Lunedì","Martedì","Mercoledì","Giovedì","Venerdì"]
     giorni.extend(giorni_i)
     
@@ -556,182 +568,127 @@ def __impostaDatiTest():
     logistica_docenti_i=[]
     logistica_docenti.extend(logistica_docenti_i)
 
+    return giorni, slot, anni_accademici, aule, corsi_di_studio, None,  attivita_didattiche, docenti, offerta, moduli, logistica_docenti
 
-def __registraDatiBaseInDb():
+def __registraDatiInDb(giorni, slot, anni_accademici, aule, corsi_di_studio, numerosita, attivita_didattiche, docenti, offerta, moduli, logistica_docenti):
     try:
-        for g in giorni:
-            row=Giorno(descrizione=g)
-            db.session.add(row)
-        db.session.flush()
+        if giorni is not None:
+            try:
+                for g in giorni:
+                    row = Giorno(descrizione=g)
+                    db.session.add(row)
+                db.session.flush()
+            except:
+                flash("Errore di caricamento dei giorni", "danger")
 
-        for s in slot:
-            row=Slot(descrizione=s)
-            db.session.add(row)
-        db.session.flush()
+        if slot is not None:
+            try:
+                for s in slot:
+                    row = Slot(descrizione=s)
+                    db.session.add(row)
+                db.session.flush()
+            except:
+                flash("Errore di caricamento degli slot", "danger")
 
-        for a in anni_accademici:
-            row=AnnoAccademico(anno=a[0],
-                                 anno_esteso=a[1])
-            db.session.add(row)
-        db.session.flush()
+        if anni_accademici is not None:
+            try:
+                for a in anni_accademici:
+                    row = AnnoAccademico(anno=a[0],
+                                         anno_esteso=a[1])
+                    db.session.add(row)
+                db.session.flush()
+            except:
+                flash("Errore di caricamento degli anni accademici", "danger")
 
-        for a in aule:
-            row=Aula(codice=a[0],
-                       descrizione=a[1],
-                       capienza=a[2],
-                       tipo_aula=a[3])
-            db.session.add(row)
-        db.session.flush()
+        if aule is not None:
+            try:
+                for a in aule:
+                    row = Aula(codice=a[0],
+                               descrizione=a[1],
+                               capienza=a[2],
+                               tipo_aula=a[3])
+                    db.session.add(row)
+                db.session.flush()
+            except:
+                flash("Errore di caricamento delle aule", "danger")
 
-        for n in numerosita_anni_corso:
-            row = NumerositaAnniCorso(codice_corso=n[0],
-                       anno_di_corso=n[1],
-                       numerosita=n[2])
-            db.session.add(row)
-        db.session.flush()
+        if numerosita is not None:
+            try:
+                for n in numerosita:
+                    row = NumerositaAnniCorso(codice_corso=n[0],
+                                              anno_di_corso=n[1],
+                                              numerosita=n[2])
+                    db.session.add(row)
+                db.session.flush()
+            except:
+                flash("Errore di caricamento delle numerosità", "danger")
 
-        db.session.commit()
-    except SQLAlchemyError:
-        db.session.rollback()
-        flash("Errore di caricamento dati minimi nel DB")
-    return -1
+        if corsi_di_studio is not None:
+            try:
+                for c in corsi_di_studio:
+                    row = CorsoDiStudio(codice=c[0],
+                                        descrizione=c[1],
+                                        cfu=c[2],
+                                        durata_legale=c[3])
+                    db.session.add(row)
+                db.session.flush()
+            except:
+                flash("Errore di caricamento dei corsi", "danger")
 
+        if attivita_didattiche is not None:
+            try:
+                for a in attivita_didattiche:
+                    row = AttivitaDidattica(codice=a[0],
+                                            descrizione=a[1],
+                                            cfu=a[2],
+                                            colore=a[3])
+                    db.session.add(row)
+                db.session.flush()
+            except:
+                flash("Errore di caricamento delle attività didattiche", "danger")
 
-def __registraDatiInDb():
-    try:
-        for g in giorni:
-            row=Giorno(descrizione=g)
-            db.session.add(row)
-        db.session.flush()
+        if docenti is not None:
+            try:
+                for d in docenti:
+                    row = Docente(codice_fiscale=d[0],
+                                  matricola=d[1],
+                                  cognome=d[2],
+                                  nome=d[3])
+                    db.session.add(row)
+                db.session.flush()
+            except:
+                flash("Errore di caricamento dei docenti", "danger")
 
-        for s in slot:
-            row=Slot(descrizione=s)
-            db.session.add(row)
-        db.session.flush()
+        if offerta is not None:
+            try:
+                for o in offerta:
+                    row = Offerta(anno_accademico_id=o[0],
+                                  corso_di_studio_id=o[1],
+                                  attivita_didattica_id=o[2],
+                                  docente_id=o[3],
+                                  anno_di_corso=o[4],
+                                  semestre=o[5],
+                                  max_studenti=o[6])
+                    db.session.add(row)
+                db.session.flush()
+            except:
+                flash("Errore di caricamento dell'offerta", "danger")
 
-        for a in anni_accademici:
-            row=AnnoAccademico(anno=a[0],
-                                 anno_esteso=a[1])
-            db.session.add(row)
-        db.session.flush()
-
-        for c in corsi_di_studio:
-            row=CorsoDiStudio(codice=c[0],
-                                descrizione=c[1],
-                                cfu=c[2],
-                                durata_legale=c[3])
-            db.session.add(row)
-        db.session.flush()
-
-        for a in attivita_didattiche:
-            row=AttivitaDidattica(codice=a[0],
-                                    descrizione=a[1],
-                                    cfu=a[2],
-                                    colore=a[3])
-            db.session.add(row)
-        db.session.flush()
-
-        for a in aule:
-            row=Aula(codice=a[0],
-                       descrizione=a[1],
-                       capienza=a[2],
-                       tipo_aula=a[3])
-            db.session.add(row)
-        db.session.flush()
-
-        for d in docenti:
-            row=Docente(codice_fiscale=d[0],
-                          matricola=d[1],
-                          cognome=d[2],
-                          nome=d[3])
-            db.session.add(row)
-        db.session.flush()
-
-        for o in offerta:
-            row=Offerta(anno_accademico_id=o[0],
-                          corso_di_studio_id=o[1],
-                          attivita_didattica_id=o[2],
-                          docente_id=o[3],
-                          anno_di_corso=o[4],
-                          semestre=o[5],
-                          max_studenti=o[6])
-            db.session.add(row)
-        db.session.flush()
-
-        for m in moduli:
-            row=Modulo(codice=m[0],
-                         descrizione=m[1],
-                         offerta_id=m[2],
-                         docente_id=m[3],
-                         tipo_aula=m[4],
-                         numero_sessioni=m[5],
-                         durata_sessioni=m[6],
-                         max_studenti=m[7])
-            db.session.add(row)
-        db.session.flush()
-
-        for l in logistica_docenti:
-            row=LogisticaDocente(offerta_id=l[0],
-                                   modulo_id=l[1],
-                                   slot_id=l[2],
-                                   giorno_id=l[3])
-            db.session.add(row)
-        db.session.flush()
-
-        db.session.commit()
-    except SQLAlchemyError:
-        db.session.rollback()
-        flash("Errore di caricamento dati nel DB")
-    return -1
-
-def __registraDatiSupplementariDb():
-    try:
-        for c in corsi_di_studio:
-            row=CorsoDiStudio(codice=c[0],
-                                descrizione=c[1],
-                                cfu=c[2],
-                                durata_legale=c[3])
-            db.session.add(row)
-        db.session.flush()
-
-        for a in attivita_didattiche:
-            row=AttivitaDidattica(codice=a[0],
-                                    descrizione=a[1],
-                                    cfu=a[2],
-                                    colore=a[3])
-            db.session.add(row)
-        db.session.flush()
-
-        for d in docenti:
-            row=Docente(codice_fiscale=d[0],
-                          matricola=d[1],
-                          cognome=d[2],
-                          nome=d[3])
-            db.session.add(row)
-        db.session.flush()
-
-        for o in offerta:
-            row=Offerta(anno_accademico_id=o[0],
-                          corso_di_studio_id=o[1],
-                          attivita_didattica_id=o[2],
-                          docente_id=o[3],
-                          anno_di_corso=o[4],
-                          semestre=o[5],
-                          max_studenti=o[6])
-            db.session.add(row)
-        db.session.flush()
-
-        for m in moduli:
-            row=Modulo(codice=m[0],
-                         descrizione=m[1],
-                         offerta_id=m[2],
-                         docente_id=m[3],
-                         tipo_aula=m[4],
-                         numero_sessioni=m[5],
-                         durata_sessioni=m[6],
-                         max_studenti=m[7])
-            db.session.add(row)
-        db.session.flush()
+        if moduli is not None:
+            try:
+                for m in moduli:
+                    row = Modulo(codice=m[0],
+                                 descrizione=m[1],
+                                 offerta_id=m[2],
+                                 docente_id=m[3],
+                                 tipo_aula=m[4],
+                                 numero_sessioni=m[5],
+                                 durata_sessioni=m[6],
+                                 max_studenti=m[7])
+                    db.session.add(row)
+                db.session.flush()
+            except:
+                flash("Errore di caricamento dei moduli", "danger")
 
         db.session.commit()
     except SQLAlchemyError:
@@ -743,18 +700,8 @@ def __registraDatiSupplementariDb():
 def caricaDati7Cds1Mod():
     try:
         __svuotaTabelle()
-        __impostaDati7Cds1Mod()
-        __registraDatiSupplementariDb()
-        return 0
-    except SQLAlchemyError:
-        return -1
-
-
-def caricaDatiBase():
-    try:
-        __svuotaTabelle()
-        __impostaDatiBase()
-        __registraDatiBaseInDb()
+        giorni, slot, anni_accademici, aule, corsi_di_studio, numerosita,  attivita_didattiche, docenti, offerta, moduli, logistica_docenti = __impostaDati7Cds1Mod()
+        __registraDatiInDb(giorni, slot, anni_accademici, aule, corsi_di_studio, numerosita,  attivita_didattiche, docenti, offerta, moduli, logistica_docenti)
         return 0
     except SQLAlchemyError:
         return -1
@@ -763,8 +710,8 @@ def caricaDatiBase():
 def caricaDatiTest():
     try:
         __svuotaTabelle()
-        __impostaDatiTest()
-        __registraDatiInDb()
+        giorni, slot, anni_accademici, aule, corsi_di_studio, numerosita,  attivita_didattiche, docenti, offerta, moduli, logistica_docenti = __impostaDatiTest()
+        __registraDatiInDb(giorni, slot, anni_accademici, aule, corsi_di_studio, numerosita,  attivita_didattiche, docenti, offerta, moduli, logistica_docenti)
         return 0
     except SQLAlchemyError:
         return -1

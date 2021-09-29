@@ -2,11 +2,10 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="4bd4ca69-5fab-4bca-9aae-55bf4e9525ff" name="Default Changelist" comment="Update">
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_21_09_2021_18_10_[Default_Changelist]/shelved.patch" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_21_09_2021_18_10__Default_Changelist_.xml" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/app/esse3_to_watt.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/app/esse3_to_watt.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/app/templates/preferences.html" beforeDir="false" afterPath="$PROJECT_DIR$/app/app/templates/preferences.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/app/templates/utility.html" beforeDir="false" afterPath="$PROJECT_DIR$/app/app/templates/utility.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/app/templates/utility_esse3.html" beforeDir="false" afterPath="$PROJECT_DIR$/app/app/templates/utility_esse3.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/app/util.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/app/util.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/app/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/app/views.py" afterDir="false" />
     </list>
@@ -134,21 +133,9 @@
       <workItem from="1632504186031" duration="7091000" />
       <workItem from="1632568342392" duration="11097000" />
       <workItem from="1632654677169" duration="2986000" />
-      <workItem from="1632666568984" duration="8986000" />
-    </task>
-    <task id="LOCAL-00025" summary="Update">
-      <created>1623347226856</created>
-      <option name="number" value="00025" />
-      <option name="presentableId" value="LOCAL-00025" />
-      <option name="project" value="LOCAL" />
-      <updated>1623347226856</updated>
-    </task>
-    <task id="LOCAL-00026" summary="Update">
-      <created>1623347991799</created>
-      <option name="number" value="00026" />
-      <option name="presentableId" value="LOCAL-00026" />
-      <option name="project" value="LOCAL" />
-      <updated>1623347991799</updated>
+      <workItem from="1632666568984" duration="9156000" />
+      <workItem from="1632857803142" duration="5710000" />
+      <workItem from="1632931548245" duration="8276000" />
     </task>
     <task id="LOCAL-00027" summary="Update">
       <created>1623348524470</created>
@@ -479,7 +466,21 @@
       <option name="project" value="LOCAL" />
       <updated>1632519429938</updated>
     </task>
-    <option name="localTasksCounter" value="74" />
+    <task id="LOCAL-00074" summary="Update">
+      <created>1632692036250</created>
+      <option name="number" value="00074" />
+      <option name="presentableId" value="LOCAL-00074" />
+      <option name="project" value="LOCAL" />
+      <updated>1632692036250</updated>
+    </task>
+    <task id="LOCAL-00075" summary="Update">
+      <created>1632692107412</created>
+      <option name="number" value="00075" />
+      <option name="presentableId" value="LOCAL-00075" />
+      <option name="project" value="LOCAL" />
+      <updated>1632692107412</updated>
+    </task>
+    <option name="localTasksCounter" value="76" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">

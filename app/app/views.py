@@ -13,7 +13,7 @@ from .models import AnnoAccademico, CorsoDiStudio, AttivitaDidattica, Docente, A
                     LogisticaDocente, Modulo, Giorno, Slot, Orario, OrarioTestata, OrarioDettaglio, Chiusura
 
 from flask.templating import render_template
-from .util import svuotaDb, caricaDatiTest, caricaDatiBase, caricaDati7Cds1Mod, getColori
+from .util import svuotaDb, caricaDatiTest, caricaDati7Cds1Mod, getColori
 from .esse3_to_watt import getAnniAccademici, getCorsiInOfferta, importDatiEsse3
 from .solver import AlgoritmoCompleto
 from datetime import timedelta
@@ -297,12 +297,6 @@ class UtilitaView(BaseView):
                 flash('Db svuotato correttamente!','success')
             else:
                 flash('Errore nella fase di svuotamento del db.','danger')
-
-        elif target=="caricaDatiBase":
-            if caricaDatiBase()==0:
-                flash('Caricamento effettuato correttamente!', 'success')
-            else:
-                flash('Errore nella fase di caricamento dei dati di base.', 'danger')
 
         elif target=="carica7Cds1Mod":
             if caricaDati7Cds1Mod()==0:
