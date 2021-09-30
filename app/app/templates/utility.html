@@ -20,9 +20,14 @@
 				<button type="button" class="btn btn-primary" onclick="svuotaDB()">Svuota il DB</button>
 			</div>
 			<br>
-			<h4>Carica dati di test supplementari (7 Corsi di Studio e 1 Modulo per ogni Attivitià Didattica)</h4>
+			<h4>Carica dati di test - TIPO 1 - (7 Corsi di Studio e 1 Modulo per ogni Attività Didattica)</h4>
 			<div>
 				<button type="button" class="btn btn-primary" onclick="caricaDatiTest7Cds1Mod()">Carica i dati di test per 7 corsi e un solo modulo per ogni AD offerta</button>
+			</div>
+			<br>
+			<h4>Carica dati di test - TIPO 2 - (7 Corsi di Studio e Moduli multipli per ogni Attività Didattica)</h4>
+			<div>
+				<button type="button" class="btn btn-primary" onclick="caricaDatiTest7CdsNMod()">Carica i dati di test per 7 corsi e moduli multipli per ogni AD offerta</button>
 			</div>
 			<br>
 			<h4>Svuota il DB e carica dati di test (Giorni, Slot, AuleAttività Didattiche, Docenti, Offerta, Moduli) </h4>
@@ -49,6 +54,17 @@
 		$('#msg').html("Si intende realmente inizializzare il database con i dati di test con 7 cds e 1 modulo per attività didattica offerta?");
 		$(document).on('click', '#modal-confirm-ok', function () {
 			$('#target').val('carica7Cds1Mod');
+			$('#loader').css({'display':'block'});
+			$('#form_post').submit();
+        });
+		$('#modal-confirm-w').modal('show');
+	}
+
+	function caricaDatiTest7CdsNMod() {
+		$('#title').html('Richiesta di conferma');
+		$('#msg').html("Si intende realmente inizializzare il database con i dati di test con 7 cds e moduli multipli per attività didattica offerta?");
+		$(document).on('click', '#modal-confirm-ok', function () {
+			$('#target').val('carica7CdsNMod');
 			$('#loader').css({'display':'block'});
 			$('#form_post').submit();
         });

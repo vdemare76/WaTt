@@ -123,7 +123,7 @@ def __impostaDatiBase():
     return giorni, slot, aule, numerosita
 
 
-def __impostaDati7Cds1Mod():
+def __impostaDati7Cds(tipoModuli):
     anni_accademici = []
     corsi_di_studio = []
     attivita_didattiche = []
@@ -280,53 +280,107 @@ def __impostaDati7Cds1Mod():
     ]
     offerta.extend(offerta_i)
 
-    modulo_i=[
-        ["MOD-1", "MOD-1", 1, 4, "N", 2, 2, 0],
-        ["MOD-1", "MOD-1", 2, 6, "N", 2, 2, 0],
-        ["MOD-1", "MOD-1", 3, 3, "N", 2, 2, 0],
-        ["MOD-1", "MOD-1", 4, 1, "N", 2, 2, 0],
-        ["MOD-1", "MOD-1", 5, 2, "N", 2, 2, 0],
-        ["MOD-1", "MOD-1", 6, 3, "N", 2, 2, 0],
-        ["MOD-1", "MOD-1", 7, 4, "N", 2, 2, 0],
-        ["MOD-1", "MOD-1", 8, 9, "N", 2, 2, 0],
-        ["MOD-1", "MOD-1", 9, 12, "N", 2, 2, 0],
-        ["MOD-1", "MOD-1", 10, 8, "N", 2, 2, 0],
-        ["MOD-1", "MOD-1", 11, 10, "N", 2, 2, 0],
-        ["MOD-1", "MOD-1", 12, 11, "N", 2, 2, 0],
-        ["MOD-1", "MOD-1", 13, 14, "N", 2, 2, 0],
-        ["MOD-1", "MOD-1", 14, 9, "N", 2, 2, 0],
-        ["MOD-1", "MOD-1", 15, 13, "N", 2, 2, 0],
-        ["MOD-1", "MOD-1", 16, 6, "N", 2, 2, 0],
-        ["MOD-1", "MOD-1", 17, 20, "N", 2, 2, 0],
-        ["MOD-1", "MOD-1", 18, 21, "N", 2, 2, 0],
-        ["MOD-1", "MOD-1", 19, 22, "N", 2, 2, 0],
-        ["MOD-1", "MOD-1", 20, 23, "N", 2, 2, 0],
-        ["MOD-1", "MOD-1", 21, 18, "N", 2, 2, 0],
-        ["MOD-1", "MOD-1", 22, 15, "N", 2, 2, 0],
-        ["MOD-1", "MOD-1", 23, 16, "N", 2, 2, 0],
-        ["MOD-1", "MOD-1", 24, 17, "N", 2, 2, 0],
-        ["MOD-1", "MOD-1", 25, 19, "N", 2, 2, 0],
-        ["MOD-1", "MOD-1", 26, 13, "N", 2, 2, 0],
-        ["MOD-1", "MOD-1", 27, 14, "N", 2, 2, 0],
-        ["MOD-1", "MOD-1", 28, 7, "N", 2, 2, 0],
-        ["MOD-1", "MOD-1", 29, 3, "N", 2, 2, 0],
-        ["MOD-1", "MOD-1", 30, 11, "N", 2, 2, 0],
-        ["MOD-1", "MOD-1", 31, 26, "N", 2, 2, 0],
-        ["MOD-1", "MOD-1", 32, 24, "N", 2, 2, 0],
-        ["MOD-1", "MOD-1", 33, 25, "N", 2, 2, 0],
-        ["MOD-1", "MOD-1", 34, 2, "N", 2, 2, 0],
-        ["MOD-1", "MOD-1", 35, 14, "N", 2, 2, 0],
-        ["MOD-1", "MOD-1", 36, 8, "N", 2, 2, 0],
-        ["MOD-1", "MOD-1", 37, 28, "N", 2, 2, 0],
-        ["MOD-1", "MOD-1", 38, 29, "N", 2, 2, 0],
-        ["MOD-1", "MOD-1", 39, 27, "N", 2, 2, 0],
-        ["MOD-1", "MOD-1", 40, 16, "N", 2, 2, 0],
-        ["MOD-1", "MOD-1", 41, 18, "N", 2, 2, 0],
-        ["MOD-1", "MOD-1", 42, 30, "N", 2, 2, 0],
-        ["MOD-1", "MOD-1", 43, 32, "N", 2, 2, 0]
-    ]
+    if tipoModuli == "1":
+        modulo_i=[
+            ["MOD-1", "MOD-1", 1, 4, "N", 2, 2, 0],
+            ["MOD-1", "MOD-1", 2, 6, "N", 2, 2, 0],
+            ["MOD-1", "MOD-1", 3, 3, "N", 2, 2, 0],
+            ["MOD-1", "MOD-1", 4, 1, "N", 2, 2, 0],
+            ["MOD-1", "MOD-1", 5, 2, "N", 2, 2, 0],
+            ["MOD-1", "MOD-1", 6, 3, "N", 2, 2, 0],
+            ["MOD-1", "MOD-1", 7, 4, "N", 2, 2, 0],
+            ["MOD-1", "MOD-1", 8, 9, "N", 2, 2, 0],
+            ["MOD-1", "MOD-1", 9, 12, "N", 2, 2, 0],
+            ["MOD-1", "MOD-1", 10, 8, "N", 2, 2, 0],
+            ["MOD-1", "MOD-1", 11, 10, "N", 2, 2, 0],
+            ["MOD-1", "MOD-1", 12, 11, "N", 2, 2, 0],
+            ["MOD-1", "MOD-1", 13, 14, "N", 2, 2, 0],
+            ["MOD-1", "MOD-1", 14, 9, "N", 2, 2, 0],
+            ["MOD-1", "MOD-1", 15, 13, "N", 2, 2, 0],
+            ["MOD-1", "MOD-1", 16, 6, "N", 2, 2, 0],
+            ["MOD-1", "MOD-1", 17, 20, "N", 2, 2, 0],
+            ["MOD-1", "MOD-1", 18, 21, "N", 2, 2, 0],
+            ["MOD-1", "MOD-1", 19, 22, "N", 2, 2, 0],
+            ["MOD-1", "MOD-1", 20, 23, "N", 2, 2, 0],
+            ["MOD-1", "MOD-1", 21, 18, "N", 2, 2, 0],
+            ["MOD-1", "MOD-1", 22, 15, "N", 2, 2, 0],
+            ["MOD-1", "MOD-1", 23, 16, "N", 2, 2, 0],
+            ["MOD-1", "MOD-1", 24, 17, "N", 2, 2, 0],
+            ["MOD-1", "MOD-1", 25, 19, "N", 2, 2, 0],
+            ["MOD-1", "MOD-1", 26, 13, "N", 2, 2, 0],
+            ["MOD-1", "MOD-1", 27, 14, "N", 2, 2, 0],
+            ["MOD-1", "MOD-1", 28, 7, "N", 2, 2, 0],
+            ["MOD-1", "MOD-1", 29, 3, "N", 2, 2, 0],
+            ["MOD-1", "MOD-1", 30, 11, "N", 2, 2, 0],
+            ["MOD-1", "MOD-1", 31, 26, "N", 2, 2, 0],
+            ["MOD-1", "MOD-1", 32, 24, "N", 2, 2, 0],
+            ["MOD-1", "MOD-1", 33, 25, "N", 2, 2, 0],
+            ["MOD-1", "MOD-1", 34, 2, "N", 2, 2, 0],
+            ["MOD-1", "MOD-1", 35, 14, "N", 2, 2, 0],
+            ["MOD-1", "MOD-1", 36, 8, "N", 2, 2, 0],
+            ["MOD-1", "MOD-1", 37, 28, "N", 2, 2, 0],
+            ["MOD-1", "MOD-1", 38, 29, "N", 2, 2, 0],
+            ["MOD-1", "MOD-1", 39, 27, "N", 2, 2, 0],
+            ["MOD-1", "MOD-1", 40, 16, "N", 2, 2, 0],
+            ["MOD-1", "MOD-1", 41, 18, "N", 2, 2, 0],
+            ["MOD-1", "MOD-1", 42, 30, "N", 2, 2, 0],
+            ["MOD-1", "MOD-1", 43, 32, "N", 2, 2, 0]
+        ]
+    elif tipoModuli == "N":
+        modulo_i = [
+            ["MOD-1/2", "MOD12", 1, 4, "N", 2, 2, 0],
+            ["MOD-2/2", "MOD22", 1, 5, "N", 2, 2, 0],
+            ["MOD-1/1", "MOD11", 2, 6, "N", 2, 2, 0],
+            ["MOD-1/2", "MOD12", 3, 3, "N", 2, 2, 0],
+            ["MOD-2/2", "MOD22", 3, 7, "L", 2, 2, 0],
+            ["MOD-1/1", "MOD11", 4, 1, "N", 2, 2, 0],
+            ["MOD-1/1", "MOD11", 5, 2, "N", 2, 2, 0],
+            ["MOD-1/1", "MOD11", 6, 3, "N", 2, 2, 0],
+            ["MOD-1/2", "MOD12", 7, 4, "N", 2, 2, 0],
+            ["MOD-2/2", "MOD22", 7, 5, "L", 2, 2, 0],
+            ["MOD-1/1", "MOD11", 8, 9, "N", 2, 2, 0],
+            ["MOD-1/1", "MOD11", 9, 12, "N", 2, 2, 0],
+            ["MOD-1/1", "MOD11", 10, 8, "N", 2, 2, 0],
+            ["MOD-1/1", "MOD11", 11, 10, "N", 2, 2, 0],
+            ["MOD-1/1", "MOD11", 12, 11, "N", 2, 2, 0],
+            ["MOD-1/1", "MOD11", 13, 14, "N", 2, 2, 0],
+            ["MOD-1/1", "MOD11", 14, 9, "N", 2, 2, 0],
+            ["MOD-1/1", "MOD11", 15, 13, "N", 2, 2, 0],
+            ["MOD-1/1", "MOD11", 16, 6, "N", 2, 2, 0],
+            ["MOD-1/1", "MOD11", 17, 20, "N", 2, 2, 0],
+            ["MOD-1/1", "MOD11", 18, 21, "N", 2, 2, 0],
+            ["MOD-1/1", "MOD11", 19, 22, "N", 2, 2, 0],
+            ["MOD-1/1", "MOD11", 20, 23, "N", 2, 2, 0],
+            ["MOD-1/1", "MOD11", 21, 18, "N", 2, 2, 0],
+            ["MOD-1/1", "MOD11", 22, 15, "N", 2, 2, 0],
+            ["MOD-1/1", "MOD11", 23, 16, "N", 2, 2, 0],
+            ["MOD-1/1", "MOD11", 24, 17, "N", 2, 2, 0],
+            ["MOD-1/1", "MOD11", 25, 19, "N", 2, 2, 0],
+            ["MOD-1/1", "MOD11", 26, 13, "N", 2, 2, 0],
+            ["MOD-1/2", "MOD12", 27, 14, "N", 2, 2, 0],
+            ["MOD-2/2", "MOD22", 27, 25, "L", 2, 2, 0],
+            ["MOD-1/2", "MOD12", 28, 7, "N", 2, 2, 0],
+            ["MOD-2/2", "MOD22", 28, 5, "L", 2, 2, 0],
+            ["MOD-1/2", "MOD12", 29, 3, "N", 2, 2, 0],
+            ["MOD-2/2", "MOD22", 29, 2, "L", 2, 2, 0],
+            ["MOD-1/1", "MOD11", 30, 11, "N", 2, 2, 0],
+            ["MOD-1/1", "MOD11", 31, 26, "N", 2, 2, 0],
+            ["MOD-1/1", "MOD11", 32, 24, "N", 2, 2, 0],
+            ["MOD-1/2", "MOD12", 33, 25, "N", 2, 2, 0],
+            ["MOD-2/2", "MOD22", 33, 7, "L", 2, 2, 0],
+            ["MOD-1/1", "MOD11", 34, 2, "N", 2, 2, 0],
+            ["MOD-1/1", "MOD11", 35, 14, "N", 2, 2, 0],
+            ["MOD-1/1", "MOD11", 36, 8, "N", 2, 2, 0],
+            ["MOD-1/1", "MOD11", 37, 28, "N", 2, 2, 0],
+            ["MOD-1/1", "MOD11", 38, 29, "N", 2, 2, 0],
+            ["MOD-1/1", "MOD11", 39, 27, "N", 2, 2, 0],
+            ["MOD-1/1", "MOD11", 40, 16, "N", 2, 2, 0],
+            ["MOD-1/1", "MOD11", 41, 18, "N", 2, 2, 0],
+            ["MOD-1/2", "MOD12", 42, 30, "N", 2, 2, 0],
+            ["MOD-2/2", "MOD22", 42, 31, "L", 2, 2, 0],
+            ["MOD-1/1", "MOD11", 43, 32, "N", 2, 2, 0]
+        ]
     moduli.extend(modulo_i)
-
     return giorni, slot, anni_accademici, aule, corsi_di_studio, numerosita,  attivita_didattiche, docenti, offerta, moduli, None
 
 
@@ -697,10 +751,10 @@ def __registraDatiInDb(giorni, slot, anni_accademici, aule, corsi_di_studio, num
     return -1
 
 
-def caricaDati7Cds1Mod():
+def caricaDati7Cds(tipoModuli):
     try:
         __svuotaTabelle()
-        giorni, slot, anni_accademici, aule, corsi_di_studio, numerosita,  attivita_didattiche, docenti, offerta, moduli, logistica_docenti = __impostaDati7Cds1Mod()
+        giorni, slot, anni_accademici, aule, corsi_di_studio, numerosita,  attivita_didattiche, docenti, offerta, moduli, logistica_docenti = __impostaDati7Cds(tipoModuli)
         __registraDatiInDb(giorni, slot, anni_accademici, aule, corsi_di_studio, numerosita,  attivita_didattiche, docenti, offerta, moduli, logistica_docenti)
         return 0
     except SQLAlchemyError:
@@ -720,8 +774,10 @@ def caricaDatiTest():
 def svuotaDb():
     try:
         __svuotaTabelle()
+        flash("DB svuotato correttamente!", "success")
         return 0
     except SQLAlchemyError:
+        flash("Errore di svuotamento del DB!", "danger")
         return -1
 
 
@@ -732,7 +788,7 @@ def caricaDatiDalDb(aa, semestre):
         for c in corsi:
             corsi_tt.append(CorsoDiStudioTt(c.id, c.codice, c.descrizione, c.cfu, c.durata_legale))
     except SQLAlchemyError:
-        flash("Errore di caricamento dati LP -> Corsi di studio")
+        flash("Errore di caricamento dati LP -> Corsi di studio", "danger")
         return -1   
     
     try:

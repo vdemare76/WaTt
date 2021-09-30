@@ -4,36 +4,38 @@
 	{% include "confirm_msg.html" %}	
 	
 <html>
-	<h2 class="bg-warning" style="text-align: center;">Schema orario settimanale</h2>
 	<head>
   		<meta charset='utf-8' />	
 	   	   <div style="overflow-x:auto;">
+		     <h2 class="bg-warning" style="text-align: center;">Schema orario settimanale</h2>
 	  		 <table class="table">
-			  <thead>
-			    <tr>
-			      <th scope="col">Slot orario</th>
-			      <th scope="col">Lunedì</th>
-			      <th scope="col">Martedì</th>
-			      <th scope="col">Mercoledì</th>
-			      <th scope="col">Giovedì</th>
-			      <th scope="col">Venerdì</th>
-			    </tr>
-			  </thead>
 			  <tbody>
-			    {% for s in slot %}	       		 
+			    {% for s in slot %}
+				<thead>
+			      <tr>
+				    <th scope="col">Slot orario</th>
+				  	<th scope="col">Lunedì</th>
+				  	<th scope="col">Martedì</th>
+				  	<th scope="col">Mercoledì</th>
+				  	<th scope="col">Giovedì</th>
+				  	<th scope="col">Venerdì</th>
+				  	</tr>
+			    </thead>
 	            <tr>
 			      <th scope="row">{{s.descrizione}}</th>
 			      	<td>
 				      {% for o in orario %}
 				      	{% if o.giorno == "Lunedì" %}
-				      	  {% if o.slot_id == s.id %}
-				      	    <div style="color:{{o.colore_corso}};">
-				      	    	Anno: <b>{{o.anno_corso}}</b><br>
-				      	    	<b>{{o.codice_attivita}}-{{o.descrizione_modulo}} ({{o.numerosita_modulo}})</b><br>
-				            	({{o.nome_docente}} {{o.cognome_docente}})<br>
-				            	<b>{{o.aula}} ({{o.capienza_aula}})</b><br>
-				            	<span style="color:black;">-----------------</span>
-				            </div>
+						  {% if o.slot_id == s.id %}
+				      	     <div style="color:{{o.colore_corso}};">
+				      	    	<b>Corso: {{o.codice_corso}} - Anno: {{o.anno_corso}}</b><br>
+								<b>{{o.codice_attivita}} - {{o.descrizione_modulo}} ({{o.numerosita_modulo}})</b><br>
+								<div style="color:black;">
+									Docente: {{o.nome_docente}} {{o.cognome_docente}}<br>
+									<b>{{o.aula}} ({{o.capienza_aula}})</b><br>
+								</div>
+				            	<span style="color:black;">--------------------------</span>
+				             </div>
 				          {% endif %}
 				        {% endif %}
 				      {% endfor %}
@@ -42,13 +44,15 @@
 				      {% for o in orario %}
 				      	{% if o.giorno == "Martedì" %}
 				      	  {% if o.slot_id == s.id %}
-				      	    <div style="color:{{o.colore_corso}};">
-				            	Anno: <b>{{o.anno_corso}}</b><br>
-				      	    	<b>{{o.codice_attivita}}-{{o.descrizione_modulo}} ({{o.numerosita_modulo}})</b><br>
-				            	({{o.nome_docente}} {{o.cognome_docente}})<br>
-				            	<b>{{o.aula}} ({{o.capienza_aula}})</b><br>
-				            	<span style="color:black;">-----------------</span>
-				            </div>
+				      	     <div style="color:{{o.colore_corso}};">
+				      	    	<b>Corso: {{o.codice_corso}} - Anno: {{o.anno_corso}}</b><br>
+								<b>{{o.codice_attivita}} - {{o.descrizione_modulo}} ({{o.numerosita_modulo}})</b><br>
+								<div style="color:black;">
+									Docente: {{o.nome_docente}} {{o.cognome_docente}}<br>
+									<b>{{o.aula}} ({{o.capienza_aula}})</b><br>
+								</div>
+				            	<span style="color:black;">--------------------------</span>
+				             </div>
 				          {% endif %}
 				        {% endif %}
 				      {% endfor %}
@@ -57,13 +61,15 @@
 				      {% for o in orario %}
 				      	{% if o.giorno == "Mercoledì" %}
 				      	  {% if o.slot_id == s.id %}
-				      	    <div style="color:{{o.colore_corso}};">
-				      	    	Anno: <b>{{o.anno_corso}}</b><br>
-				      	    	<b>{{o.codice_attivita}}-{{o.descrizione_modulo}} ({{o.numerosita_modulo}})</b><br>
-				            	({{o.nome_docente}} {{o.cognome_docente}})<br>
-				            	<b>{{o.aula}} ({{o.capienza_aula}})</b><br>
-				            	<span style="color:black;">-----------------</span>
-				            </div>
+				      	     <div style="color:{{o.colore_corso}};">
+				      	    	<b>Corso: {{o.codice_corso}} - Anno: {{o.anno_corso}}</b><br>
+								<b>{{o.codice_attivita}} - {{o.descrizione_modulo}} ({{o.numerosita_modulo}})</b><br>
+								<div style="color:black;">
+									Docente: {{o.nome_docente}} {{o.cognome_docente}}<br>
+									<b>{{o.aula}} ({{o.capienza_aula}})</b><br>
+								</div>
+				            	<span style="color:black;">--------------------------</span>
+				             </div>
 				          {% endif %}
 				        {% endif %}
 				      {% endfor %}
@@ -72,13 +78,15 @@
 				      {% for o in orario %}
 				      	{% if o.giorno == "Giovedì" %}
 				      	  {% if o.slot_id == s.id %}
-				      	    <div style="color:{{o.colore_corso}};">
-				      	    	Anno: <b>{{o.anno_corso}}</b><br>
-				      	    	<b>{{o.codice_attivita}}-{{o.descrizione_modulo}} ({{o.numerosita_modulo}})</b><br>
-				            	({{o.nome_docente}} {{o.cognome_docente}})<br>
-				            	<b>{{o.aula}} ({{o.capienza_aula}})</b><br>
-				            	<span style="color:black;">-----------------</span>
-				            </div>
+				      	     <div style="color:{{o.colore_corso}};">
+				      	    	<b>Corso: {{o.codice_corso}} - Anno: {{o.anno_corso}}</b><br>
+								<b>{{o.codice_attivita}} - {{o.descrizione_modulo}} ({{o.numerosita_modulo}})</b><br>
+								<div style="color:black;">
+									Docente: {{o.nome_docente}} {{o.cognome_docente}}<br>
+									<b>{{o.aula}} ({{o.capienza_aula}})</b><br>
+								</div>
+				            	<span style="color:black;">---------------------------</span>
+				             </div>
 				          {% endif %}
 				        {% endif %}
 				      {% endfor %}
@@ -87,13 +95,15 @@
 				      {% for o in orario %}
 				      	{% if o.giorno == "Venerdì" %}
 				      	  {% if o.slot_id == s.id %}
-				      	    <div style="color:{{o.colore_corso}};">
-				      	    	Anno: <b>{{o.anno_corso}}</b><br>
-				      	    	<b>{{o.codice_attivita}}-{{o.descrizione_modulo}} ({{o.numerosita_modulo}})</b><br>
-				            	({{o.nome_docente}} {{o.cognome_docente}})<br>
-				            	<b>{{o.aula}} ({{o.capienza_aula}})</b><br>
-				            	<span style="color:black;">-----------------</span>
-				            </div>
+				      	     <div style="color:{{o.colore_corso}};">
+				      	    	<b>Corso: {{o.codice_corso}} - Anno: {{o.anno_corso}}</b><br>
+								<b>{{o.codice_attivita}} - {{o.descrizione_modulo}} ({{o.numerosita_modulo}})</b><br>
+								<div style="color:black;">
+									Docente: {{o.nome_docente}} {{o.cognome_docente}}<br>
+									<b>{{o.aula}} ({{o.capienza_aula}})</b><br>
+								</div>
+				            	<span style="color:black;">--------------------------</span>
+				             </div>
 				          {% endif %}
 				        {% endif %}
 				      {% endfor %}

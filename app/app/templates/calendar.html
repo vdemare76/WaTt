@@ -9,6 +9,8 @@
     <meta charset='utf-8' />
     <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.7.2/main.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.7.2/locales-all.min.js"></script>
+    <script src="/static/ics.min.js"></script>
+    <script src="/static/FileSaver.min.js"></script>
     <link href="https://cdn.jsdelivr.net/npm/fullcalendar@5.7.2/main.min.css" rel="stylesheet" />
   </head>
 
@@ -113,11 +115,23 @@
               click: function() {
                 download(JSON.stringify(Object.assign({}, calendar.getEvents())), 'calendar.json', 'application/json');
               }
+            },
+            iCalButton: {
+              text: 'Download iCal',
+              click: function() {
+                var evs = calendar.getEvents();
+                var cal = ics();
+                for (e in evs)
+                {
+                  cal.addEvent(evs[e].title, evs[e].title, evs[e].title, evs[e].start, evs[e].end);
+                }
+                cal.download('cal');
+              }
             }
           },
           headerToolbar: {
-            left: 'jsonButton',
-            center: 'title'
+            left: 'jsonButton iCalButton',
+            center: 'title',
           }
       });
 
@@ -215,6 +229,7 @@
     function aggiorna_data_fine(arrChiusure) {
       $("#data_fine_lezioni").val($("#data_avvio_lezioni").val());
     }
+
 </script>
 	
 {% endblock %}
