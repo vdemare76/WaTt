@@ -299,8 +299,9 @@ class AlgoritmoCompleto(TemplateCalcoloOrario):
         # Vincolo che fissa  il numero massimo di slot per giorno per un anno di corso
         if request.form.get('chk_max_ore')=='1': 
             limsup=int(request.form.get('sel_max_ore'))
+            flash(limsup)
             for c in dati.get_corsi():
-                for g in dati.get_giorni():   
+                for g in dati.get_giorni():
                     model+=lpSum(skd[(c,m,a,g,s)] for m in dati.get_moduli() if m.get_anno_corso()==1 for s in dati.get_slot() for a in dati.get_aule())<=limsup
                     model+=lpSum(skd[(c,m,a,g,s)] for m in dati.get_moduli() if m.get_anno_corso()==2 for s in dati.get_slot() for a in dati.get_aule())<=limsup
                     model+=lpSum(skd[(c,m,a,g,s)] for m in dati.get_moduli() if m.get_anno_corso()==3 for s in dati.get_slot() for a in dati.get_aule())<=limsup

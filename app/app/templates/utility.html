@@ -20,6 +20,11 @@
 				<button type="button" class="btn btn-primary" onclick="svuotaDB()">Svuota il DB</button>
 			</div>
 			<br>
+			<h4>Carica dati di base per l'import da Esse3</h4>
+			<div>
+				<button type="button" class="btn btn-primary" onclick="caricaDatiBase()">Carica i dati di base per importare dati da Esse3</button>
+			</div>
+			<br>
 			<h4>Carica dati di test - TIPO 1 - (7 Corsi di Studio e 1 Modulo per ogni Attività Didattica)</h4>
 			<div>
 				<button type="button" class="btn btn-primary" onclick="caricaDatiTest7Cds1Mod()">Carica i dati di test per 7 corsi e un solo modulo per ogni AD offerta</button>
@@ -44,6 +49,17 @@
 		$('#msg').html('Si intende realmente svuotare il database?');
 		$(document).on('click', '#modal-confirm-ok', function () {
 			$('#target').val('svuotaDB');
+			$('#form_post').submit();
+        });
+		$('#modal-confirm-w').modal('show');
+	}
+
+	function caricaDatiBase() {
+		$('#title').html('Richiesta di conferma');
+		$('#msg').html("Si intende realmente inizializzare il database con i dati di base per poi importare i dati da Esse3?");
+		$(document).on('click', '#modal-confirm-ok', function () {
+			$('#target').val('caricaDatiBase');
+			$('#loader').css({'display':'block'});
 			$('#form_post').submit();
         });
 		$('#modal-confirm-w').modal('show');

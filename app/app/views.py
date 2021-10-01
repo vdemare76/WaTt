@@ -13,7 +13,7 @@ from .models import AnnoAccademico, CorsoDiStudio, AttivitaDidattica, Docente, A
                     LogisticaDocente, Modulo, Giorno, Slot, Orario, OrarioTestata, OrarioDettaglio, Chiusura
 
 from flask.templating import render_template
-from .util import svuotaDb, caricaDatiTest, caricaDati7Cds, getColori
+from .util import svuotaDb, caricaDatiTest, caricaDati7Cds, caricaDatiBase, getColori
 from .esse3_to_watt import getAnniAccademici, getCorsiInOfferta, importDatiEsse3
 from .solver import AlgoritmoCompleto
 from datetime import timedelta
@@ -293,28 +293,15 @@ class UtilitaView(BaseView):
     def srv_util(self):
         target=request.form.get("target")
         if target=="svuotaDB":
-            if svuotaDb()==0:
-                flash('Db svuotato correttamente!','success')
-            else:
-                flash('Errore nella fase di svuotamento del db.','danger')
-
+            svuotaDb()
+        elif target=="caricaDatiBase":
+            caricaDatiBase()
         elif target=="carica7Cds1Mod":
-            if caricaDati7Cds("1")==0:
-                flash('Caricamento effettuato correttamente!', 'success')
-            else:
-                flash('Errore nella fase di caricamento dei dati di test TIPO 1.', 'danger')
-
+            caricaDati7Cds("1")
         elif target=="carica7CdsNMod":
-            if caricaDati7Cds("N")==0:
-                flash('Caricamento effettuato correttamente!', 'success')
-            else:
-                flash('Errore nella fase di caricamento dei dati di test TIPO 2.', 'danger')
-
+            caricaDati7Cds("N")
         elif target=="inizializzaAllDB":
-            if caricaDatiTest()==0:
-                flash('Inizializzazione del db effettuata correttamente!','success')
-            else:    
-                flash('Errore nella fase di inizializzazione del db.','danger')
+            caricaDatiTest()
 
         return render_template("utility.html", base_template=appbuilder.base_template, appbuilder=appbuilder)
 

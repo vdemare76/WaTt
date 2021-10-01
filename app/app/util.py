@@ -139,7 +139,7 @@ def __impostaDati7Cds(tipoModuli):
     anni_accademici.extend(anni_accademici_i)
 
     corsi_di_studio_i=[
-        ["0120", "INFORMATICA APPLICATA (MACHINE LEARNING E BIG DATA) ", 120, 2],
+        ["0120", "INFORMATICA APPLICATA (MACHINE LEARNING E BIG DATA)", 120, 2],
         ["0124", "INFORMATICA", 180, 3],
         ["0123", "SCIENZE BIOLOGICHE", 180, 3],
         ["0122", "SCIENZE NAUTICHE, AERONAUTICHE E METEO-OCEANOGRAFICHE", 180, 3],
@@ -756,9 +756,9 @@ def caricaDati7Cds(tipoModuli):
         __svuotaTabelle()
         giorni, slot, anni_accademici, aule, corsi_di_studio, numerosita,  attivita_didattiche, docenti, offerta, moduli, logistica_docenti = __impostaDati7Cds(tipoModuli)
         __registraDatiInDb(giorni, slot, anni_accademici, aule, corsi_di_studio, numerosita,  attivita_didattiche, docenti, offerta, moduli, logistica_docenti)
-        return 0
+        flash("Caricamento effettuato correttamente!", "success")
     except SQLAlchemyError:
-        return -1
+        flash("Errore nella fase di caricamento dei dati Esse3 preimpostati", "danger")
 
 
 def caricaDatiTest():
@@ -766,10 +766,9 @@ def caricaDatiTest():
         __svuotaTabelle()
         giorni, slot, anni_accademici, aule, corsi_di_studio, numerosita,  attivita_didattiche, docenti, offerta, moduli, logistica_docenti = __impostaDatiTest()
         __registraDatiInDb(giorni, slot, anni_accademici, aule, corsi_di_studio, numerosita,  attivita_didattiche, docenti, offerta, moduli, logistica_docenti)
-        return 0
+        flash("Caricamento effettuato correttamente!", "success")
     except SQLAlchemyError:
-        return -1
-
+        flash("Errore nella fase di caricamento dei dati preimpostati", "danger")
 
 def svuotaDb():
     try:
@@ -845,7 +844,7 @@ def caricaDatiDalDb(aa, semestre):
         for l in logistica:
             logistica_tt.append([l.offerta_id,l.modulo_id,l.slot_id,l.giorno_id])
     except SQLAlchemyError:
-        flash("Errore di caricamento dati LP -> Aule")
+        flash("Errore di caricamento dati LP -> Logistica Docenti")
         return -1    
     
     return corsi_tt, giorni_tt, slot_tt, aule_tt, moduli_tt, logistica_tt
@@ -853,6 +852,16 @@ def caricaDatiDalDb(aa, semestre):
 
 def getColori():
     return colori
+
+
+def caricaDatiBase():
+    try:
+        __svuotaTabelle()
+        giorni, slot, aule, numerosita = __impostaDatiBase()
+        __registraDatiInDb(giorni, slot, None, aule, None, numerosita, None, None, None, None, None)
+        flash("Caricamento dei dati di base effettuato correttamente!", "success")
+    except SQLAlchemyError:
+        flash("Errore nella fase di caricamento dei dati di base", "danger")
 
 
 def inizializza_db():
@@ -864,9 +873,8 @@ def inizializza_db():
         row=StatoOrario(codice="B", descrizione="Bozza")
         db.session.add(row)
         db.session.commit()
-    except SQLAlchemyError:
-        flash("Errore di inizializzazione del db")
-        return -1
+    except:
+        None
 
 
 def getLdapToken(uid):
