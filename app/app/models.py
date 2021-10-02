@@ -156,7 +156,6 @@ class OrarioTestata(Model):
     vincolo_sessioni_consecutive=Column(Integer)
     vincolo_max_slot=Column(Integer)
     vincolo_logistica_docenti=Column(Integer)
-    note_creazione=Column(String(150))
     stato_orario_id=Column(Integer, ForeignKey("stato_orario.id"), nullable=False)
     stato_orario=relationship("StatoOrario")
 
@@ -185,7 +184,7 @@ class OrarioDettaglio(Model):
 class Orario(Model):
     id=Column(Integer, primary_key=True)
     testata_id=Column(Integer)
-    giorni_id=Column(Integer)
+    giorno_id=Column(Integer)
     giorno=Column(String(10))
     corso_id=Column(Integer)
     codice_corso=Column(String(10))
