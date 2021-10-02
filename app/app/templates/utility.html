@@ -34,11 +34,6 @@
 			<div>
 				<button type="button" class="btn btn-primary" onclick="caricaDatiTest7CdsNMod()">Carica i dati di test per 7 corsi e moduli multipli per ogni AD offerta</button>
 			</div>
-			<br>
-			<h4>Svuota il DB e carica dati di test (Giorni, Slot, AuleAttività Didattiche, Docenti, Offerta, Moduli) </h4>
-			<div>
-				<button type="button" class="btn btn-primary" onclick="inizializzaAllDB()">Svuota il DB e carica di test</button>
-			</div>
 			<input type="text" id="target" name="target" value="" style="display:none">
 		</form>
 	</div>
@@ -87,16 +82,6 @@
 		$('#modal-confirm-w').modal('show');
 	}
 
-	function inizializzaAllDB() {
-		$('#title').html('Richiesta di conferma');
-		$('#msg').html('Si intende realmente inizializzare il database con i dati completi di test?');
-		$(document).on('click', '#modal-confirm-ok', function () {
-			$('#target').val('inizializzaAllDB');
-			$('#loader').css({'display':'block'});
-			$('#form_post').submit();
-        });
-		$('#modal-confirm-w').modal('show');
-	}	
 	</script>
 
 {% endblock %}

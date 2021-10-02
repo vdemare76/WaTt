@@ -303,8 +303,6 @@ class UtilitaView(BaseView):
             caricaDati7Cds("1")
         elif target=="carica7CdsNMod":
             caricaDati7Cds("N")
-        elif target=="inizializzaAllDB":
-            caricaDatiTest()
 
         return render_template("utility.html", base_template=appbuilder.base_template, appbuilder=appbuilder)
 
