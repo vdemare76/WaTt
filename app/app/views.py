@@ -254,6 +254,7 @@ class OrariGeneratiView(ModelView):
 
             for r in rows:
                 row = Orario(testata_id=item.id,
+                             giorno_id=r.Giorno.id,
                              giorno=r.Giorno.descrizione,
                              corso_id=r.CorsoDiStudio.id,
                              codice_corso=r.CorsoDiStudio.codice,
@@ -261,6 +262,7 @@ class OrariGeneratiView(ModelView):
                              codice_attivita=r.AttivitaDidattica.codice,
                              descrizione_attivita=r.AttivitaDidattica.descrizione,
                              colore_attivita=r.AttivitaDidattica.colore,
+                             modulo_id=r.Modulo.id,
                              descrizione_modulo=r.Modulo.descrizione,
                              numerosita_modulo=r.Modulo.max_studenti,
                              slot_id=r.Slot.id,
@@ -268,6 +270,7 @@ class OrariGeneratiView(ModelView):
                              nome_docente=r.Docente.nome,
                              cognome_docente=r.Docente.cognome,
                              anno_corso=r.Offerta.anno_di_corso,
+                             aula_id=r.Aula.id,
                              aula=r.Aula.descrizione,
                              capienza_aula=r.Aula.capienza)
                 db.session.add(row)

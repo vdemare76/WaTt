@@ -11,16 +11,16 @@ from ldap3.core.exceptions import LDAPException, LDAPBindError, LDAPSocketOpenEr
 import config
 
 colori={
-    1:"#FF0000",
-    2:"#4169E1",
-    3:"#228B22",
-    4:"#FFD800",
-    5:"#993300",
-    6:"#66ff33",
-    7:"#fa2d9a",
-    8:"#92b09e",
-    9:"#7ec4ba",
-    10:"#9292d4"
+    1:"#0000FF",
+    2:"#008000",
+    3:"#008080",
+    4:"#FF0000",
+    5:"#800000",
+    6:"#808000",
+    7:"#FF00FF",
+    8:"#800080",
+    9:"#FF8C00",
+    10:"#DBE887"
 }
 
 def __svuotaTabelle():

@@ -375,7 +375,7 @@ class AlgoritmoCompleto(TemplateCalcoloOrario):
                 flash('Orario correttamente registrato nel db','success')
             except SQLAlchemyError:
                 db.session.rollback()
-                flash('Errore di registrazione dell\'orario generato nel db','danger')
+                flash("Errore di registrazione dell'orario generato nel db","danger")
         
     
     

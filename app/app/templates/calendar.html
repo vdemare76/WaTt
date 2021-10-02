@@ -44,7 +44,7 @@
 
 <script>
     function formatDate(date) {
-        var d = new Date(date),
+        let d = new Date(date),
             month = '' + (d.getMonth() + 1),
             day = '' + d.getDate(),
             year = d.getFullYear();
@@ -71,8 +71,8 @@
       let adc=$("#anno_corso option:selected").val();
       let orLen=arrOrario.length;
 
-      var calendarEl = document.getElementById('calendar');
-      var calendar = new FullCalendar.Calendar(calendarEl, {
+      let calendarEl = document.getElementById('calendar');
+      let calendar = new FullCalendar.Calendar(calendarEl, {
           //headerToolbar: { center: 'dayGridMonth,timeGridWeek' },
           locale:'itLocale',
           initialDate:data_avvio,
@@ -110,6 +110,12 @@
             next:'succ'
           },
           customButtons: {
+            verifyButton: {
+              text: 'Verifica vincoli',
+              click: function() {
+                verificaOrario(calendar.getEvents());
+              }
+            },
             jsonButton: {
               text: 'Download Json',
               click: function() {
@@ -119,8 +125,8 @@
             iCalButton: {
               text: 'Download iCal',
               click: function() {
-                var evs = calendar.getEvents();
-                var cal = ics();
+                let evs = calendar.getEvents();
+                let cal = ics();
                 for (e in evs)
                 {
                   cal.addEvent(evs[e].title, evs[e].title, evs[e].title, evs[e].start, evs[e].end);
@@ -130,8 +136,11 @@
             }
           },
           headerToolbar: {
-            left: 'jsonButton iCalButton',
             center: 'title',
+          },
+          footerToolbar: {
+            left: 'verifyButton',
+            right: 'jsonButton iCalButton',
           }
       });
 
@@ -163,9 +172,10 @@
                               });
         }
         else {
-          for (var i=0; i<orLen; i++) {
+          for (let i=0; i<orLen; i++) {
             if (arrOrario[i].corso_id==idc && arrOrario[i].anno_corso==adc) {
-              let titolo_evento = arrOrario[i].codice_attivita + " - " + arrOrario[i].descrizione_modulo + " (" + arrOrario[i].aula + ")";
+              let titolo_evento = "["+arrOrario[i].codice_attivita + "] - " + arrOrario[i].descrizione_attivita + " "
+                                     +arrOrario[i].descrizione_modulo + " (" + arrOrario[i].aula + ")";
               if (arrOrario[i].giorno == giorni_settimana[data_cur.getDay()]) {
                 ora_inizio = arrOrario[i].descrizione_slot.substring(0, 2);
                 ora_fine = arrOrario[i].descrizione_slot.substring(6, 8);
@@ -177,9 +187,14 @@
                   end: data_cur.setHours(ora_fine),
                   editable: true,
                   color: arrOrario[i].colore_attivita,
-                  textColor: '#000000',
+                  borderColor: '#000000',
+                  textColor: '#FFFFFF',
                   description: '<b>' + arrOrario[i].descrizione_attivita + '</b><br>'
-                          + '<i>' + arrOrario[i].cognome_docente + ' ' + arrOrario[i].nome_docente + '</i>'
+                          + '<i>' + arrOrario[i].cognome_docente + ' ' + arrOrario[i].nome_docente + '</i>',
+                  /*slot: arrOrario[i].descrizione_slot,
+                  giorno: arrOrario[i].giorno,
+                  aula: arrOrrario[i].aula,
+                  corso: arrOrario[i].codice_corso,*/
                 });
               }
             }
@@ -201,8 +216,8 @@
     }
 
     function download(content, fileName, contentType) {
-      var a = document.createElement("a");
-      var file = new Blob([content], {type: contentType});
+      let a = document.createElement("a");
+      let file = new Blob([content], {type: contentType});
       a.href = URL.createObjectURL(file);
       a.download = fileName;
       a.click();
@@ -212,11 +227,18 @@
       let idc=$('#corso_id option:selected').val();
       let anLen=arrAnni.length;
       $('#anno_corso').empty();
-      for (var i=0; i<anLen; i++) {
+      for (let i=0; i<anLen; i++) {
           if (arrAnni[i].corso_id==idc) {
             $('#anno_corso').append(new Option(arrAnni[i].anno_corso, arrAnni[i].anno_corso));
           }
       }
+    }
+
+    function verificaOrario(eventi) {
+      alert("Ecco")
+         for (let i=0; i<eventi.length; i++) {
+           alert(eventi[i].extendedProps['slot'])
+         }
     }
 
     function inizializza(arrAnni) {

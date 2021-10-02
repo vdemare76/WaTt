@@ -181,6 +181,7 @@ class OrarioDettaglio(Model):
 class Orario(Model):
     id=Column(Integer, primary_key=True)
     testata_id=Column(Integer)
+    giorni_id=Column(Integer)
     giorno=Column(String(10))
     corso_id=Column(Integer)
     codice_corso=Column(String(10))
@@ -188,6 +189,7 @@ class Orario(Model):
     codice_attivita=Column(String(25))
     descrizione_attivita=Column(String(150))
     colore_attivita=Column(String(7))
+    modulo_id=Column(Integer)
     descrizione_modulo=Column(String(100))
     numerosita_modulo=Column(Integer)
     slot_id=Column(Integer)
@@ -195,6 +197,7 @@ class Orario(Model):
     nome_docente=Column(String(50))
     cognome_docente=Column(String(50))
     anno_corso=Column(Integer)
+    aula_id=Column(Integer)
     aula=Column(String(35))
     capienza_aula=Column(Integer)
 
