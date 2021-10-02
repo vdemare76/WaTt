@@ -328,29 +328,30 @@ class AlgoritmoCompleto(TemplateCalcoloOrario):
             try:
                 tz = pytz.timezone('Europe/Rome')
 
+                vincolo_sessione_unica=0
                 if request.form.get('chk_sessione_unica')=='1':
-                    vincolo1="Sessione Unica # "
-                else:
-                    vincolo1=""
+                    vincolo_sessione_unica=1
+
+                vincolo_sessioni_consecutive=0
                 if request.form.get('chk_slot_sessioni_consecutive') == '1':
-                    vincolo2="Sessioni consecutive # "
-                else:
-                    vincolo2=""
+                    vincolo_sessioni_consecutive=1
+
+                vincolo_max_slot=0
                 if request.form.get('chk_max_ore') == '1':
-                    vincolo3="Massimo numero di ore # "
-                else:
-                    vincolo3=""
+                    vincolo_max_slot=request.form.get('sel_max_ore')
+
+                vincolo_logistica_docenti=0
                 if request.form.get('chk_preferenze_docenti') == '1':
-                    vincolo4="Preferenze docenti # "
-                else:
-                    vincolo4=""
-                vincoli = "Vincoli: " + vincolo1 + vincolo2 + vincolo3 + vincolo4
+                    vincolo_logistica_docenti=1
 
                 row_test = OrarioTestata(descrizione = desc_orario,
                                          anno_accademico_id = aa,
                                          semestre = semestre,
                                          data_creazione = datetime.datetime.now(tz),
-                                         note_creazione = vincoli,
+                                         vincolo_sessione_unica = vincolo_sessione_unica,
+                                         vincolo_sessioni_consecutive = vincolo_sessioni_consecutive,
+                                         vincolo_max_slot = vincolo_max_slot,
+                                         vincolo_logistica_docenti = vincolo_logistica_docenti,
                                          stato_orario_id = 2)
                 db.session.add(row_test)
                 db.session.flush()
