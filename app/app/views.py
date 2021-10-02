@@ -13,7 +13,7 @@ from .models import AnnoAccademico, CorsoDiStudio, AttivitaDidattica, Docente, A
                     LogisticaDocente, Modulo, Giorno, Slot, Orario, OrarioTestata, OrarioDettaglio, Chiusura
 
 from flask.templating import render_template
-from .util import svuotaDb, caricaDatiTest, caricaDati7Cds, caricaDatiBase, getColori
+from .util import svuotaDb, caricaDati7Cds, caricaDatiBase, getColori
 from .esse3_to_watt import getAnniAccademici, getCorsiInOfferta, importDatiEsse3
 from .solver import AlgoritmoCompleto
 from datetime import timedelta
