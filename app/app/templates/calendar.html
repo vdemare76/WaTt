@@ -15,29 +15,31 @@
   </head>
 
   <body onload="inizializza({{anni_corso}})">
-  <p class="bg-primary">PARAMETRI PER LA GENERAZIONE DEL CALENDARIO</p><br>
+    <p class="bg-primary" align="center">PARAMETRI PER LA GENERAZIONE DEL CALENDARIO</p><br>
     <div>
-      <div>
-        <label for="corso_id">Seleziona il corso di studio:</label>
-        <select type="date" id="corso_id" name="corso_id" onchange="caricaAnni({{anni_corso}})">
-          {% for c in corsi %}
-            <option value={{c.corso_id}}>{{c.codice_corso}} - {{c.descrizione}}</option>
-          {% endfor %}
-        </select>
-      </div>
-      <div>
-        <label for="anno_corso">Seleziona l'anno di corso:</label>
-        <select type="date" id="anno_corso" name="anno_corso"></select>
-      </div>
-      <div>
-        <label for="data_avvio_lezioni">Imposta la data di avvio e fine delle lezioni:</label><br>
-        <input type="date" id="data_avvio_lezioni" data-date-format="DD MM YYYY" onchange="aggiorna_data_fine({{chiusure}})">
-        <input type="date" id="data_fine_lezioni">
+      <div class="panel panel-info">
+        <div class="panel-heading">Scegli il corso e l'anno di corso</div>
+        <div class="panel-body">
+          <select type="date" id="corso_id" name="corso_id" onchange="caricaAnni({{anni_corso}})">
+            {% for c in corsi %}
+             <option value={{c.corso_id}}>{{c.codice_corso}} - {{c.descrizione}}</option>
+            {% endfor %}
+          </select>
+          <select type="date" id="anno_corso" name="anno_corso"></select>
+        </div>
       </div><br>
-      <button type="button" id="genera_calendario" onclick="genera_calendario({{orario}},{{chiusure}})" class="btn bg-info">Genera calendario per il corso selezionato</button>
+      <div class="panel panel-info">
+        <div class="panel-heading">Imposta la data di avvio e fine delle lezioni</div>
+        <div class="panel-body">
+          <input type="date" id="data_avvio_lezioni" data-date-format="DD MM YYYY" onchange="aggiorna_data_fine({{chiusure}})">
+          <input type="date" id="data_fine_lezioni">
+        </div>
+      </div><br>
+      <button type="button" id="genera_calendario" onclick="genera_calendario({{orario}},{{chiusure}})" class="btn bg-primary">Genera calendario per il corso selezionato</button>
     </div><br>
-    <p class="bg-primary">CALENDARIO</p><br>
+    <p class="bg-primary" align="center">CALENDARIO</p><br>
     <div id='calendar'></div>
+
   </body>
 
 </html>
@@ -217,11 +219,11 @@
 
     function download(content, fileName, contentType) {
       let a = document.createElement("a");
-      let file = new Blob([content], {type: contentType});
+      let file = new Blob([content],
+      a.click();
+    } {type: contentType});
       a.href = URL.createObjectURL(file);
       a.download = fileName;
-      a.click();
-    }
 
     function caricaAnni(arrAnni) {
       let idc=$('#corso_id option:selected').val();
@@ -235,10 +237,13 @@
     }
 
     function verificaOrario(eventi) {
-      alert("Ecco")
-         for (let i=0; i<eventi.length; i++) {
-           alert(eventi[i].extendedProps['slot'])
-         }
+       $.get(
+          url="cld_ver",
+          data={"dati":eventi},
+          success=function(data) {
+             alert('passaggio');
+          }
+      );
     }
 
     function inizializza(arrAnni) {

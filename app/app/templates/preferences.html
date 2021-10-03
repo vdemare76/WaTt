@@ -17,60 +17,72 @@
 			<div>
 				<div id="loader" class="loader" style="display:none"></div>
 				<br>
-				<div>
-					Selezionare l'anno accademico dell'offerta formativa
-					<select name="aa" id="aa_select">
-					{% for a in anni_accademici %}
-						<option value={{a.id}}>{{a.anno_esteso}}</option>
-					{% endfor %}
-					</select><br><br>
-					Selezionare il semestre per cui si vuole calcolare l'orario settimanale
-					<select name="semestre" id="semestri_select">
-					{% for s in semestri %}
-						<option value={{s.semestre}}>{{s.semestre}}</option>
-					{% endfor %}
-					</select>
+				<div class="panel panel-info">
+					<div class="panel-heading">Scegli l'anno accademico ed il semestre di riferimento</div>
+					<div class="panel-body">
+					  Anno Accademico
+					  <select name="aa" id="aa_select">
+						{% for a in anni_accademici %}
+						  <option value={{a.id}}>{{a.anno_esteso}}</option>
+						{% endfor %}
+					  </select>
+					  Semestre
+					  <select name="semestre" id="semestri_select">
+					    {% for s in semestri %}
+						  <option value={{s.semestre}}>{{s.semestre}}</option>
+					    {% endfor %}
+					  </select>
+					</div>
 				</div><br>
-				<p class="bg-primary">VINCOLI PER IL CALCOLO DELLO SCHEMA ORARIO</p><br>
-				<p class="bg-info">VINCOLI OBBLIGATORI</p><br>
-				<label>
+
+				<p class="bg-primary" align="center">VINCOLI PER IL CALCOLO DELLO SCHEMA ORARIO</p><br>
+				<div class="panel panel-info">
+				  <div class="panel-heading">Vincoli OBBLIGATORI</div>
+				  <div class="panel-body">
 					<ul>
 						<li>Non ci possono essere moduli insegnati dagli stessi docenti sovrapposti negli stessi slot orari</li>
 						<li>Non ci possono essere moduli dello stesso anno di corso sovrapposti negli stessi slot orari</li>
 						<li>L'aula assegnata al corso deve avere una capienza compatibile con il numero massimo di studenti per un dato anno di corso</li>
 						<li>L'aula assegnata al corso deve essere compatibile con il tipo di aula associata al modulo</li>
 					</ul>
-				</label>
-				<div class="bg-info">VINCOLI FACOLTATIVI</div><br>
-				<input type="checkbox" name="chk_sessione_unica" id="chk_sessione_unica" value="1">
-				<label for = "chk_sessione_unica">
-					Non devono essere consentite due sessioni dello stesso modulo nella stessa giornata
-				</label>  	
-				<br>
-				<input type="checkbox" name="chk_slot_sessioni_consecutive" id="chk_slot_sessioni_consecutive" value="1">
-				<label for = "chk_slot_sessioni_consecutive">
-					Le sessione di un giorno deve tenersi obbligatoriamente nella stessa aula ed in slot consecutivi
-				</label>  	  		  
-				<br>
-				<input type="checkbox" name="chk_max_ore" id="chk_max_ore" value="1">
-				<label for="chk_max_ore">Numero massimo di slot di lezioni da destinare in una settimana per ogni anno di corso</label>
-				<select name="sel_max_ore">
-				  <option value="4">4</option>
-				  <option value="5">5</option>
-				  <option value="6">6</option>
-				  <option value="7">7</option>
-				  <option value="8">8</option>
-				  <option value="9">9</option>
-				  <option value="10">10</option>
-	  			  <option value="11">11</option>
-				  <option value="12">12</option>
-				</select> 	
-				<br>
-				<input type="checkbox" name="chk_preferenze_docenti" id="chk_preferenze_docenti" value="1">
-				<label for = "chk_preferenze_docenti">
-					Devono essere considerate le indicazioni dei docenti
-				</label>  	  		 
+				  </div>
+				</div>
+				<div class="panel panel-info">
+				  <div class="panel-heading">Vincoli FACOLTATIVI</div>
+				  <div class="panel-body">
+					<input type="checkbox" name="chk_sessione_unica" id="chk_sessione_unica" value="1">
+					<label for = "chk_sessione_unica">
+						Non devono essere consentite due sessioni dello stesso modulo nella stessa giornata
+					</label>
+					<br>
+					<input type="checkbox" name="chk_slot_sessioni_consecutive" id="chk_slot_sessioni_consecutive" value="1">
+					<label for = "chk_slot_sessioni_consecutive">
+						Le sessione di un giorno deve tenersi obbligatoriamente nella stessa aula ed in slot consecutivi
+					</label>
+					<br>
+					<input type="checkbox" name="chk_max_ore" id="chk_max_ore" value="1">
+					<label for="chk_max_ore">Numero massimo di slot di lezioni da destinare in una settimana per ogni anno di corso</label>
+					<select name="sel_max_ore">
+					  <option value="4">4</option>
+					  <option value="5">5</option>
+					  <option value="6">6</option>
+					  <option value="7">7</option>
+					  <option value="8">8</option>
+					  <option value="9">9</option>
+					  <option value="10">10</option>
+					  <option value="11">11</option>
+					  <option value="12">12</option>
+					</select>
+					<br>
+					<input type="checkbox" name="chk_preferenze_docenti" id="chk_preferenze_docenti" value="1">
+					<label for = "chk_preferenze_docenti">
+						Devono essere considerate le indicazioni dei docenti
+					</label>
+				  </div>
+				</div>
 			</div><br>
+
+			<p class="bg-primary" align="center">DATI ORARIO IN GENERAZIONE</p><br>
 			<label for="txt_desc_orario">Descrizione orario:</label>
   			<input type="text" id="txt_desc_orario" name="txt_desc_orario" size="80"><br><br>
 			<button type="button" id="form_post" name="form_post" onclick="calcola_orario()" class="btn btn-primary">Calcola schema orario </button>

@@ -15,26 +15,33 @@
     <div class="container">
 		<form method="post" id="form_post" method="post" action="{{url_for('UtilitaView.srv_util')}}">
 			<div id="loader" class="loader" style="display:none"></div>
-			<h4>Funzioni di utilità</h4>
-			<div>
-				<button type="button" class="btn btn-primary" onclick="svuotaDB()">Svuota il DB</button>
-			</div>
-			<br>
-			<h4>Carica dati di base per l'import da Esse3</h4>
-			<div>
-				<button type="button" class="btn btn-primary" onclick="caricaDatiBase()">Carica i dati di base per importare dati da Esse3</button>
-			</div>
-			<br>
-			<h4>Carica dati di test - TIPO 1 - (7 Corsi di Studio e 1 Modulo per ogni Attività Didattica)</h4>
-			<div>
-				<button type="button" class="btn btn-primary" onclick="caricaDatiTest7Cds1Mod()">Carica i dati di test per 7 corsi e un solo modulo per ogni AD offerta</button>
-			</div>
-			<br>
-			<h4>Carica dati di test - TIPO 2 - (7 Corsi di Studio e Moduli multipli per ogni Attività Didattica)</h4>
-			<div>
-				<button type="button" class="btn btn-primary" onclick="caricaDatiTest7CdsNMod()">Carica i dati di test per 7 corsi e moduli multipli per ogni AD offerta</button>
-			</div>
-			<input type="text" id="target" name="target" value="" style="display:none">
+			<p class="bg-primary" align="center">FUNZIONI DI UTILITA'</p><br>
+
+        <div class="panel panel-primary">
+          <div class="panel-heading">Svuota il DB</div>
+          <div class="panel-body">
+			  <button type="button" class="btn btn-info" onclick="svuotaDB()">Svuota</button>
+          </div>
+        </div>
+        <div class="panel panel-primary">
+          <div class="panel-heading">Carica dati di base per l'import da Esse3</div>
+          <div class="panel-body">
+			  <button type="button" class="btn btn-info" onclick="caricaDatiBase()">Carica</button>
+          </div>
+        </div>
+    	<div class="panel panel-primary">
+          <div class="panel-heading">Carica dati di test - TIPO 1 - (7 Corsi di Studio e 1 Modulo per ogni Attività Didattica)</div>
+          <div class="panel-body">
+			  <button type="button" class="btn btn-info" onclick="caricaDatiTest7Cds1Mod()">Carica</button>
+          </div>
+        </div>
+		    <div class="panel panel-primary">
+          <div class="panel-heading">Carica dati di test - TIPO 2 - (7 Corsi di Studio e Moduli multipli per ogni Attività Didattica)</div>
+          <div class="panel-body">
+			  <button type="button" class="btn btn-info" onclick="caricaDatiTest7CdsNMod()">Carica</button>
+          </div>
+        </div>
+		<input type="text" id="target" name="target" value="" style="display:none">
 		</form>
 	</div>
 	

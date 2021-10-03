@@ -399,7 +399,7 @@ class SchemaSettimanaleView(BaseView):
 
     @expose('/wsk_home/')
     @has_access
-    def wsk_home(self, name=None):
+    def wsk_home(self):
         slot=db.session.query(Slot).all()
         orario=db.session.query(Orario).all()
         return render_template("timetable.html",
@@ -414,7 +414,7 @@ class CalendarioView(BaseView):
 
     @expose('/cld_home/')
     @has_access
-    def cld_home(self, name=None):
+    def cld_home(self):
         corsi = db.session.query(Orario.corso_id, Orario.codice_corso, CorsoDiStudio.descrizione) \
             .join(CorsoDiStudio, Orario.corso_id == CorsoDiStudio.id) \
             .order_by(CorsoDiStudio.codice.asc()).distinct().all()
@@ -447,6 +447,11 @@ class CalendarioView(BaseView):
                                anni_corso=vAnniCorso,
                                orario=vOrario,
                                chiusure=vChiusure)
+
+    @expose('/cld_ver/')
+    @has_access
+    def cld_home(self):
+        flash("chiamata")
 
 db.create_all()
 
