@@ -159,7 +159,12 @@
             editable: false,
             color: '#FFCCCC',
             textColor: '#000000',
-            description: 'Chiusura'
+            description: 'Chiusura',
+            giorno_id: -1,
+            slot_id: -1,
+            corso_id: -1,
+            modulo_id: -1,
+            aula_id: -1
           });
         }
         else if (data_cur.getDay()==0 || data_cur.getDay()==6) {
@@ -170,7 +175,12 @@
                               editable:false,
                               color:'#DDDDDD',
                               textColor:'#000000',
-                              description:'Lezioni non previste'
+                              description:'Lezioni non previste',
+                              giorno_id: -1,
+                              slot_id: -1,
+                              corso_id: -1,
+                              modulo_id: -1,
+                              aula_id: -1
                               });
         }
         else {
@@ -193,10 +203,11 @@
                   textColor: '#FFFFFF',
                   description: '<b>' + arrOrario[i].descrizione_attivita + '</b><br>'
                           + '<i>' + arrOrario[i].cognome_docente + ' ' + arrOrario[i].nome_docente + '</i>',
-                  /*slot: arrOrario[i].descrizione_slot,
-                  giorno: arrOrario[i].giorno,
-                  aula: arrOrrario[i].aula,
-                  corso: arrOrario[i].codice_corso,*/
+                  giorno_id: arrOrario[i].giorno_id,
+                  slot_id: arrOrario[i].slot_id,
+                  corso_id: arrOrario[i].corso_id,
+                  modulo_id: arrOrario[i].modulo_id,
+                  aula_id: arrOrario[i].aula_id
                 });
               }
             }
@@ -209,8 +220,13 @@
               editable:false,
               color:'#DDDDDD',
               textColor:'#000000',
-              description:'Pausa lezioni'
-            });
+              description:'Pausa lezioni',
+              giorno_id: -1,
+              slot_id: -1,
+              corso_id: -1,
+              modulo_id: -1,
+              aula_id: -1
+          });
         }
       }
 
@@ -219,11 +235,11 @@
 
     function download(content, fileName, contentType) {
       let a = document.createElement("a");
-      let file = new Blob([content],
-      a.click();
-    } {type: contentType});
+      let file = new Blob([content], {type: contentType});
       a.href = URL.createObjectURL(file);
       a.download = fileName;
+      a.click();
+    }
 
     function caricaAnni(arrAnni) {
       let idc=$('#corso_id option:selected').val();
@@ -237,13 +253,15 @@
     }
 
     function verificaOrario(eventi) {
-       $.get(
-          url="cld_ver",
-          data={"dati":eventi},
-          success=function(data) {
-             alert('passaggio');
-          }
-      );
+        $.ajax({
+          type: 'POST',
+          contentType: 'application/json',
+          data: JSON.stringify(eventi),
+          dataType: 'json',
+          url: '/calendarioview/cld_ver/',
+          success: function (d) {
+              alert(d["status"]);
+        }});
     }
 
     function inizializza(arrAnni) {

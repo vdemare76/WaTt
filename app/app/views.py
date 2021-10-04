@@ -1,4 +1,4 @@
-from flask import flash, render_template, redirect, url_for, request, g, session
+from flask import flash, render_template, redirect, url_for, request, g, session, json
 from flask_appbuilder import ModelView, BaseView, expose, has_access, action
 from flask_appbuilder.models.sqla.interface import SQLAInterface
 from sqlalchemy.exc import SQLAlchemyError
@@ -390,7 +390,11 @@ class PreferenzeView(BaseView):
             algoritmo=AlgoritmoCompleto()
             algoritmo.genera_orario(request.form.get('aa'),
                                     request.form.get('semestre'),
-                                    request.form.get('txt_desc_orario'))
+                                    request.form.get('txt_desc_orario'),
+                                    request.form.get('chk_sessione_unica'),
+                                    request.form.get('chk_slot_sessioni_consecutive'),
+                                    request.form.get('chk_max_ore'),
+                                    request.form.get('chk_preferenze_docenti'))
         return redirect(url_for('PreferenzeView.prf_home'));  
 
 
@@ -448,10 +452,17 @@ class CalendarioView(BaseView):
                                orario=vOrario,
                                chiusure=vChiusure)
 
-    @expose('/cld_ver/')
+    @expose('/cld_ver/', methods=['GET','POST'])
     @has_access
-    def cld_home(self):
-        flash("chiamata")
+    def cld_ver(self):
+        eventi=json.loads(request.data)
+        for e in eventi:
+            #evento=json.loads(e)
+            flash(e['extendedProps']['slot_id'])
+
+        data = {"status": eventi[1]["title"]}
+        return data, 200
+
 
 db.create_all()
 

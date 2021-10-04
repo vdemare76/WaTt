@@ -66,9 +66,9 @@ class StruttureAusiliarie(object):
 
 class TemplateCalcoloOrario(ABC):
     
-    def genera_orario(self, aa, semestre, desc_orario):
+    def genera_orario(self, aa, semestre, desc_orario, flgSessioneUnica, flgSessioniConsecutive, flgMaxOre, flgLogisticaDocenti):
         # Modello risolutivo di calcolo del timetable
-        
+
         # Step 1
         # CARICAMENTO DEI DATI su cui viene effettuato il calcolo dell'orario
         dati = self.carica_dati(aa, semestre)
@@ -83,11 +83,11 @@ class TemplateCalcoloOrario(ABC):
         
         # Step 4 - abstract
         # IMPLEMENTA EVENTUALMENTE I VINCOLI FACOLTATIVI
-        self.imposta_vincoli_facoltativi(model, dati, strutture_ausiliarie)
+        self.imposta_vincoli_facoltativi(model, dati, strutture_ausiliarie, flgSessioneUnica, flgSessioniConsecutive, flgMaxOre)
         
         # Step 5 - abstract
         # IMPLEMENTA EVENTUALMENTE I VINCOLI ADDIZIONALI
-        self.imposta_vincoli_addizionali(model, dati, strutture_ausiliarie)
+        self.imposta_vincoli_addizionali(model, dati, strutture_ausiliarie, flgLogisticaDocenti)
         
         # Step 6
         self.calcola_orario(model, dati, strutture_ausiliarie)
@@ -206,11 +206,11 @@ class TemplateCalcoloOrario(ABC):
             flash ('Orario non generabile nel rispetto dei vincoli impostati','danger')
            
     @abstractmethod
-    def imposta_vincoli_facoltativi(self, model, dati, str_aux):
+    def imposta_vincoli_facoltativi(self, model, dati, str_aux, flgSessioneUnica, flgSessioniConsecutive, flgMaxOre):
         pass
         
     @abstractmethod
-    def imposta_vincoli_addizionali(self, model, dati, str_aux):
+    def imposta_vincoli_addizionali(self, model, dati, str_aux, flgLogisticaDocenti):
         pass
     
     @abstractmethod
@@ -219,19 +219,19 @@ class TemplateCalcoloOrario(ABC):
     
     
 class AlgoritmoCompleto(TemplateCalcoloOrario):
-    def imposta_vincoli_facoltativi(self, model, dati, str_aux):
+    def imposta_vincoli_facoltativi(self, model, dati, str_aux, flgSessioneUnica, flgSessioniConsecutive, flgMaxOre):
         
         skd=str_aux.get_schedulazione()
 
-        if request.form.get('chk_sessione_unica')=='1':
+        if flgSessioneUnica=="1":
             # Per ogni giorno, ogni corso ed ogni aula il numero di slot massimo consentito è pari alla durata delle sessioni
             # ciò evita che ci possano essere due sessioni nello stesso giorno    
             for c in dati.get_corsi():   
                 for m in dati.get_moduli():
                     for g in dati.get_giorni():
                         model+= lpSum(skd[(c,m,a,g,s)] for s in dati.get_slot() for a in dati.get_aule())<=m.get_dur_sessioni()
-           
-        if request.form.get('chk_slot_sessioni_consecutive')=='1':   
+
+        if flgSessioniConsecutive=="1":
             # Un corso per un dato giorno in un dato slot può essere assegnato ad una sola aula         
             for c in dati.get_corsi():   
                 for m in dati.get_moduli():
@@ -297,9 +297,8 @@ class AlgoritmoCompleto(TemplateCalcoloOrario):
                                     model+=skd[(c,m,a,g,dati.get_slot()[s])]-skd[(c,m,a,g,dati.get_slot()[s-3])]<=0
 
         # Vincolo che fissa  il numero massimo di slot per giorno per un anno di corso
-        if request.form.get('chk_max_ore')=='1': 
+        if flgMaxOre=="1":
             limsup=int(request.form.get('sel_max_ore'))
-            flash(limsup)
             for c in dati.get_corsi():
                 for g in dati.get_giorni():
                     model+=lpSum(skd[(c,m,a,g,s)] for m in dati.get_moduli() if m.get_anno_corso()==1 for s in dati.get_slot() for a in dati.get_aule())<=limsup
@@ -307,8 +306,8 @@ class AlgoritmoCompleto(TemplateCalcoloOrario):
                     model+=lpSum(skd[(c,m,a,g,s)] for m in dati.get_moduli() if m.get_anno_corso()==3 for s in dati.get_slot() for a in dati.get_aule())<=limsup
 
                                                                   
-    def imposta_vincoli_addizionali(self, model, dati, str_aux):
-        if request.form.get('chk_preferenze_docenti')=='1': 
+    def imposta_vincoli_addizionali(self, model, dati, str_aux, flgLogisticaDocenti):
+        if flgLogisticaDocenti=="1":
             skd=str_aux.get_schedulazione()    
             for l in dati.get_logistica():
                 s = l[2]
