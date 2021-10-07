@@ -15,6 +15,7 @@
   </head>
 
   <body onload="inizializza({{anni_corso}})">
+    <div id="loader" class="loader" style="display:none"></div>
     <p class="bg-primary" align="center">PARAMETRI PER LA GENERAZIONE DEL CALENDARIO</p><br>
     <div>
       <div class="panel panel-info">
@@ -253,6 +254,8 @@
     }
 
     function verificaOrario(eventi) {
+        alert("pippo")
+        $('#loader').css({'display':'block'});
         $.ajax({
           type: 'POST',
           contentType: 'application/json',
@@ -260,6 +263,7 @@
           dataType: 'json',
           url: '/calendarioview/cld_ver/',
           success: function (d) {
+              $('#loader').css({'display':'none'});
               alert(d["status"]);
         }});
     }

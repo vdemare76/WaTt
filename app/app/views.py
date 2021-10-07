@@ -15,7 +15,7 @@ from .models import AnnoAccademico, CorsoDiStudio, AttivitaDidattica, Docente, A
 from flask.templating import render_template
 from .util import svuotaDb, caricaDati7Cds, caricaDatiBase, getColori
 from .esse3_to_watt import getAnniAccademici, getCorsiInOfferta, importDatiEsse3
-from .solver import AlgoritmoCompleto
+from .solver import AlgoritmoCalcolo
 from datetime import timedelta
 
 class AnniAccademiciView(ModelView):
@@ -237,9 +237,18 @@ class OrariGeneratiView(ModelView):
     @action("carica_schema", "Carica orario", "Vuoi visualizzare lo schema orario selezionato?", "fa-trash-alt", multiple=False, single=True)
     def carica_schema(self, item):
         try:
+            tst=db.session.query(OrarioTestata).filter(OrarioTestata.id==item.id).first()
+            session["chkSessioneUnica"]=tst.vincolo_sessione_unica
+            session["chkSessioniConsecutive"]=tst.vincolo_sessioni_consecutive
+            if tst.vincolo_max_slot>0:
+                session["chkMaxOre"]="1"
+            else:
+                session["chkMaxOre"]="0"
+            session["selMaxOre"]=tst.vincolo_max_slot
+            session["chkPreferenzeDocenti"]=tst.vincolo_logistica_docenti
+
             db.session.query(Orario).delete()
             db.session.execute('ALTER TABLE orario AUTO_INCREMENT = 1')
-
             rows=db.session.query(OrarioDettaglio, Modulo, Giorno, Offerta, AttivitaDidattica, CorsoDiStudio, Docente, Slot, Aula) \
             .join(CorsoDiStudio, OrarioDettaglio.corso_di_studio_id == CorsoDiStudio.id) \
             .join(Modulo, OrarioDettaglio.modulo_id == Modulo.id) \
@@ -251,7 +260,6 @@ class OrariGeneratiView(ModelView):
             .join(Aula, OrarioDettaglio.aula_id==Aula.id)\
             .filter(OrarioDettaglio.testata_id==item.id)\
             .order_by(CorsoDiStudio.codice.asc(), Giorno.id.asc(), Modulo.codice.asc(), Slot.id.asc(), Aula.codice.asc()).all()
-
             for r in rows:
                 row = Orario(testata_id=item.id,
                              giorno_id=r.Giorno.id,
@@ -385,16 +393,20 @@ class PreferenzeView(BaseView):
     @expose('/prf_calc/', methods=['GET','POST'])
     @has_access
     def prf_calc(self):
-        target = request.form.get("target")
+        target=request.form.get("target")
+        vincoli={"chkSessioneUnica":request.form.get('chk_sessione_unica'),
+                 "chkSessioniConsecutive":request.form.get('chk_slot_sessioni_consecutive'),
+                 "chkMaxOre":request.form.get('chk_max_ore'),
+                 "selMaxOre":int(request.form.get('sel_max_ore')),
+                 "chkPreferenzeDocenti":request.form.get('chk_preferenze_docenti'),
+                 "posizioniFisse":None}
         if target=="genera_orario" :
-            algoritmo=AlgoritmoCompleto()
+            algoritmo=AlgoritmoCalcolo()
             algoritmo.genera_orario(request.form.get('aa'),
                                     request.form.get('semestre'),
                                     request.form.get('txt_desc_orario'),
-                                    request.form.get('chk_sessione_unica'),
-                                    request.form.get('chk_slot_sessioni_consecutive'),
-                                    request.form.get('chk_max_ore'),
-                                    request.form.get('chk_preferenze_docenti'))
+                                    True,
+                                    vincoli)
         return redirect(url_for('PreferenzeView.prf_home'));  
 
 
@@ -455,14 +467,25 @@ class CalendarioView(BaseView):
     @expose('/cld_ver/', methods=['GET','POST'])
     @has_access
     def cld_ver(self):
-        eventi=json.loads(request.data)
-        for e in eventi:
-            #evento=json.loads(e)
-            flash(e['extendedProps']['slot_id'])
+        try:
+            vincoli={"chkSessioneUnica": session["chkSessioneUnica"],
+                     "chkSessioniConsecutive": session["chkSessioniConsecutive"],
+                     "chkMaxOre": session["chkMaxOre"],
+                     "selMaxOre": session["selMaxOre"],
+                     "chkPreferenzeDocenti": session["chkPreferenzeDocenti"],
+                     "posizioniFisse":json.loads(request.data)}
 
-        data = {"status": eventi[1]["title"]}
-        return data, 200
-
+            algoritmo=AlgoritmoCalcolo()
+            algoritmo.genera_orario(request.form.get('aa'),
+                                    request.form.get('semestre'),
+                                    request.form.get('txt_desc_orario'),
+                                    False,
+                                    vincoli)
+            data = {"status": "Orario verificato"}
+            return data, 200
+        except:
+            data = {"status": "Verifica fallita"}
+            return data, 200
 
 db.create_all()
 
