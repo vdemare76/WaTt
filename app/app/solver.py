@@ -326,7 +326,9 @@ class AlgoritmoCalcolo(TemplateCalcoloOrario):
             posizioniFisse=vincoli["posizioniFisse"]
             for p in posizioniFisse:
                 if (p["extendedProps"]["corso_id"]!=-1 and p["extendedProps"]["modulo_id"]!=-1 and p["extendedProps"]["aula_id"]!=-1 and p["extendedProps"]["giorno_id"]!=-1 and p["extendedProps"]["slot_id"]!=-1):
-                    model+=skd[(p["extendedProps"]["corso_id"], p["extendedProps"]["modulo_id"], p["extendedProps"]["aula_id"], p["extendedProps"]["giorno_id"], p["extendedProps"]["slot_id"])]==1
+                    flash("000")
+                    model+=lpSum(skd[(1,1,1,1,a)] for a in (1))<=1
+                    #model+=skd[(p["extendedProps"]["corso_id"], p["extendedProps"]["modulo_id"], p["extendedProps"]["aula_id"], p["extendedProps"]["giorno_id"], p["extendedProps"]["slot_id"])]==1
 
     def registra_orario(self, model, dati, str_aux, aa, semestre, desc_orario):
         skd=str_aux.get_schedulazione()  
