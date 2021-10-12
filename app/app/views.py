@@ -237,8 +237,13 @@ class OrariGeneratiView(ModelView):
     @action("carica_schema", "Carica orario", "Vuoi visualizzare lo schema orario selezionato?", "fa-trash-alt", multiple=False, single=True)
     def carica_schema(self, item):
         try:
-            tst=db.session.query(OrarioTestata).filter(OrarioTestata.id==item.id).first()
-            session["chkSessioneUnica"]=tst.vincolo_sessione_unica
+            tst= not db.session.query(OrarioTestata, AnnoAccademico) \
+                .join(AnnoAccademico, OrarioTestata.anno_accademico_id == AnnoAccademico.id) \
+                .filter(OrarioTestata.id==item.id).first()
+
+            flash(tst)
+
+            '''session["chkSessioneUnica"]=tst.vincolo_sessione_unica
             session["chkSessioniConsecutive"]=tst.vincolo_sessioni_consecutive
             if tst.vincolo_max_slot>0:
                 session["chkMaxOre"]="1"
@@ -246,6 +251,8 @@ class OrariGeneratiView(ModelView):
                 session["chkMaxOre"]="0"
             session["selMaxOre"]=tst.vincolo_max_slot
             session["chkPreferenzeDocenti"]=tst.vincolo_logistica_docenti
+            session["anno_accademico"]=tst.anno
+            session["semestre"]=tst.semestre'''
 
             db.session.query(Orario).delete()
             db.session.execute('ALTER TABLE orario AUTO_INCREMENT = 1')
@@ -385,11 +392,11 @@ class PreferenzeView(BaseView):
         .join(Offerta, Offerta.anno_accademico_id==AnnoAccademico.id).distinct()
         semestri=db.session.query(Offerta.semestre).distinct()
         return render_template("preferences.html",
-                                base_template=appbuilder.base_template, 
+                                base_template=appbuilder.base_template,
                                 appbuilder=appbuilder,
-                                anni_accademici=anni_accademici, 
+                                anni_accademici=anni_accademici,
                                 semestri=semestri)
-    
+
     @expose('/prf_calc/', methods=['GET','POST'])
     @has_access
     def prf_calc(self):
@@ -407,7 +414,7 @@ class PreferenzeView(BaseView):
                                     request.form.get('txt_desc_orario'),
                                     True,
                                     vincoli)
-        return redirect(url_for('PreferenzeView.prf_home'));  
+        return redirect(url_for('PreferenzeView.prf_home'));
 
 
 class SchemaSettimanaleView(BaseView):
@@ -476,9 +483,9 @@ class CalendarioView(BaseView):
                      "posizioniFisse":json.loads(request.data)}
 
             algoritmo=AlgoritmoCalcolo()
-            algoritmo.genera_orario(request.form.get('aa'),
-                                    request.form.get('semestre'),
-                                    request.form.get('txt_desc_orario'),
+            algoritmo.genera_orario(session["anno_accademico"],
+                                    session["semestre"],
+                                    None,
                                     False,
                                     vincoli)
             data = {"status": "Orario verificato"}
@@ -526,4 +533,3 @@ appbuilder.add_view(ChiusuraView, "Imposta chiusure", icon="fa-home", category="
 appbuilder.add_view(SchemaSettimanaleView, "Schema settimanale",  icon="fa-calendar", category="Orario")
 
 appbuilder.add_view(CalendarioView, "Calendario orario",  icon="fa-clipboard", category="Orario")
-

@@ -103,7 +103,7 @@ class TemplateCalcoloOrario(ABC):
     def genera_strutture_ausiliarie(self, dati) -> None:
         
         model = pl.LpProblem("CalcolaOrario", pl.LpMaximize)
-        
+
         # set dei docenti che hanno insegnamenti tra i moduli da fissare in orario
         doc = set(m.get_matricola() for m in dati.get_moduli())
     
@@ -137,7 +137,6 @@ class TemplateCalcoloOrario(ABC):
         
         # Le variabili skd valgono uno se per un dato slot di un dato giorno viene assegnata la lezione di un modulo 
         # di una dato corso in un data aula
-        
         skd = LpVariable.dicts("assign", [(c,m,a,g,s) for c in dati.get_corsi() for m in dati.get_moduli() for a in dati.get_aule() 
                                                     for g in dati.get_giorni() for s in dati.get_slot()], 
                                 lowBound=0,
@@ -323,12 +322,32 @@ class AlgoritmoCalcolo(TemplateCalcoloOrario):
         if vincoli["posizioniFisse"]==None:
             None
         else:
+            skd = str_aux.get_schedulazione()
             posizioniFisse=vincoli["posizioniFisse"]
             for p in posizioniFisse:
-                if (p["extendedProps"]["corso_id"]!=-1 and p["extendedProps"]["modulo_id"]!=-1 and p["extendedProps"]["aula_id"]!=-1 and p["extendedProps"]["giorno_id"]!=-1 and p["extendedProps"]["slot_id"]!=-1):
-                    flash("000")
-                    model+=lpSum(skd[(1,1,1,1,a)] for a in (1))<=1
-                    #model+=skd[(p["extendedProps"]["corso_id"], p["extendedProps"]["modulo_id"], p["extendedProps"]["aula_id"], p["extendedProps"]["giorno_id"], p["extendedProps"]["slot_id"])]==1
+                if (p["extendedProps"]["corso_id"]!=-1 and p["extendedProps"]["modulo_id"]!=-1 and
+                    p["extendedProps"]["aula_id"]!=-1 and p["extendedProps"]["giorno_id"]!=-1 and
+                    p["extendedProps"]["slot_id"]!=-1):
+                    for c in dati.get_corsi():
+                        flash(1)
+                        if c.get_id()==p["extendedProps"]["corso_id"]:
+                            break
+                    for m in dati.get_moduli():
+                        if m.get_id()==p["extendedProps"]["modulo_id"]:
+                            break
+                    for a in dati.get_aule():
+                        flash(3)
+                        if a.get_id()==p["extendedProps"]["aula_id"]:
+                            break
+                    for g in dati.get_giorni():
+                        flash(4)
+                        if g.get_id()==p["extendedProps"]["giorno_id"]:
+                            break
+                    for s in dati.get_slot():
+                        flash(5)
+                        if s.get_id()==p["extendedProps"]["slot_id"]:
+                            break
+                    #model+=skd[(c,m,a,g,s)]==1
 
     def registra_orario(self, model, dati, str_aux, aa, semestre, desc_orario):
         skd=str_aux.get_schedulazione()  
