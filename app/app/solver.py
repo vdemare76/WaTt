@@ -90,12 +90,14 @@ class TemplateCalcoloOrario(ABC):
         self.imposta_vincoli_addizionali(model, dati, strutture_ausiliarie, vincoli)
         
         # Step 6
-        self.calcola_orario(model, dati, strutture_ausiliarie)
+        ris = self.calcola_orario(model, dati, strutture_ausiliarie)
         
         # Step 7 - abstract
         if registra==True:
             self.registra_orario(model, dati, strutture_ausiliarie, aa, semestre, desc_orario)
-        
+
+        return ris
+
     def carica_dati(self, aa, semestre):
         corsi, giorni, slot, aule, moduli, logistica = caricaDatiDalDb(aa, semestre)
         return DatiDiBase(corsi, giorni, slot, aule, moduli, logistica)
@@ -199,12 +201,8 @@ class TemplateCalcoloOrario(ABC):
                                       for g in dati.get_giorni() for s in dati.get_slot()) 
         
         model.solve()
+        return pl.LpStatus[model.status]
 
-        if (pl.LpStatus[model.status]) == 'Optimal':
-            flash ('Orario correttamente generato sulla base dei vincoli impostati','success')
-        else:
-            flash ('Orario non generabile nel rispetto dei vincoli impostati','danger')
-           
     @abstractmethod
     def imposta_vincoli_facoltativi(self, model, dati, str_aux, vincoli):
         pass
@@ -231,7 +229,7 @@ class AlgoritmoCalcolo(TemplateCalcoloOrario):
                         model+= lpSum(skd[(c,m,a,g,s)] for s in dati.get_slot() for a in dati.get_aule())<=m.get_dur_sessioni()
 
         if vincoli["chkSessioniConsecutive"]=="1":
-            # Un corso per un dato giorno in un dato slot può essere assegnato ad una sola aula         
+            # Un corso per un dato giorno in un dato slot può essere assegnato ad una sola aula
             for c in dati.get_corsi():   
                 for m in dati.get_moduli():
                     for g in dati.get_giorni():
@@ -255,11 +253,11 @@ class AlgoritmoCalcolo(TemplateCalcoloOrario):
                         for a in dati.get_aule():
                             for g in dati.get_giorni():
                                 for s in (0,4):
-                                    model+=skd[(c,m,a,g,dati.get_slot()[s])]-skd[(c,m,a,g,dati.get_slot()[s+1])]<= 0
+                                    model+=skd[(c,m,a,g,dati.get_slot()[s])]-skd[(c,m,a,g,dati.get_slot()[s+1])]<=0
                                 for s in (1,2,5,6):
                                     model+=skd[(c,m,a,g,dati.get_slot()[s])]-skd[(c,m,a,g,dati.get_slot()[s+1])]-skd[(c,m,a,g,dati.get_slot()[s-1])]<=0 
                                 for s in (3,7):
-                                    model+=skd[(c,m,a,g,dati.get_slot()[s])]-skd[(c,m,a,g,dati.get_slot()[s-1])]<= 0 
+                                    model+=skd[(c,m,a,g,dati.get_slot()[s])]-skd[(c,m,a,g,dati.get_slot()[s-1])]<=0
                     elif dur_sessione==3:
                         for a in dati.get_aule():
                             for g in dati.get_giorni():                   
@@ -267,10 +265,10 @@ class AlgoritmoCalcolo(TemplateCalcoloOrario):
                                     model+=skd[(c,m,a,g,dati.get_slot()[s])]-skd[(c,m,a,g,dati.get_slot()[s+1])]<=0 
                                     model+=skd[(c,m,a,g,dati.get_slot()[s])]-skd[(c,m,a,g,dati.get_slot()[s+2])]<=0
                                 for s in (1,5):
-                                    model+=skd[(c,m,a,g,dati.get_slot()[s])]-skd[(c,m,a,g,dati.get_slot()[s+1])]<= 0
+                                    model+=skd[(c,m,a,g,dati.get_slot()[s])]-skd[(c,m,a,g,dati.get_slot()[s+1])]<=0
                                     model+=skd[(c,m,a,g,dati.get_slot()[s])]-skd[(c,m,a,g,dati.get_slot()[s-1])]-skd[(c,m,a,g,dati.get_slot()[s+2])]<=0   
                                 for s in (2,6):
-                                    model+=skd[(c,m,a,g,dati.get_slot()[s])]-skd[(c,m,a,g,dati.get_slot()[s-1])]<= 0 
+                                    model+=skd[(c,m,a,g,dati.get_slot()[s])]-skd[(c,m,a,g,dati.get_slot()[s-1])]<=0
                                     model+=skd[(c,m,a,g,dati.get_slot()[s])]-skd[(c,m,a,g,dati.get_slot()[s+1])]-skd[(c,m,a,g,dati.get_slot()[s-2])]<=0      
                                 for s in (3,7):
                                     model+=skd[(c,m,a,g,dati.get_slot()[s])]-skd[(c,m,a,g,dati.get_slot()[s-1])]<=0 
@@ -329,25 +327,21 @@ class AlgoritmoCalcolo(TemplateCalcoloOrario):
                     p["extendedProps"]["aula_id"]!=-1 and p["extendedProps"]["giorno_id"]!=-1 and
                     p["extendedProps"]["slot_id"]!=-1):
                     for c in dati.get_corsi():
-                        flash(1)
                         if c.get_id()==p["extendedProps"]["corso_id"]:
                             break
                     for m in dati.get_moduli():
                         if m.get_id()==p["extendedProps"]["modulo_id"]:
                             break
                     for a in dati.get_aule():
-                        flash(3)
                         if a.get_id()==p["extendedProps"]["aula_id"]:
                             break
                     for g in dati.get_giorni():
-                        flash(4)
                         if g.get_id()==p["extendedProps"]["giorno_id"]:
                             break
                     for s in dati.get_slot():
-                        flash(5)
                         if s.get_id()==p["extendedProps"]["slot_id"]:
                             break
-                    #model+=skd[(c,m,a,g,s)]==1
+                    model+=skd[(c,m,a,g,s)]==1
 
     def registra_orario(self, model, dati, str_aux, aa, semestre, desc_orario):
         skd=str_aux.get_schedulazione()  

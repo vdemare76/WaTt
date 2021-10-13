@@ -237,22 +237,19 @@ class OrariGeneratiView(ModelView):
     @action("carica_schema", "Carica orario", "Vuoi visualizzare lo schema orario selezionato?", "fa-trash-alt", multiple=False, single=True)
     def carica_schema(self, item):
         try:
-            tst= not db.session.query(OrarioTestata, AnnoAccademico) \
-                .join(AnnoAccademico, OrarioTestata.anno_accademico_id == AnnoAccademico.id) \
+            tst=db.session.query(OrarioTestata, AnnoAccademico) \
                 .filter(OrarioTestata.id==item.id).first()
 
-            flash(tst)
-
-            '''session["chkSessioneUnica"]=tst.vincolo_sessione_unica
-            session["chkSessioniConsecutive"]=tst.vincolo_sessioni_consecutive
-            if tst.vincolo_max_slot>0:
+            session["chkSessioneUnica"]=str(tst.OrarioTestata.vincolo_sessione_unica)
+            session["chkSessioniConsecutive"]=str(tst.OrarioTestata.vincolo_sessioni_consecutive)
+            if tst.OrarioTestata.vincolo_max_slot>0:
                 session["chkMaxOre"]="1"
             else:
                 session["chkMaxOre"]="0"
-            session["selMaxOre"]=tst.vincolo_max_slot
-            session["chkPreferenzeDocenti"]=tst.vincolo_logistica_docenti
-            session["anno_accademico"]=tst.anno
-            session["semestre"]=tst.semestre'''
+            session["selMaxOre"]=tst.OrarioTestata.vincolo_max_slot
+            session["chkPreferenzeDocenti"]=str(tst.OrarioTestata.vincolo_logistica_docenti)
+            session["annoAccademico"]=tst.OrarioTestata.anno_accademico_id
+            session["semestre"]=tst.OrarioTestata.semestre
 
             db.session.query(Orario).delete()
             db.session.execute('ALTER TABLE orario AUTO_INCREMENT = 1')
@@ -409,11 +406,15 @@ class PreferenzeView(BaseView):
                  "posizioniFisse":None}
         if target=="genera_orario" :
             algoritmo=AlgoritmoCalcolo()
-            algoritmo.genera_orario(request.form.get('aa'),
+            ris=algoritmo.genera_orario(request.form.get('aa'),
                                     request.form.get('semestre'),
                                     request.form.get('txt_desc_orario'),
                                     True,
                                     vincoli)
+            if (ris) == 'Optimal':
+                flash('Orario correttamente generato sulla base dei vincoli impostati', 'success')
+            else:
+                flash('Orario non generabile nel rispetto dei vincoli impostati', 'danger')
         return redirect(url_for('PreferenzeView.prf_home'));
 
 
@@ -483,12 +484,15 @@ class CalendarioView(BaseView):
                      "posizioniFisse":json.loads(request.data)}
 
             algoritmo=AlgoritmoCalcolo()
-            algoritmo.genera_orario(session["anno_accademico"],
-                                    session["semestre"],
-                                    None,
-                                    False,
-                                    vincoli)
-            data = {"status": "Orario verificato"}
+            ris=algoritmo.genera_orario(session["annoAccademico"],
+                                        session["semestre"],
+                                        "Verifica Orario",
+                                        False,
+                                        vincoli)
+            if ris=='Optimal':
+                data={"status": "Orario compatibile con i vincoli impostati"}
+            else:
+                data={"status": "Orario non compatibile con i vincoli impostati"}
             return data, 200
         except:
             data = {"status": "Verifica fallita"}
