@@ -65,8 +65,16 @@ def __impostaDatiBase():
     giorni_i=["Lunedì", "Martedì", "Mercoledì", "Giovedì", "Venerdì"]
     giorni.extend(giorni_i)
 
-    slot_i=["09:00-10:00", "10:00-11:00", "11:00-12:00", "12:00-13:00",
-            "14:00-15:00", "15:00-16:00", "16:00-17:00", "17:00-18:00"]
+    slot_i=[
+        ["09:00-10:00", 9],
+        ["10:00-11:00", 10],
+        ["11:00-12:00", 11],
+        ["12:00-13:00", 12],
+        ["14:00-15:00", 14],
+        ["15:00-16:00", 15],
+        ["16:00-17:00", 16],
+        ["17:00-18:00", 17]
+    ]
     slot.extend(slot_i)
 
     aule_i=[
@@ -398,7 +406,8 @@ def __registraDatiInDb(giorni, slot, anni_accademici, aule, corsi_di_studio, num
         if slot is not None:
             try:
                 for s in slot:
-                    row = Slot(descrizione=s)
+                    row = Slot(descrizione=s[0],
+                               ora_slot_cal=s[1])
                     db.session.add(row)
                 db.session.flush()
             except:
@@ -554,7 +563,7 @@ def caricaDatiDalDb(aa, semestre):
         slot_tt=[]
         slot=db.session.query(Slot).all()    
         for s in slot:
-            slot_tt.append(SlotTt(s.id, s.descrizione))
+            slot_tt.append(SlotTt(s.id, s.descrizione, s.ora_slot_cal))
     except SQLAlchemyError:
         flash("Errore di caricamento dati LP -> Slot")
         return -1    

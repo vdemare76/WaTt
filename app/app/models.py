@@ -25,6 +25,7 @@ class StatoOrario(Model):
 class Slot(Model):
     id=Column(Integer, primary_key=True)
     descrizione=Column(String(30))
+    ora_slot_cal=Column(Integer)
     
     def __repr__(self):
         return self.descrizione

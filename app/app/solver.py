@@ -96,6 +96,14 @@ class TemplateCalcoloOrario(ABC):
         if registra==True:
             self.registra_orario(model, dati, strutture_ausiliarie, aa, semestre, desc_orario)
 
+        skd = strutture_ausiliarie.get_schedulazione()
+        for c in dati.get_corsi():
+            for m in dati.get_moduli():
+                for a in dati.get_aule():
+                    for g in dati.get_giorni():
+                        for s in dati.get_slot():
+                            if skd[(c, m, a, g, s)].varValue > 0:
+                                flash(str(c.get_id()) + " - " + str(m.get_id()) + " - " + str(a.get_id()) + " - " + str(g.get_id()) + " - " + str(s.get_id()))
         return ris
 
     def carica_dati(self, aa, semestre):
@@ -195,7 +203,7 @@ class TemplateCalcoloOrario(ABC):
                
     def calcola_orario(self, model, dati, str_aux):
         skd=str_aux.get_schedulazione()
-        
+
          # Funzione obiettivo
         model+=lpSum(skd[(c,m,a,g,s)] for c in dati.get_corsi() for m in dati.get_moduli() for a in dati.get_aule() 
                                       for g in dati.get_giorni() for s in dati.get_slot()) 
@@ -326,6 +334,28 @@ class AlgoritmoCalcolo(TemplateCalcoloOrario):
                 if (p["extendedProps"]["corso_id"]!=-1 and p["extendedProps"]["modulo_id"]!=-1 and
                     p["extendedProps"]["aula_id"]!=-1 and p["extendedProps"]["giorno_id"]!=-1 and
                     p["extendedProps"]["slot_id"]!=-1):
+                    if (p["extendedProps"]["corso_id"] == 2 and
+                        p["extendedProps"]["modulo_id"] == 15 and
+                        p["extendedProps"]["aula_id"] == 2 and
+                        p["extendedProps"]["giorno_id"] == 5 and
+                        p["extendedProps"]["slot_id"] == 1):
+                        flash("OK1")
+                        p["extendedProps"]["corso_id"] = 2
+                        p["extendedProps"]["modulo_id"] = 15
+                        p["extendedProps"]["aula_id"] = 2
+                        p["extendedProps"]["giorno_id"] = 2
+                        p["extendedProps"]["slot_id"] = 1
+                    if (p["extendedProps"]["corso_id"] == 2 and
+                        p["extendedProps"]["modulo_id"] == 15 and
+                        p["extendedProps"]["aula_id"] == 2 and
+                        p["extendedProps"]["giorno_id"] == 5 and
+                        p["extendedProps"]["slot_id"] == 2):
+                        flash("OK2")
+                        p["extendedProps"]["corso_id"] = 2
+                        p["extendedProps"]["modulo_id"] = 15
+                        p["extendedProps"]["aula_id"] = 2
+                        p["extendedProps"]["giorno_id"] = 2
+                        p["extendedProps"]["slot_id"] = 2
                     for c in dati.get_corsi():
                         if c.get_id()==p["extendedProps"]["corso_id"]:
                             break

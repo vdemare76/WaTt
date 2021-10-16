@@ -17,6 +17,8 @@
 
   <body onload="inizializza({{anni_corso}})">
     <div id="loader" class="loader" style="display:none"></div>
+    <p class="bg-primary" align="center">CALENDARIO</p><br>
+    <div id='calendar'></div><br>
     <p class="bg-primary" align="center">PARAMETRI PER LA GENERAZIONE DEL CALENDARIO</p><br>
     <div>
       <div class="panel panel-info">
@@ -39,9 +41,6 @@
       </div><br>
       <button type="button" id="genera_calendario" onclick="genera_calendario({{orario}},{{chiusure}})" class="btn bg-primary">Genera calendario per il corso selezionato</button>
     </div><br>
-    <p class="bg-primary" align="center">CALENDARIO</p><br>
-    <div id='calendar'></div>
-
   </body>
 
 </html>
@@ -100,7 +99,12 @@
               html: true
             });
           },
-          eventDragStop: function() {
+          eventChange: function(info) {
+            //alert(info.event.start.getDay());
+            alert(info.event.start.getHours());
+            //applicaModificaOrario(date);
+          },
+          eventDragStop: function(info) {
             $(".popover").remove();
           },
           buttonText:
@@ -233,6 +237,10 @@
       }
 
       calendar.render();
+    }
+
+    function applicaModificaOrario(date) {
+      alert("pippo");
     }
 
     function download(content, fileName, contentType) {
