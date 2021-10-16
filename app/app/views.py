@@ -498,6 +498,12 @@ class CalendarioView(BaseView):
             data = {"status": "Verifica fallita"}
             return data, 200
 
+    @expose('/cld_mod/', methods=['GET', 'POST'])
+    @has_access
+    def cld_mod(self):
+        data={"status": "pippo"}
+        return data, 200
+
 db.create_all()
 
 appbuilder.add_view(SlotView, "Slot", icon="fa-clock-o", category="Tabelle di base")

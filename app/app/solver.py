@@ -96,14 +96,14 @@ class TemplateCalcoloOrario(ABC):
         if registra==True:
             self.registra_orario(model, dati, strutture_ausiliarie, aa, semestre, desc_orario)
 
-        skd = strutture_ausiliarie.get_schedulazione()
+        '''skd = strutture_ausiliarie.get_schedulazione()
         for c in dati.get_corsi():
             for m in dati.get_moduli():
                 for a in dati.get_aule():
                     for g in dati.get_giorni():
                         for s in dati.get_slot():
                             if skd[(c, m, a, g, s)].varValue > 0:
-                                flash(str(c.get_id()) + " - " + str(m.get_id()) + " - " + str(a.get_id()) + " - " + str(g.get_id()) + " - " + str(s.get_id()))
+                                flash(str(c.get_id()) + " - " + str(m.get_id()) + " - " + str(a.get_id()) + " - " + str(g.get_id()) + " - " + str(s.get_id()))'''
         return ris
 
     def carica_dati(self, aa, semestre):

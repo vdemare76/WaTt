@@ -563,7 +563,7 @@ def caricaDatiDalDb(aa, semestre):
         slot_tt=[]
         slot=db.session.query(Slot).all()    
         for s in slot:
-            slot_tt.append(SlotTt(s.id, s.descrizione, s.ora_slot_cal))
+            slot_tt.append(SlotTt(s.id, s.descrizione))
     except SQLAlchemyError:
         flash("Errore di caricamento dati LP -> Slot")
         return -1    

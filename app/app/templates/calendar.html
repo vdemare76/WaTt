@@ -100,9 +100,7 @@
             });
           },
           eventChange: function(info) {
-            //alert(info.event.start.getDay());
-            alert(info.event.start.getHours());
-            //applicaModificaOrario(date);
+            modificaEventoInOrario(info.event, info.event.start.getDay(), info.event.start.getHours());
           },
           eventDragStop: function(info) {
             $(".popover").remove();
@@ -239,8 +237,16 @@
       calendar.render();
     }
 
-    function applicaModificaOrario(date) {
-      alert("pippo");
+    function modificaEventoInOrario(evento, giorno, slot) {
+        $.ajax({
+          type: 'POST',
+          contentType: 'application/json',
+          data: {evento: JSON.stringify(evento), giorno: giorno, slot: slot},
+          dataType: 'json',
+          url: '/calendarioview/cld_mod/',
+          success: function (d) {
+            alert(d["status"]);
+        }});
     }
 
     function download(content, fileName, contentType) {
