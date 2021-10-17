@@ -237,18 +237,6 @@
       calendar.render();
     }
 
-    function modificaEventoInOrario(evento, giorno, slot) {
-        $.ajax({
-          type: 'POST',
-          contentType: 'application/json',
-          data: {evento: JSON.stringify(evento), giorno: giorno, slot: slot},
-          dataType: 'json',
-          url: '/calendarioview/cld_mod/',
-          success: function (d) {
-            alert(d["status"]);
-        }});
-    }
-
     function download(content, fileName, contentType) {
       let a = document.createElement("a");
       let file = new Blob([content], {type: contentType});
@@ -266,6 +254,18 @@
             $('#anno_corso').append(new Option(arrAnni[i].anno_corso, arrAnni[i].anno_corso));
           }
       }
+    }
+
+    function modificaEventoInOrario(evento, giorno, slot) {
+        $.ajax({
+          type: 'POST',
+          contentType: 'application/json',
+          data: JSON.stringify({evento: evento, giorno: giorno, slot: slot}),
+          dataType: 'json',
+          url: '/calendarioview/cld_mod/',
+          success: function (d) {
+            alert(d["status"]);
+        }});
     }
 
     function verificaOrario(eventi) {

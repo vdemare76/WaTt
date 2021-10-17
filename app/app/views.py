@@ -2,6 +2,7 @@ from flask import flash, render_template, redirect, url_for, request, g, session
 from flask_appbuilder import ModelView, BaseView, expose, has_access, action
 from flask_appbuilder.models.sqla.interface import SQLAInterface
 from sqlalchemy.exc import SQLAlchemyError
+from sqlalchemy import and_
 
 from flask_appbuilder.fieldwidgets import Select2AJAXWidget, Select2SlaveAJAXWidget
 from flask_appbuilder.fields import AJAXSelectField
@@ -237,19 +238,18 @@ class OrariGeneratiView(ModelView):
     @action("carica_schema", "Carica orario", "Vuoi visualizzare lo schema orario selezionato?", "fa-trash-alt", multiple=False, single=True)
     def carica_schema(self, item):
         try:
-            tst=db.session.query(OrarioTestata, AnnoAccademico) \
-                .filter(OrarioTestata.id==item.id).first()
+            tst=db.session.query(OrarioTestata).filter(OrarioTestata.id==item.id).first()
 
-            session["chkSessioneUnica"]=str(tst.OrarioTestata.vincolo_sessione_unica)
-            session["chkSessioniConsecutive"]=str(tst.OrarioTestata.vincolo_sessioni_consecutive)
-            if tst.OrarioTestata.vincolo_max_slot>0:
+            session["chkSessioneUnica"]=str(tst.vincolo_sessione_unica)
+            session["chkSessioniConsecutive"]=str(tst.vincolo_sessioni_consecutive)
+            if tst.vincolo_max_slot>0:
                 session["chkMaxOre"]="1"
             else:
                 session["chkMaxOre"]="0"
-            session["selMaxOre"]=tst.OrarioTestata.vincolo_max_slot
-            session["chkPreferenzeDocenti"]=str(tst.OrarioTestata.vincolo_logistica_docenti)
-            session["annoAccademico"]=tst.OrarioTestata.anno_accademico_id
-            session["semestre"]=tst.OrarioTestata.semestre
+            session["selMaxOre"]=tst.vincolo_max_slot
+            session["chkPreferenzeDocenti"]=str(tst.vincolo_logistica_docenti)
+            session["annoAccademico"]=tst.anno_accademico_id
+            session["semestre"]=tst.semestre
 
             db.session.query(Orario).delete()
             db.session.execute('ALTER TABLE orario AUTO_INCREMENT = 1')
@@ -472,7 +472,7 @@ class CalendarioView(BaseView):
                                orario=vOrario,
                                chiusure=vChiusure)
 
-    @expose('/cld_ver/', methods=['GET','POST'])
+    @expose('/cld_ver/', methods=['POST'])
     @has_access
     def cld_ver(self):
         try:
@@ -498,10 +498,26 @@ class CalendarioView(BaseView):
             data = {"status": "Verifica fallita"}
             return data, 200
 
-    @expose('/cld_mod/', methods=['GET', 'POST'])
+    @expose('/cld_mod/', methods=['POST'])
     @has_access
     def cld_mod(self):
-        data={"status": "pippo"}
+        dati=json.loads(request.data)
+        evento=dati["evento"]
+        slot=db.session.query(Slot).filter(Slot.ora_slot_cal==dati["slot"]).first()
+        flash(evento["extendedProps"]["corso_id"])
+        flash(evento["extendedProps"]["modulo_id"])
+        flash(evento["extendedProps"]["aula_id"])
+        flash(evento["extendedProps"]["giorno_id"])
+        flash(evento["extendedProps"]["slot_id"])
+        db.session.query(Orario).filter(Orario.corso_id==evento["extendedProps"]["corso_id"]) \
+                                .filter(Orario.modulo_id==evento["extendedProps"]["modulo_id"]) \
+                                .filter(Orario.aula_id==evento["extendedProps"]["aula_id"]) \
+                                .filter(Orario.giorno_id==evento["extendedProps"]["giorno_id"]) \
+                                .filter(Orario.slot_id==evento["extendedProps"]["slot_id"]) \
+                                .update({Orario.giorno_id: dati["giorno"], Orario.slot_id: slot.id})
+        db.session.commit()
+
+        data={"status": "OK"}
         return data, 200
 
 db.create_all()
