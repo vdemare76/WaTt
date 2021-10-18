@@ -151,9 +151,8 @@ FAB_ROLES = {
         ["Schema settimanale", "menu_access"],
         ["SchemaSettimanaleView", "can_wsk_home"],
         ["Calendario orario", "menu_access"],
-        ["CalendarioView", "can_cld_home"],
-        ["CalendarioView", "can_cld_ver"],
-        ["CalendarioView", "can_cld_mod"]
+        ["CalendarioView", "can_cld_home"], ["CalendarioView", "can_cld_ver"],
+        ["CalendarioView", "can_cld_mod"], ["CalendarioView", "can_cld_upd"]
     ],
 
     # Profilo STUDENTE

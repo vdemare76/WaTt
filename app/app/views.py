@@ -442,11 +442,14 @@ class CalendarioView(BaseView):
         corsi = db.session.query(Orario.corso_id, Orario.codice_corso, CorsoDiStudio.descrizione) \
             .join(CorsoDiStudio, Orario.corso_id == CorsoDiStudio.id) \
             .order_by(CorsoDiStudio.codice.asc()).distinct().all()
+        session["corsiCal"]=corsi
 
-        anni_corso = db.session.query(Orario.corso_id, Orario.codice_corso, Orario.anno_corso)\
+        anniCorso = db.session.query(Orario.corso_id, Orario.codice_corso, Orario.anno_corso) \
             .order_by(Orario.corso_id.asc(), Orario.anno_corso.asc()).distinct().all()
+        session["anniCorsoCal"]=anniCorso
+
         vAnniCorso = []
-        for a in anni_corso:
+        for a in anniCorso:
             vAnniCorso.append({"corso_id":a[0],"codice_corso":a[1],"anno_corso":a[2]})
 
         orario = db.session.query(Orario).all()
@@ -455,6 +458,7 @@ class CalendarioView(BaseView):
             vOrario.append(o.to_dict())
 
         chiusure = db.session.query(Chiusura).filter(Chiusura.testata_id==Orario.testata_id).all()
+        session["chiusure"]=chiusure
         vChiusure = []
         for c in chiusure:
             cur = c.data_inizio
@@ -516,9 +520,25 @@ class CalendarioView(BaseView):
                                 .filter(Orario.slot_id==evento["extendedProps"]["slot_id"]) \
                                 .update({Orario.giorno_id: dati["giorno"], Orario.slot_id: slot.id})
         db.session.commit()
+        data = {"status": "OK"}
+        return redirect(url_for('CalendarioView.cld_home'));
 
-        data={"status": "OK"}
-        return data, 200
+    @expose('/cld_upd/')
+    @has_access
+    def cld_upd(self):
+        orario = db.session.query(Orario).all()
+        vOrario = []
+        for o in orario:
+            vOrario.append(o.to_dict())
+
+        return render_template("calendar.html",
+                               base_template=appbuilder.base_template,
+                               appbuilder=appbuilder,
+                               corsi=session["corsiCal"],
+                               anni_corso=session["anniCorsoCal"],
+                               orario=vOrario,
+                               chiusure=["chiusure"])
+
 
 db.create_all()
 
