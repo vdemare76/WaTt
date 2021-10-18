@@ -459,6 +459,7 @@ class CalendarioView(BaseView):
 
         chiusure = db.session.query(Chiusura).filter(Chiusura.testata_id==Orario.testata_id).all()
         session["chiusure"]=chiusure
+
         vChiusure = []
         for c in chiusure:
             cur = c.data_inizio
@@ -480,14 +481,20 @@ class CalendarioView(BaseView):
     @has_access
     def cld_ver(self):
         try:
-            vincoli={"chkSessioneUnica": session["chkSessioneUnica"],
-                     "chkSessioniConsecutive": session["chkSessioniConsecutive"],
-                     "chkMaxOre": session["chkMaxOre"],
-                     "selMaxOre": session["selMaxOre"],
-                     "chkPreferenzeDocenti": session["chkPreferenzeDocenti"],
-                     "posizioniFisse":json.loads(request.data)}
+            orario = db.session.query(Orario).all()
+            vOrario = []
+            for o in orario:
+                vOrario.append(o.to_dict())
+
+            vincoli = {"chkSessioneUnica": session["chkSessioneUnica"],
+                       "chkSessioniConsecutive": session["chkSessioniConsecutive"],
+                       "chkMaxOre": session["chkMaxOre"],
+                       "selMaxOre": session["selMaxOre"],
+                       "chkPreferenzeDocenti": session["chkPreferenzeDocenti"],
+                       "posizioniFisse": vOrario}
 
             algoritmo=AlgoritmoCalcolo()
+
             ris=algoritmo.genera_orario(session["annoAccademico"],
                                         session["semestre"],
                                         "Verifica Orario",
@@ -508,22 +515,26 @@ class CalendarioView(BaseView):
         dati=json.loads(request.data)
         evento=dati["evento"]
         slot=db.session.query(Slot).filter(Slot.ora_slot_cal==dati["slot"]).first()
-        flash(evento["extendedProps"]["corso_id"])
-        flash(evento["extendedProps"]["modulo_id"])
-        flash(evento["extendedProps"]["aula_id"])
-        flash(evento["extendedProps"]["giorno_id"])
-        flash(evento["extendedProps"]["slot_id"])
+        giorno=db.session.query(Giorno).filter(Giorno.id==dati["giorno"]).first()
         db.session.query(Orario).filter(Orario.corso_id==evento["extendedProps"]["corso_id"]) \
                                 .filter(Orario.modulo_id==evento["extendedProps"]["modulo_id"]) \
                                 .filter(Orario.aula_id==evento["extendedProps"]["aula_id"]) \
                                 .filter(Orario.giorno_id==evento["extendedProps"]["giorno_id"]) \
                                 .filter(Orario.slot_id==evento["extendedProps"]["slot_id"]) \
-                                .update({Orario.giorno_id: dati["giorno"], Orario.slot_id: slot.id})
+                                .update({Orario.giorno_id: dati["giorno"], Orario.slot_id: slot.id, Orario.descrizione_slot: slot.descrizione, Orario.giorno: giorno.descrizione})
         db.session.commit()
-        data = {"status": "OK"}
-        return redirect(url_for('CalendarioView.cld_home'));
 
-    @expose('/cld_upd/')
+        orario = db.session.query(Orario).all()
+        vOrario = []
+        for o in orario:
+            vOrario.append(o.to_dict())
+
+        data = {"orario": vOrario,
+                "chiusure": session["chiusure"]}
+
+        return data, 200
+
+    @expose('/cld_upd/', methods=['POST'])
     @has_access
     def cld_upd(self):
         orario = db.session.query(Orario).all()
@@ -531,14 +542,10 @@ class CalendarioView(BaseView):
         for o in orario:
             vOrario.append(o.to_dict())
 
-        return render_template("calendar.html",
-                               base_template=appbuilder.base_template,
-                               appbuilder=appbuilder,
-                               corsi=session["corsiCal"],
-                               anni_corso=session["anniCorsoCal"],
-                               orario=vOrario,
-                               chiusure=["chiusure"])
+        data = {"orario": vOrario,
+                "chiusure": session["chiusure"]}
 
+        return data, 200
 
 db.create_all()
 

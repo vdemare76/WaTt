@@ -39,7 +39,7 @@
           <input type="date" id="data_fine_lezioni">
         </div>
       </div><br>
-      <button type="button" id="genera_calendario" onclick="genera_calendario({{orario}},{{chiusure}})" class="btn bg-primary">Genera calendario per il corso selezionato</button>
+      <button type="button" id="genera_calendario" onclick="carica_orario()" class="btn bg-primary">Genera calendario per il corso selezionato</button>
     </div><br>
   </body>
 
@@ -119,7 +119,8 @@
             verifyButton: {
               text: 'Verifica vincoli',
               click: function() {
-                verificaOrario(calendar.getEvents());
+                //verificaOrario(calendar.getEvents());
+                verificaOrario();
               }
             },
             jsonButton: {
@@ -263,23 +264,26 @@
           data: JSON.stringify({evento: evento, giorno: giorno, slot: slot}),
           dataType: 'json',
           url: '/calendarioview/cld_mod/',
-          success: function (d) {
-            alert(d["status"]);
-        }});
+          success: function (ris) {
+            genera_calendario(ris["orario"],ris["chiusure"]);
+            $(".popover").remove();
+          }
+        });
     }
 
-    function verificaOrario(eventi) {
+    function verificaOrario() {
         $('#loader').css({'display':'block'});
         $.ajax({
           type: 'POST',
           contentType: 'application/json',
-          data: JSON.stringify(eventi),
+          //data: JSON.stringify(eventi),
           dataType: 'json',
           url: '/calendarioview/cld_ver/',
-          success: function (d) {
+          success: function (ris) {
               $('#loader').css({'display':'none'});
-              alert(d["status"]);
-        }});
+              alert(ris["status"]);
+          }
+        });
     }
 
     function inizializza(arrAnni) {
@@ -291,6 +295,19 @@
 
     function aggiorna_data_fine(arrChiusure) {
       $("#data_fine_lezioni").val($("#data_avvio_lezioni").val());
+    }
+
+    function carica_orario() {
+      $.ajax({
+        type: 'POST',
+        contentType: 'application/json',
+        dataType: 'json',
+        url: '/calendarioview/cld_upd/',
+        success: function (ris) {
+          genera_calendario(ris["orario"],ris["chiusure"]);
+          $(".popover").remove();
+        }
+      });
     }
 
 </script>
