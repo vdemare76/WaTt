@@ -452,8 +452,8 @@ class CalendarioView(BaseView):
         for a in anniCorso:
             vAnniCorso.append({"corso_id":a[0],"codice_corso":a[1],"anno_corso":a[2]})
 
-        orario = db.session.query(Orario).all()
         vOrario = []
+        orario = db.session.query(Orario).all()
         for o in orario:
             vOrario.append(o.to_dict())
 
@@ -537,8 +537,8 @@ class CalendarioView(BaseView):
     @expose('/cld_upd/', methods=['POST'])
     @has_access
     def cld_upd(self):
-        orario = db.session.query(Orario).all()
         vOrario = []
+        orario = db.session.query(Orario).all()
         for o in orario:
             vOrario.append(o.to_dict())
 
@@ -546,6 +546,14 @@ class CalendarioView(BaseView):
                 "chiusure": session["chiusure"]}
 
         return data, 200
+
+    @expose('/cld_room/', methods=['POST'])
+    @has_access
+    def cld_room(self):
+
+        data = {"orario": "test"}
+        return data, 200
+
 
 db.create_all()
 
