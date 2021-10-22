@@ -265,6 +265,10 @@ class OrariGeneratiView(ModelView):
             .filter(OrarioDettaglio.testata_id==item.id)\
             .order_by(CorsoDiStudio.codice.asc(), Giorno.id.asc(), Modulo.codice.asc(), Slot.id.asc(), Aula.codice.asc()).all()
             for r in rows:
+                if r.Modulo.max_studenti > 0:
+                    numerosita = r.Modulo.max_studenti
+                else:
+                    numerosita = r.Offerta.max_studenti
                 row = Orario(testata_id=item.id,
                              giorno_id=r.Giorno.id,
                              giorno=r.Giorno.descrizione,
@@ -276,7 +280,7 @@ class OrariGeneratiView(ModelView):
                              colore_attivita=r.AttivitaDidattica.colore,
                              modulo_id=r.Modulo.id,
                              descrizione_modulo=r.Modulo.descrizione,
-                             numerosita_modulo=r.Modulo.max_studenti,
+                             numerosita_modulo=numerosita,
                              slot_id=r.Slot.id,
                              descrizione_slot=r.Slot.descrizione,
                              nome_docente=r.Docente.nome,
@@ -531,7 +535,6 @@ class CalendarioView(BaseView):
 
         data = {"orario": vOrario,
                 "chiusure": session["chiusure"]}
-
         return data, 200
 
     @expose('/cld_upd/', methods=['POST'])
@@ -544,16 +547,23 @@ class CalendarioView(BaseView):
 
         data = {"orario": vOrario,
                 "chiusure": session["chiusure"]}
-
         return data, 200
 
     @expose('/cld_room/', methods=['POST'])
     @has_access
     def cld_room(self):
+        dati = json.loads(request.data)
+        flash(dati)
+        vAule = []
+        aule = db.session.query(Aula) \
+            .filter(Aula.id != dati["aula_id"]).filter(Aula.capienza >= dati["capienza"]). \
+            order_by(Aula.codice).all()
+        for a in aule:
+            vAule.append(a.to_dict())
+            flash(a)
 
-        data = {"orario": "test"}
+        data = {"aule": vAule}
         return data, 200
-
 
 db.create_all()
 

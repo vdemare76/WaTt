@@ -94,7 +94,7 @@
               title: info.event.title,
               placement: 'top',
               trigger: 'hover',
-              content: info.event.extendedProps.description,
+              content: info.event.extendedProps.descrizione,
               background:'#FFF000',
               container: 'body',
               html: true
@@ -104,10 +104,11 @@
             modificaEventoInOrario(info.event, info.event.start.getDay(), info.event.start.getHours());
           },
           eventClick: function(info) {
+            aule=carica_aule_compatibili(info.event.extendedProps.aula_id, info.event.extendedProps.numerosita);
             $('#room-title').html("Modifica aula");
             $('#modal-room-w').modal();
             $(document).on('click', '#modal-room-ok', function () {
-			  alert("PIPPA!")
+              alert(aule);
             });
           },
           eventDragStop: function(info) {
@@ -127,7 +128,6 @@
             verifyButton: {
               text: 'Verifica vincoli',
               click: function() {
-                //verificaOrario(calendar.getEvents());
                 verificaOrario();
               }
             },
@@ -172,7 +172,8 @@
             editable: false,
             color: '#FFCCCC',
             textColor: '#000000',
-            description: 'Chiusura',
+            descrizione: 'Chiusura',
+            numerosita: 0,
             giorno_id: -1,
             slot_id: -1,
             corso_id: -1,
@@ -188,7 +189,8 @@
                               editable:false,
                               color:'#DDDDDD',
                               textColor:'#000000',
-                              description:'Lezioni non previste',
+                              descrizione:'Lezioni non previste',
+                              numerosita: 0,
                               giorno_id: -1,
                               slot_id: -1,
                               corso_id: -1,
@@ -214,8 +216,9 @@
                   color: arrOrario[i].colore_attivita,
                   borderColor: '#000000',
                   textColor: '#FFFFFF',
-                  description: '<b>' + arrOrario[i].descrizione_attivita + '</b><br>'
+                  descrizione: '<b>' + arrOrario[i].descrizione_attivita + '</b><br>'
                           + '<i>' + arrOrario[i].cognome_docente + ' ' + arrOrario[i].nome_docente + '</i>',
+                  numerosita: arrOrario[i].numerosita,
                   giorno_id: arrOrario[i].giorno_id,
                   slot_id: arrOrario[i].slot_id,
                   corso_id: arrOrario[i].corso_id,
@@ -233,7 +236,8 @@
               editable:false,
               color:'#DDDDDD',
               textColor:'#000000',
-              description:'Pausa lezioni',
+              descrizione:'Pausa lezioni',
+              numerosita: 0,
               giorno_id: -1,
               slot_id: -1,
               corso_id: -1,
@@ -242,7 +246,6 @@
           });
         }
       }
-
       calendar.render();
     }
 
@@ -284,12 +287,11 @@
         $.ajax({
           type: 'POST',
           contentType: 'application/json',
-          //data: JSON.stringify(eventi),
           dataType: 'json',
           url: '/calendarioview/cld_ver/',
           success: function (ris) {
-              $('#loader').css({'display':'none'});
-              alert(ris["status"]);
+            $('#loader').css({'display':'none'});
+            alert(ris["status"]);
           }
         });
     }
@@ -314,6 +316,20 @@
         success: function (ris) {
           genera_calendario(ris["orario"],ris["chiusure"]);
           $(".popover").remove();
+        }
+      });
+    }
+
+    function carica_aule_compatibili(aula_id, capienza) {
+      $.ajax({
+        type: 'POST',
+        contentType: 'application/json',
+        data: JSON.stringify({aula_id: aula_id, capienza: capienza}),
+        dataType: 'json',
+        url: '/calendarioview/cld_room/',
+        success: function (ris) {
+          $('#loader').css({'display':'none'});
+          return ris["aule"];
         }
       });
     }
