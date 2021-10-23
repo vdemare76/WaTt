@@ -1,4 +1,4 @@
-from flask import flash, render_template, redirect, url_for, request, g, session, json
+from flask import flash, render_template, redirect, url_for, request, g, session, json, jsonify
 from flask_appbuilder import ModelView, BaseView, expose, has_access, action
 from flask_appbuilder.models.sqla.interface import SQLAInterface
 from sqlalchemy.exc import SQLAlchemyError
@@ -520,12 +520,20 @@ class CalendarioView(BaseView):
         evento=dati["evento"]
         slot=db.session.query(Slot).filter(Slot.ora_slot_cal==dati["slot"]).first()
         giorno=db.session.query(Giorno).filter(Giorno.id==dati["giorno"]).first()
+        if dati["aula"]>-1:
+            aula=db.session.query(Aula).filter(Aula.id==dati["aula"]).first()
         db.session.query(Orario).filter(Orario.corso_id==evento["extendedProps"]["corso_id"]) \
                                 .filter(Orario.modulo_id==evento["extendedProps"]["modulo_id"]) \
                                 .filter(Orario.aula_id==evento["extendedProps"]["aula_id"]) \
                                 .filter(Orario.giorno_id==evento["extendedProps"]["giorno_id"]) \
                                 .filter(Orario.slot_id==evento["extendedProps"]["slot_id"]) \
-                                .update({Orario.giorno_id: dati["giorno"], Orario.slot_id: slot.id, Orario.descrizione_slot: slot.descrizione, Orario.giorno: giorno.descrizione})
+                                .update({Orario.giorno_id: dati["giorno"],
+                                         Orario.slot_id: slot.id,
+                                         Orario.descrizione_slot: slot.descrizione,
+                                         Orario.giorno: giorno.descrizione,
+                                         Orario.aula_id: aula.id,
+                                         Orario.aula: aula.descrizione,
+                                         Orario.capienza_aula: aula.capienza})
         db.session.commit()
 
         orario = db.session.query(Orario).all()
@@ -553,14 +561,15 @@ class CalendarioView(BaseView):
     @has_access
     def cld_room(self):
         dati = json.loads(request.data)
-        flash(dati)
         vAule = []
+        subquery = db.session.query(Orario.aula_id).filter(Orario.slot_id == dati["slot"]) \
+            .filter(Orario.giorno_id == dati["giorno"]).distinct()
         aule = db.session.query(Aula) \
-            .filter(Aula.id != dati["aula_id"]).filter(Aula.capienza >= dati["capienza"]). \
-            order_by(Aula.codice).all()
+            .filter(Aula.id != dati["aula"]).filter(Aula.capienza >= dati["numerosita"]) \
+            .filter(Aula.id.notin_(subquery)). \
+            order_by(Aula.descrizione).all()
         for a in aule:
             vAule.append(a.to_dict())
-            flash(a)
 
         data = {"aule": vAule}
         return data, 200

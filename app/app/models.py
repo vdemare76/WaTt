@@ -82,8 +82,8 @@ class Aula(Model):
     capienza=Column(Integer)
     tipo_aula=Column(String(10))
 
-    def __repr__(self):
-        return self.codice +  " " + self.descrizione
+    def to_dict(self):
+        return dict([(k, getattr(self, k)) for k in self.__dict__.keys() if not k.startswith("_")])
 
 
 class NumerositaAnniCorso(Model):

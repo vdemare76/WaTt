@@ -8,18 +8,15 @@
 <html lang='en'>
   <head>
     <meta charset='utf-8' />
-    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.7.2/main.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.7.2/locales-all.min.js"></script>
     <script src="/static/ics.min.js"></script>
     <script src="/static/FileSaver.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.7.2/main.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.7.2/locales-all.min.js"></script>
     <link href="https://cdn.jsdelivr.net/npm/fullcalendar@5.7.2/main.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="/static/watt.css">
   </head>
 
   <body onload="inizializza({{anni_corso}})">
-    <div id="loader" class="loader" style="display:none"></div>
-    <p class="bg-primary" align="center">CALENDARIO</p><br>
-    <div id='calendar'></div><br>
     <p class="bg-primary" align="center">PARAMETRI PER LA GENERAZIONE DEL CALENDARIO</p><br>
     <div>
       <div class="panel panel-info">
@@ -40,8 +37,17 @@
           <input type="date" id="data_fine_lezioni">
         </div>
       </div><br>
-      <button type="button" id="genera_calendario" onclick="carica_orario()" class="btn bg-primary">Genera calendario per il corso selezionato</button>
+      <button type="button" id="genera_calendario" onclick="carica_orario(false)" class="btn bg-primary">Genera calendario per il corso selezionato</button>
+      <input type="checkbox" name="chk_modifica" id="chk_modifica" value="1">
+      <label for = "chk_modifica">
+          Abilita modalità modifica schema orario settimanale
+      </label>
     </div><br>
+    <div id="loader" class="loader" style="display:none"></div>
+    <div>
+      <p class="bg-primary" align="center">CALENDARIO</p><br>
+      <div id='calendar'></div><br>
+    </div>
   </body>
 
 </html>
@@ -61,7 +67,7 @@
         return [year, month, day].join('/');
     }
 
-    function genera_calendario(arrOrario,arrChiusure) {
+    function genera_calendario(arrOrario,arrChiusure,editabile) {
       let day = 60 * 60 * 24 * 1000;
       let giorni_settimana = ["Domenica","Lunedì","Martedì","Mercoledì","Giovedì","Venerdì","Sabato"];
 
@@ -83,35 +89,30 @@
           initialView:'timeGridWeek',
           allDaySlot: false,
           displayEventTime:false,
+          editable:editabile,
           eventOverlap:false,
-          editable:true,
           slotMinTime:"09:00:00",
           slotMaxTime:"18:00:00",
           height:720,
           expandRows:true,
-          eventDidMount: function(info) {
-            $(info.el).popover({
-              title: info.event.title,
+          eventDidMount: function(evento) {
+            $(evento.el).popover({
+              title: evento.event.title,
               placement: 'top',
               trigger: 'hover',
-              content: info.event.extendedProps.descrizione,
+              content: evento.event.extendedProps.descrizione,
               background:'#FFF000',
               container: 'body',
               html: true
             });
           },
-          eventChange: function(info) {
-            modificaEventoInOrario(info.event, info.event.start.getDay(), info.event.start.getHours());
+          eventChange: function(evento) {
+            modificaEventoInOrario(evento.event, evento.event.start.getDay(), evento.event.start.getHours(), 0);
           },
-          eventClick: function(info) {
-            aule=carica_aule_compatibili(info.event.extendedProps.aula_id, info.event.extendedProps.numerosita);
-            $('#room-title').html("Modifica aula");
-            $('#modal-room-w').modal();
-            $(document).on('click', '#modal-room-ok', function () {
-              alert(aule);
-            });
+          eventClick: function(evento) {
+            gestione_cambio_aula(evento)
           },
-          eventDragStop: function(info) {
+          eventDragStop: function(evento) {
             $(".popover").remove();
           },
           buttonText:
@@ -151,10 +152,10 @@
             }
           },
           headerToolbar: {
+            left: 'verifyButton',
             center: 'title',
           },
           footerToolbar: {
-            left: 'verifyButton',
             right: 'jsonButton iCalButton',
           }
       });
@@ -212,13 +213,12 @@
                   displayEventEnd: true,
                   start: data_cur.setHours(ora_inizio),
                   end: data_cur.setHours(ora_fine),
-                  editable: true,
                   color: arrOrario[i].colore_attivita,
                   borderColor: '#000000',
                   textColor: '#FFFFFF',
                   descrizione: '<b>' + arrOrario[i].descrizione_attivita + '</b><br>'
                           + '<i>' + arrOrario[i].cognome_docente + ' ' + arrOrario[i].nome_docente + '</i>',
-                  numerosita: arrOrario[i].numerosita,
+                  numerosita: arrOrario[i].numerosita_modulo,
                   giorno_id: arrOrario[i].giorno_id,
                   slot_id: arrOrario[i].slot_id,
                   corso_id: arrOrario[i].corso_id,
@@ -268,70 +268,113 @@
       }
     }
 
-    function modificaEventoInOrario(evento, giorno, slot) {
-        $.ajax({
-          type: 'POST',
-          contentType: 'application/json',
-          data: JSON.stringify({evento: evento, giorno: giorno, slot: slot}),
-          dataType: 'json',
-          url: '/calendarioview/cld_mod/',
-          success: function (ris) {
-            genera_calendario(ris["orario"],ris["chiusure"]);
-            $(".popover").remove();
-          }
-        });
+    function modificaEventoInOrario(evento, giorno, slot, aula) {
+      if (aula>0)
+        newAula=aula;
+      else
+        newAula=evento.extendedProps.aula_id;
+      $.ajax({
+        type: 'POST',
+        contentType: 'application/json',
+        data: JSON.stringify({evento: evento, giorno: giorno, slot: slot, aula:newAula}),
+        dataType: 'json',
+        url: '/calendarioview/cld_mod/',
+        success: function (ris) {
+          genera_calendario(ris["orario"], ris["chiusure"], true);
+          $(".popover").remove();
+        }
+      });
     }
 
     function verificaOrario() {
-        $('#loader').css({'display':'block'});
-        $.ajax({
-          type: 'POST',
-          contentType: 'application/json',
-          dataType: 'json',
-          url: '/calendarioview/cld_ver/',
-          success: function (ris) {
-            $('#loader').css({'display':'none'});
-            alert(ris["status"]);
-          }
-        });
+      $('#loader').css({'display':'block'});
+      $.ajax({
+        type: 'POST',
+        contentType: 'application/json',
+        dataType: 'json',
+        url: '/calendarioview/cld_ver/',
+        success: function (ris) {
+          $('#loader').css({'display':'none'});
+          alert(ris["status"]);
+        }
+      });
     }
 
     function inizializza(arrAnni) {
       caricaAnni(arrAnni);
       let today = new Date();
-      document.getElementById("data_avvio_lezioni").value = today.getFullYear() + '-' + ('0' + (today.getMonth() + 1)).slice(-2) + '-' + ('0' + today.getDate()).slice(-2);
-      document.getElementById("data_fine_lezioni").value = today.getFullYear() + '-' + ('0' + (today.getMonth() + 1)).slice(-2) + '-' + ('0' + today.getDate()).slice(-2);
+      $("#data_avvio_lezioni").val(today.getFullYear() + '-' + ('0' + (today.getMonth() + 1)).slice(-2) + '-' + ('0' + today.getDate()).slice(-2));
+      $("#data_fine_lezioni").val(today.getFullYear() + '-' + ('0' + (today.getMonth() + 1)).slice(-2) + '-' + ('0' + today.getDate()).slice(-2));
+      $("#chk_modifica").prop('checked', false);
+      $("#chk_modifica").click(function() {
+        if($(this).is(":checked")) {
+          imposta_intervallo_modifica();
+        }
+        else {
+          imposta_intervallo_iniziale();
+        }
+      });
     }
 
     function aggiorna_data_fine(arrChiusure) {
       $("#data_fine_lezioni").val($("#data_avvio_lezioni").val());
     }
 
-    function carica_orario() {
+    function carica_orario(editabile) {
       $.ajax({
         type: 'POST',
         contentType: 'application/json',
         dataType: 'json',
         url: '/calendarioview/cld_upd/',
         success: function (ris) {
-          genera_calendario(ris["orario"],ris["chiusure"]);
+          genera_calendario(ris["orario"],ris["chiusure"],editabile);
           $(".popover").remove();
         }
       });
     }
 
-    function carica_aule_compatibili(aula_id, capienza) {
+    function gestione_cambio_aula(evento) {
       $.ajax({
         type: 'POST',
         contentType: 'application/json',
-        data: JSON.stringify({aula_id: aula_id, capienza: capienza}),
+        data: JSON.stringify({aula: evento.event.extendedProps.aula_id,
+                              numerosita: evento.event.extendedProps.numerosita,
+                              giorno: evento.event.extendedProps.giorno_id,
+                              slot: evento.event.extendedProps.slot_id}),
         dataType: 'json',
         url: '/calendarioview/cld_room/',
-        success: function (ris) {
-          $('#loader').css({'display':'none'});
-          return ris["aule"];
+        success: function(ris) {
+          aule=ris["aule"];
+          $('#room-title').html("Modifica aula");
+          $('#aulaSel').empty();
+          for (a in aule) {
+            $('#aulaSel').append(new Option(aule[a].descrizione+" ("+aule[a].capienza+")",aule[a].id));
+          }
+          $('#modal-room-w').modal();
+          $(document).on('click', '#modal-room-ok', function () {
+            modificaEventoInOrario(evento.event, evento.event.start.getDay(), evento.event.start.getHours(), parseInt($("#aulaSel option:selected").val()));
+          });
         }
       });
+    }
+
+    function imposta_intervallo_modifica() {
+      let today = new Date(), anno=today.getFullYear(), mese=today.getMonth();
+      primaDomenica=1;
+      while (dy = new Date(anno, mese, primaDomenica).getDay() != 0)
+        primaDomenica++;
+      giorno_inizio = new Date(anno, mese, primaDomenica).getDate();
+      giorno_fine = new Date(anno, mese, primaDomenica+7).getDate();
+      $("#data_avvio_lezioni").val(anno + '-' + ('0' + (mese + 1)).slice(-2) + '-' + ('0' + giorno_inizio).slice(-2));
+      $("#data_fine_lezioni").val(anno + '-' + ('0' + (mese + 1)).slice(-2) + '-' + ('0' + giorno_fine).slice(-2));
+      carica_orario(true);
+    }
+
+    function imposta_intervallo_iniziale() {
+      let today = new Date();
+      $("#data_avvio_lezioni").val(today.getFullYear() + '-' + ('0' + (today.getMonth() + 1)).slice(-2) + '-' + ('0' + today.getDate()).slice(-2));
+      $("#data_fine_lezioni").val(today.getFullYear() + '-' + ('0' + (today.getMonth() + 1)).slice(-2) + '-' + ('0' + today.getDate()).slice(-2));
+      carica_orario(false);
     }
 
 </script>
