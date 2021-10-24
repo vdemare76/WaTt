@@ -9,7 +9,6 @@ from flask_appbuilder.fields import AJAXSelectField
 from wtforms import validators
 
 from .import appbuilder, db
-import requests
 from .models import AnnoAccademico, CorsoDiStudio, AttivitaDidattica, Docente, Aula, NumerositaAnniCorso, Offerta, \
                     LogisticaDocente, Modulo, Giorno, Slot, Orario, OrarioTestata, OrarioDettaglio, Chiusura
 
@@ -185,8 +184,8 @@ class LogisticaDocentiView(ModelView):
                 endpoint="/logisticadocentiview/api/column/add/offerta"
             ),
         ),
-        'modulo': AJAXSelectField(
-            'Modulo',
+        "modulo": AJAXSelectField(
+            "Modulo",
             datamodel=datamodel,
             validators=[validators.DataRequired()],
             col_name="modulo",
@@ -231,7 +230,7 @@ class OrariGeneratiView(ModelView):
                 db.session.commit()
             except SQLAlchemyError:
                 db.sessione.rollback()
-                flash('Errore durante la cancellazione degli orari selezionati','danger')
+                flash("Errore durante la cancellazione degli orari selezionati","danger")
                 return -1
         return redirect(self.get_redirect())
 
@@ -252,7 +251,7 @@ class OrariGeneratiView(ModelView):
             session["semestre"]=tst.semestre
 
             db.session.query(Orario).delete()
-            db.session.execute('ALTER TABLE orario AUTO_INCREMENT = 1')
+            db.session.execute("ALTER TABLE orario AUTO_INCREMENT = 1")
             rows=db.session.query(OrarioDettaglio, Modulo, Giorno, Offerta, AttivitaDidattica, CorsoDiStudio, Docente, Slot, Aula) \
             .join(CorsoDiStudio, OrarioDettaglio.corso_di_studio_id == CorsoDiStudio.id) \
             .join(Modulo, OrarioDettaglio.modulo_id == Modulo.id) \
@@ -291,23 +290,23 @@ class OrariGeneratiView(ModelView):
                              capienza_aula=r.Aula.capienza)
                 db.session.add(row)
             db.session.commit()
-            flash('Orario caricato correttamente! (Puoi visualizzarlo con Orario -> Schema settimanale','success')
+            flash("Orario caricato correttamente! (Puoi visualizzarlo con Orario -> Schema settimanale","success")
         except SQLAlchemyError:
             db.sessione.rollback()
-            flash('Errore durante la cancellazione degli orari selezionati','danger')
+            flash("Errore durante la cancellazione degli orari selezionati","danger")
             return -1
         return redirect(self.get_redirect())
 
 
 class UtilitaView(BaseView):
-    default_view = 'srv_home'
+    default_view = "srv_home"
 
-    @expose('/srv_home/')
+    @expose("/srv_home/")
     @has_access
     def srv_home(self, name=None):
         return render_template("utility.html", base_template=appbuilder.base_template, appbuilder=appbuilder)
 
-    @expose('/srv_initdb', methods=['GET','POST'])
+    @expose("/srv_initdb", methods=["GET","POST"])
     @has_access
     def srv_util(self):
         target=request.form.get("target")
@@ -324,69 +323,69 @@ class UtilitaView(BaseView):
 
 
 class UtilitaEsse3View(BaseView):
-    default_view = 'srv_esse3_home'
+    default_view = "srv_esse3_home"
 
-    @expose('/srv_esse3_home/')
+    @expose("/srv_esse3_home/")
     @has_access
     def srv_esse3_home(self, name=None):
         return render_template("utility_esse3.html", base_template=appbuilder.base_template, appbuilder=appbuilder)
 
-    @expose('/srv_esse3_util', methods=['GET','POST'])
+    @expose("/srv_esse3_util", methods=["GET","POST"])
     @has_access
     def srv_esse3_util(self):
         target=request.form.get("target")
 
         if target == "caricaAnniAccademici":
-            session['anniAccademici']=getAnniAccademici()
+            session["anniAccademici"]=getAnniAccademici()
             return render_template("utility_esse3.html",
                                    base_template=appbuilder.base_template,
                                    appbuilder=appbuilder,
                                    annoAccademicoSelezionato=1000,
-                                   anniAccademici=session['anniAccademici'])
+                                   anniAccademici=session["anniAccademici"])
 
         elif target == "caricaCorsiOffertaFormativa":
             try:
-                anniAccademici=session['anniAccademici']
-                session['corsiInOfferta']=getCorsiInOfferta(request.form.get("anniAccademici"))
+                anniAccademici=session["anniAccademici"]
+                session["corsiInOfferta"]=getCorsiInOfferta(request.form.get("anniAccademici"))
                 return render_template("utility_esse3.html",
                                        base_template=appbuilder.base_template,
                                        appbuilder=appbuilder,
                                        anniAccademici=anniAccademici,
-                                       annoAccademicoSelezionato=request.form.get('anniAccademici'),
-                                       corsiInOfferta=session['corsiInOfferta'])
+                                       annoAccademicoSelezionato=request.form.get("anniAccademici"),
+                                       corsiInOfferta=session["corsiInOfferta"])
             except:
-                flash("Non sono stati caricati gli anni accademici per cui è disponibile un'offerta didattica!",'danger')
+                flash("Non sono stati caricati gli anni accademici per cui è disponibile un'offerta didattica!","danger")
 
         elif target == "caricaDatiCorsi":
             try:
-                anniAccademici=session['anniAccademici']
-                corsiInOfferta=session['corsiInOfferta']
-                corsi=request.form.getlist('corsi')
+                anniAccademici=session["anniAccademici"]
+                corsiInOfferta=session["corsiInOfferta"]
+                corsi=request.form.getlist("corsi")
             except:
-                flash('Bisogna effettuare almeno una selezione nelle precedenti sezioni!', 'warning')
+                flash("Bisogna effettuare almeno una selezione nelle precedenti sezioni!", "warning")
 
             if len(corsi)>0:
-                importDatiEsse3(request.form.get('anniAccademici'),request.form.getlist('corsi'), request.form.get('semestre'),
-                                request.form.get('cbSovrDatiCorsi'),request.form.get('cbSovrDatiAD'), request.form.get('cbSovrDatiDocenti'),
-                                request.form.get('cbSovrDatiOfferta'),request.form.get('cbImportaADObbligatorie'),request.form.get('cbImportaDatiIncompleti'),
-                                request.form.get('moduli'))
+                importDatiEsse3(request.form.get("anniAccademici"),request.form.getlist("corsi"), request.form.get("semestre"),
+                                request.form.get("cbSovrDatiCorsi"),request.form.get("cbSovrDatiAD"), request.form.get("cbSovrDatiDocenti"),
+                                request.form.get("cbSovrDatiOfferta"),request.form.get("cbImportaADObbligatorie"),request.form.get("cbImportaDatiIncompleti"),
+                                request.form.get("moduli"))
             else:
-                flash('Selezionare almeno un corso da importare!', 'warning')
+                flash("Selezionare almeno un corso da importare!", "warning")
 
             return render_template("utility_esse3.html",
                                    base_template=appbuilder.base_template,
                                    appbuilder=appbuilder,
                                    anniAccademici=anniAccademici,
-                                   annoAccademicoSelezionato=request.form.get('anniAccademici'),
+                                   annoAccademicoSelezionato=request.form.get("anniAccademici"),
                                    corsiInOfferta=corsiInOfferta)
 
         return render_template("utility_esse3.html", base_template=appbuilder.base_template, appbuilder=appbuilder)
 
 
 class PreferenzeView(BaseView):
-    default_view = 'prf_home'
+    default_view = "prf_home"
 
-    @expose('/prf_home/', methods=['GET','POST'])
+    @expose("/prf_home/", methods=["GET","POST"])
     @has_access
     def prf_home(self):
         anni_accademici=db.session.query(AnnoAccademico.id, AnnoAccademico.anno, AnnoAccademico.anno_esteso)\
@@ -398,34 +397,34 @@ class PreferenzeView(BaseView):
                                 anni_accademici=anni_accademici,
                                 semestri=semestri)
 
-    @expose('/prf_calc/', methods=['GET','POST'])
+    @expose("/prf_calc/", methods=["GET","POST"])
     @has_access
     def prf_calc(self):
         target=request.form.get("target")
-        vincoli={"chkSessioneUnica":request.form.get('chk_sessione_unica'),
-                 "chkSessioniConsecutive":request.form.get('chk_slot_sessioni_consecutive'),
-                 "chkMaxOre":request.form.get('chk_max_ore'),
-                 "selMaxOre":int(request.form.get('sel_max_ore')),
-                 "chkPreferenzeDocenti":request.form.get('chk_preferenze_docenti'),
+        vincoli={"chkSessioneUnica":request.form.get("chk_sessione_unica"),
+                 "chkSessioniConsecutive":request.form.get("chk_slot_sessioni_consecutive"),
+                 "chkMaxOre":request.form.get("chk_max_ore"),
+                 "selMaxOre":int(request.form.get("sel_max_ore")),
+                 "chkPreferenzeDocenti":request.form.get("chk_preferenze_docenti"),
                  "posizioniFisse":None}
         if target=="genera_orario" :
             algoritmo=AlgoritmoCalcolo()
-            ris=algoritmo.genera_orario(request.form.get('aa'),
-                                    request.form.get('semestre'),
-                                    request.form.get('txt_desc_orario'),
+            ris=algoritmo.genera_orario(request.form.get("aa"),
+                                    request.form.get("semestre"),
+                                    request.form.get("txt_desc_orario"),
                                     True,
                                     vincoli)
-            if (ris) == 'Optimal':
-                flash('Orario correttamente generato sulla base dei vincoli impostati', 'success')
+            if (ris) == "Optimal":
+                flash("Orario correttamente generato sulla base dei vincoli impostati", "success")
             else:
-                flash('Orario non generabile nel rispetto dei vincoli impostati', 'danger')
-        return redirect(url_for('PreferenzeView.prf_home'));
+                flash("Orario non generabile nel rispetto dei vincoli impostati", "danger")
+        return redirect(url_for("PreferenzeView.prf_home"));
 
 
 class SchemaSettimanaleView(BaseView):
-    default_view = 'wsk_home'
+    default_view = "wsk_home"
 
-    @expose('/wsk_home/')
+    @expose("/wsk_home/")
     @has_access
     def wsk_home(self):
         slot=db.session.query(Slot).all()
@@ -438,9 +437,9 @@ class SchemaSettimanaleView(BaseView):
 
 
 class CalendarioView(BaseView):
-    default_view = 'cld_home'
+    default_view = "cld_home"
 
-    @expose('/cld_home/')
+    @expose("/cld_home/")
     @has_access
     def cld_home(self):
         corsi = db.session.query(Orario.corso_id, Orario.codice_corso, CorsoDiStudio.descrizione) \
@@ -469,8 +468,8 @@ class CalendarioView(BaseView):
             cur = c.data_inizio
             end = c.data_fine + timedelta(days=1)
             while (cur<end):
-                if cur.strftime('%Y/%m/%d') not in vChiusure:
-                    vChiusure.append(cur.strftime('%Y/%m/%d'))
+                if cur.strftime("%Y/%m/%d") not in vChiusure:
+                    vChiusure.append(cur.strftime("%Y/%m/%d"))
                 cur = cur + timedelta(days=1)
 
         return render_template("calendar.html",
@@ -481,7 +480,7 @@ class CalendarioView(BaseView):
                                orario=vOrario,
                                chiusure=vChiusure)
 
-    @expose('/cld_ver/', methods=['POST'])
+    @expose("/cld_ver/", methods=["POST"])
     @has_access
     def cld_ver(self):
         try:
@@ -504,7 +503,7 @@ class CalendarioView(BaseView):
                                         "Verifica Orario",
                                         False,
                                         vincoli)
-            if ris=='Optimal':
+            if ris=="Optimal":
                 data={"status": "Orario compatibile con i vincoli impostati"}
             else:
                 data={"status": "Orario non compatibile con i vincoli impostati"}
@@ -513,7 +512,7 @@ class CalendarioView(BaseView):
             data = {"status": "Verifica fallita"}
             return data, 200
 
-    @expose('/cld_mod/', methods=['POST'])
+    @expose("/cld_mod/", methods=["POST"])
     @has_access
     def cld_mod(self):
         dati=json.loads(request.data)
@@ -545,7 +544,7 @@ class CalendarioView(BaseView):
                 "chiusure": session["chiusure"]}
         return data, 200
 
-    @expose('/cld_upd/', methods=['POST'])
+    @expose("/cld_upd/", methods=["POST"])
     @has_access
     def cld_upd(self):
         vOrario = []
@@ -557,7 +556,7 @@ class CalendarioView(BaseView):
                 "chiusure": session["chiusure"]}
         return data, 200
 
-    @expose('/cld_room/', methods=['POST'])
+    @expose("/cld_room/", methods=["POST"])
     @has_access
     def cld_room(self):
         dati = json.loads(request.data)

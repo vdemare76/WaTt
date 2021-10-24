@@ -153,6 +153,7 @@ class OrarioTestata(Model):
     anno_accademico=relationship("AnnoAccademico")
     semestre=Column(Integer)
     data_creazione=Column(DateTime)
+    data_ultima_modifica=Column(DateTime)
     vincolo_sessione_unica=Column(Integer)
     vincolo_sessioni_consecutive=Column(Integer)
     vincolo_max_slot=Column(Integer)

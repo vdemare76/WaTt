@@ -345,30 +345,31 @@ class AlgoritmoCalcolo(TemplateCalcoloOrario):
 
     def registra_orario(self, model, dati, str_aux, aa, semestre, desc_orario):
         skd=str_aux.get_schedulazione()  
-        if (pl.LpStatus[model.status]) == 'Optimal':
+        if (pl.LpStatus[model.status]) == "Optimal":
             try:
-                tz = pytz.timezone('Europe/Rome')
+                tz = pytz.timezone("Europe/Rome")
 
                 vincolo_sessione_unica=0
-                if request.form.get('chk_sessione_unica')=='1':
+                if request.form.get("chk_sessione_unica")=="1":
                     vincolo_sessione_unica=1
 
                 vincolo_sessioni_consecutive=0
-                if request.form.get('chk_slot_sessioni_consecutive') == '1':
+                if request.form.get("chk_slot_sessioni_consecutive") == "1":
                     vincolo_sessioni_consecutive=1
 
                 vincolo_max_slot=0
-                if request.form.get('chk_max_ore') == '1':
-                    vincolo_max_slot=request.form.get('sel_max_ore')
+                if request.form.get("chk_max_ore") == "1":
+                    vincolo_max_slot=request.form.get("sel_max_ore")
 
                 vincolo_logistica_docenti=0
-                if request.form.get('chk_preferenze_docenti') == '1':
+                if request.form.get("chk_preferenze_docenti") == "1":
                     vincolo_logistica_docenti=1
 
                 row_test = OrarioTestata(descrizione = desc_orario,
                                          anno_accademico_id = aa,
                                          semestre = semestre,
                                          data_creazione = datetime.datetime.now(tz),
+                                         data_ultima_modifica = datetime.datetime.now(tz),
                                          vincolo_sessione_unica = vincolo_sessione_unica,
                                          vincolo_sessioni_consecutive = vincolo_sessioni_consecutive,
                                          vincolo_max_slot = vincolo_max_slot,
@@ -394,7 +395,7 @@ class AlgoritmoCalcolo(TemplateCalcoloOrario):
                                         db.session.add(row_dett)
 
                 db.session.commit()
-                flash('Orario correttamente registrato nel db','success')
+                flash("Orario correttamente registrato nel db","success")
             except SQLAlchemyError:
                 db.session.rollback()
                 flash("Errore di registrazione dell'orario generato nel db","danger")
