@@ -503,10 +503,8 @@ class CalendarioView(BaseView):
                                         "Verifica Orario",
                                         False,
                                         vincoli)
-            if ris=="Optimal":
-                data={"status": "Orario compatibile con i vincoli impostati"}
-            else:
-                data={"status": "Orario non compatibile con i vincoli impostati"}
+            data={"status": ris}
+
             return data, 200
         except:
             data = {"status": "Verifica fallita"}
@@ -555,6 +553,11 @@ class CalendarioView(BaseView):
         data = {"orario": vOrario,
                 "chiusure": session["chiusure"]}
         return data, 200
+
+    @expose("/cld_app/", methods=["POST"])
+    @has_access
+    def cld_app(self):
+        None
 
     @expose("/cld_room/", methods=["POST"])
     @has_access

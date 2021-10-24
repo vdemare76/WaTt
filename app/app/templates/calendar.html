@@ -133,6 +133,12 @@
                 verificaOrario(editabile);
               }
             },
+            applyButton: {
+              text: "Applica modifiche orario",
+              click: function() {
+                applicaModificaOrario(editabile);
+              }
+            },
             jsonButton: {
               text: "Download Json",
               click: function() {
@@ -153,7 +159,7 @@
             }
           },
           headerToolbar: {
-            left: "verifyButton",
+            left: "verifyButton applyButton",
             center: "title",
           },
           footerToolbar: {
@@ -297,7 +303,13 @@
           url: "/calendarioview/cld_ver/",
           success: function (ris) {
             $("#loader").css({"display": "none"});
-            alert(ris["status"]);
+            $("#info-title").html("Risultato della verifica");
+            if (ris["status"]=="Optimal")
+              $("#info-msg").html("Orario compatibile con i vincoli impostati");
+            else
+              $("#info-msg").html("Orario NON compatibile con i vincoli impostati");
+            $(document).on("click", "#modal-info-ok", function () {});
+            $("#modal-info-w").modal("show");
           }
         });
       }
@@ -316,12 +328,10 @@
       $("#data_fine_lezioni").val(today.getFullYear() + "-" + ("0" + (today.getMonth() + 1)).slice(-2) + "-" + ("0" + today.getDate()).slice(-2));
       $("#chk_modifica").prop("checked", false);
       $("#chk_modifica").click(function() {
-        if($(this).is(":checked")) {
-          imposta_intervallo_modifica();
-        }
-        else {
-          imposta_intervallo_iniziale();
-        }
+        if($(this).is(":checked"))
+          impostaIntervalloModifica();
+        else
+          impostaIntervalloIniziale();
       });
     }
 
@@ -367,7 +377,7 @@
       });
     }
 
-    function imposta_intervallo_modifica() {
+    function impostaIntervalloModifica() {
       let today = new Date(), anno=today.getFullYear(), mese=today.getMonth();
       primaDomenica=1;
       while (dy = new Date(anno, mese, primaDomenica).getDay() != 0)
@@ -380,12 +390,24 @@
       carica_orario(true);
     }
 
-    function imposta_intervallo_iniziale() {
-      let today = new Date();
+    function impostaIntervalloIniziale() {
+      let now = new Date();
       $("#data_avvio_lezioni").val(today.getFullYear() + "-" + ("0" + (today.getMonth() + 1)).slice(-2) + "-" + ("0" + today.getDate()).slice(-2));
       $("#data_fine_lezioni").val(today.getFullYear() + "-" + ("0" + (today.getMonth() + 1)).slice(-2) + "-" + ("0" + today.getDate()).slice(-2));
       $("#panel-periodo").css({"display":"block"});
       carica_orario(false);
+    }
+
+    function applicaModificaOrario(editabile) {
+      $.ajax({
+        type: "POST",
+        contentType: "application/json",
+        dataType: "json",
+        url: "/calendarioview/cld_app/",
+        success: function (ris) {
+          alert("Modifiche applicate!")
+        }
+      });
     }
 
 </script>
