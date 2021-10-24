@@ -13,15 +13,15 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.2/js/bootstrap-select.min.js"></script>
 
 <div class="container">
-    <form method="post" id="form_post" method="post" action="{{url_for('UtilitaEsse3View.srv_esse3_util')}}">
+    <form method="post" id="form_post" method="post" action="{{url_for("UtilitaEsse3View.srv_esse3_util")}}">
         <div id="loader" class="loader" style="display:none"></div>
         <p class="bg-primary" align="center">Carica i dati dalla procedura di gestione delle carriere studenti (Esse3)</p><br>
         <div class="panel panel-primary">
-          <div class="panel-heading">Carica gli anni accademici per cui risulta disponibile un'offerta didattica</div>
+          <div class="panel-heading">Carica gli anni accademici per cui risulta disponibile un"offerta didattica</div>
           <div class="panel-body">
             <button type="button" class="btn btn-info" onclick="caricaAnniAccademici()">Carica</button>
             <select name="anniAccademici" id="anniAccademici">
-              $('#anniAccademici).empty()
+              $("#anniAccademici).empty()
               {% for a in anniAccademici %}
                 {% if a == annoAccademicoSelezionato|int %}
                   <option selected="selected" value={{a}}>{{a}}/{{a+1}}</option>
@@ -33,7 +33,7 @@
           </div>
         </div>
         <div class="panel panel-primary">
-          <div class="panel-heading">Carica i corsi in offerta formativa per l'anno accademico selezionato</div>
+          <div class="panel-heading">Carica i corsi in offerta formativa per l"anno accademico selezionato</div>
           <div class="panel-body">
             <button type="button" class="btn btn-info" onclick="caricaCorsiInOfferta()">Carica</button>
             <select name="corsi" id="corsi" class="selectpicker"  style="width: 1050px;" data-none-selected-text="Nessun corso selezionato" data-live-search="true">
@@ -58,7 +58,7 @@
                   <label for = "cbImportaADObbligatorie"> Importa le sole attività didattiche obbligatorie </label>
                   <br>
                   <input type="checkbox" name="cbImportaDatiIncompleti" id="cbImportaDatiIncompleti" value="1">
-                  <label for = "cbImportaDatiIncompleti"> Importa anche le eventuali attività didattiche per le quali non è possibile recuperare anno di corso e semestre dall'offerta </label>
+                  <label for = "cbImportaDatiIncompleti"> Importa anche le eventuali attività didattiche per le quali non è possibile recuperare anno di corso e semestre dall"offerta </label>
                 </div>
             </div>
             <div class="panel panel-info">
@@ -83,8 +83,8 @@
                 <label for = "cbSovrDatiDocenti"> Aggiorna i dati dei docenti già presenti in DB </label>
                 <br>
                 <input type="checkbox" name="cbSovrDatiOfferta" id="cbSovrDatiOfferta" value="1">
-                <label for = "cbSovrDatiOfferta"> Sostuisci l'offerta formativa per i corsi selezionati eventualmente già presente in DB</label>
-                <label>(Lasciando non selezionata questa opzione corsi selezionati eventualmente già presenti in DB per l'anno di offerta scelto non saranno )</label>
+                <label for = "cbSovrDatiOfferta"> Sostuisci l"offerta formativa per i corsi selezionati eventualmente già presente in DB</label>
+                <label>(Lasciando non selezionata questa opzione corsi selezionati eventualmente già presenti in DB per l"anno di offerta scelto non saranno )</label>
             </div>
           </div>
         </div>
@@ -99,43 +99,43 @@
 
 <script>
     function inizializzaDB() {
-        $('#title').html('Richiesta di conferma');
-        $('#msg').html('Si intende realmente inizializzare il database con i dati di test?');
-        $(document).on('click', '#modal-confirm-ok', function () {
-            $('#target').val('inizializzaDB');
-            $('#loader').css({'display':'block'});
-            $('#form_post').submit();
+        $("#title").html("Richiesta di conferma");
+        $("#msg").html("Si intende realmente inizializzare il database con i dati di test?");
+        $(document).on("click", "#modal-confirm-ok", function () {
+            $("#target").val("inizializzaDB");
+            $("#loader").css({"display":"block"});
+            $("#form_post").submit();
         });
-        $('#modal-confirm-w').modal('show');
+        $("#modal-confirm-w").modal("show");
     }
 
     function svuotaDB() {
-        $('#title').html('Richiesta di conferma');
-        $('#msg').html('Si intende realmente svuotare il database?');
-        $(document).on('click', '#modal-confirm-ok', function () {
-            $('#target').val('svuotaDB');
-            $('#form_post').submit();
+        $("#title").html("Richiesta di conferma");
+        $("#msg").html("Si intende realmente svuotare il database?");
+        $(document).on("click", "#modal-confirm-ok", function () {
+            $("#target").val("svuotaDB");
+            $("#form_post").submit();
         });
-        $('#modal-confirm-w').modal('show');
+        $("#modal-confirm-w").modal("show");
     }
 
     function caricaAnniAccademici() {
-        $('#target').val('caricaAnniAccademici');
-        $('#corsi').empty();
-        $('#loader').css({'display':'block'});
-        $('#form_post').submit();
+        $("#target").val("caricaAnniAccademici");
+        $("#corsi").empty();
+        $("#loader").css({"display":"block"});
+        $("#form_post").submit();
     }
 
     function caricaCorsiInOfferta() {
-        $('#target').val('caricaCorsiOffertaFormativa');
-        $('#loader').css({'display':'block'});
-        $('#form_post').submit();
+        $("#target").val("caricaCorsiOffertaFormativa");
+        $("#loader").css({"display":"block"});
+        $("#form_post").submit();
     }
 
     function caricaDatiCorsi() {
-        $('#target').val('caricaDatiCorsi');
-        $('#loader').css({'display':'block'});
-        $('#form_post').submit();
+        $("#target").val("caricaDatiCorsi");
+        $("#loader").css({"display":"block"});
+        $("#form_post").submit();
     }
 </script>
 

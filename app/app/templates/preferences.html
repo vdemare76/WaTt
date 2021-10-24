@@ -13,12 +13,12 @@
 
 	<div class="container">
 	  <h2>Preferenze di calcolo</h2>
-		<form id="form_post" method="post" action="{{url_for('PreferenzeView.prf_calc')}}">
+		<form id="form_post" method="post" action="{{url_for("PreferenzeView.prf_calc")}}">
 			<div>
 				<div id="loader" class="loader" style="display:none"></div>
 				<br>
 				<div class="panel panel-info">
-					<div class="panel-heading">Scegli l'anno accademico ed il semestre di riferimento</div>
+					<div class="panel-heading">Scegli l"anno accademico ed il semestre di riferimento</div>
 					<div class="panel-body">
 					  Anno Accademico
 					  <select name="aa" id="aa_select">
@@ -42,8 +42,8 @@
 					<ul>
 						<li>Non ci possono essere moduli insegnati dagli stessi docenti sovrapposti negli stessi slot orari</li>
 						<li>Non ci possono essere moduli dello stesso anno di corso sovrapposti negli stessi slot orari</li>
-						<li>L'aula assegnata al corso deve avere una capienza compatibile con il numero massimo di studenti per un dato anno di corso</li>
-						<li>L'aula assegnata al corso deve essere compatibile con il tipo di aula associata al modulo</li>
+						<li>L"aula assegnata al corso deve avere una capienza compatibile con il numero massimo di studenti per un dato anno di corso</li>
+						<li>L"aula assegnata al corso deve essere compatibile con il tipo di aula associata al modulo</li>
 					</ul>
 				  </div>
 				</div>
@@ -92,18 +92,16 @@
 	
 	<script>
 		function calcola_orario() {
-			if ($('#txt_desc_orario').val().length > 0) {
-				$('#loader').css({'display':'block'});
-				$('#target').val('genera_orario');
-				$('#form_post').submit();				
+			if ($("#txt_desc_orario").val().length > 0) {
+				$("#loader").css({"display":"block"});
+				$("#target").val("genera_orario");
+				$("#form_post").submit();
 			}
 			else {
-				$('#info-title').html('Completare i dati');
-				$('#info-msg').html('E\' necessario specificare una descrizione per lo schema orario che si intende creare');
-				$(document).on('click', '#modal-info-ok', function () {
-					
-				});
-				$('#modal-info-w').modal('show');
+				$("#info-title").html("Completare i dati");
+				$("#info-msg").html("E\" necessario specificare una descrizione per lo schema orario che si intende creare");
+				$(document).on("click", "#modal-info-ok", function () {});
+				$("#modal-info-w").modal("show");
 			}
 		}
 	</script>

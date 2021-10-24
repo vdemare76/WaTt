@@ -2,12 +2,13 @@
 
 {% block content %}	
 	{% include "confirm_msg.html" %}
+    {% include "info_msg.html" %}
     {% include "room_cal.html" %}
 
 <!DOCTYPE html>
-<html lang='en'>
+<html lang="en">
   <head>
-    <meta charset='utf-8' />
+    <meta charset="utf-8" />
     <script src="/static/ics.min.js"></script>
     <script src="/static/FileSaver.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.7.2/main.min.js"></script>
@@ -20,7 +21,7 @@
     <p class="bg-primary" align="center">PARAMETRI PER LA GENERAZIONE DEL CALENDARIO</p><br>
     <div>
       <div class="panel panel-info">
-        <div class="panel-heading">Scegli il corso e l'anno di corso</div>
+        <div class="panel-heading">Scegli il corso e l"anno di corso</div>
         <div class="panel-body">
           <select type="date" id="corso_id" name="corso_id" onchange="caricaAnni({{anni_corso}})">
             {% for c in corsi %}
@@ -30,7 +31,7 @@
           <select type="date" id="anno_corso" name="anno_corso"></select>
         </div>
       </div><br>
-      <div class="panel panel-info">
+      <div id="panel-periodo" class="panel panel-info">
         <div class="panel-heading">Imposta la data di avvio e fine delle lezioni</div>
         <div class="panel-body">
           <input type="date" id="data_avvio_lezioni" data-date-format="DD MM YYYY" onchange="aggiorna_data_fine({{chiusure}})">
@@ -46,7 +47,7 @@
     <div id="loader" class="loader" style="display:none"></div>
     <div>
       <p class="bg-primary" align="center">CALENDARIO</p><br>
-      <div id='calendar'></div><br>
+      <div id="calendar"></div><br>
     </div>
   </body>
 
@@ -55,16 +56,16 @@
 <script>
     function formatDate(date) {
         let d = new Date(date),
-            month = '' + (d.getMonth() + 1),
-            day = '' + d.getDate(),
+            month = "" + (d.getMonth() + 1),
+            day = "" + d.getDate(),
             year = d.getFullYear();
 
         if (month.length < 2)
-            month = '0' + month;
+            month = "0" + month;
         if (day.length < 2)
-            day = '0' + day;
+            day = "0" + day;
 
-        return [year, month, day].join('/');
+        return [year, month, day].join("/");
     }
 
     function genera_calendario(arrOrario,arrChiusure,editabile) {
@@ -81,12 +82,12 @@
       let adc=$("#anno_corso option:selected").val();
       let orLen=arrOrario.length;
 
-      let calendarEl = document.getElementById('calendar');
+      let calendarEl = document.getElementById("calendar");
       let calendar = new FullCalendar.Calendar(calendarEl, {
-          //headerToolbar: { center: 'dayGridMonth,timeGridWeek' },
-          locale:'itLocale',
+          //headerToolbar: { center: "dayGridMonth,timeGridWeek" },
+          locale:"itLocale",
           initialDate:data_avvio,
-          initialView:'timeGridWeek',
+          initialView:"timeGridWeek",
           allDaySlot: false,
           displayEventTime:false,
           editable:editabile,
@@ -98,11 +99,11 @@
           eventDidMount: function(evento) {
             $(evento.el).popover({
               title: evento.event.title,
-              placement: 'top',
-              trigger: 'hover',
+              placement: "top",
+              trigger: "hover",
               content: evento.event.extendedProps.descrizione,
-              background:'#FFF000',
-              container: 'body',
+              background:"#FFF000",
+              container: "body",
               html: true
             });
           },
@@ -117,29 +118,29 @@
           },
           buttonText:
           {
-            today:'oggi',
-            month:'mese',
-            week:'settimana',
-            day:'giorno',
-            list:'lista',
-            prev:'prec',
-            next:'succ'
+            today:"oggi",
+            month:"mese",
+            week:"settimana",
+            day:"giorno",
+            list:"lista",
+            prev:"prec",
+            next:"succ"
           },
           customButtons: {
             verifyButton: {
-              text: 'Verifica vincoli',
+              text: "Verifica vincoli",
               click: function() {
-                verificaOrario();
+                verificaOrario(editabile);
               }
             },
             jsonButton: {
-              text: 'Download Json',
+              text: "Download Json",
               click: function() {
-                download(JSON.stringify(Object.assign({}, calendar.getEvents())), 'calendar.json', 'application/json');
+                download(JSON.stringify(Object.assign({}, calendar.getEvents())), "calendar.json", "application/json");
               }
             },
             iCalButton: {
-              text: 'Download iCal',
+              text: "Download iCal",
               click: function() {
                 let evs = calendar.getEvents();
                 let cal = ics();
@@ -147,16 +148,16 @@
                 {
                   cal.addEvent(evs[e].title, evs[e].title, evs[e].title, evs[e].start, evs[e].end);
                 }
-                cal.download('cal');
+                cal.download("cal");
               }
             }
           },
           headerToolbar: {
-            left: 'verifyButton',
-            center: 'title',
+            left: "verifyButton",
+            center: "title",
           },
           footerToolbar: {
-            right: 'jsonButton iCalButton',
+            right: "jsonButton iCalButton",
           }
       });
 
@@ -171,9 +172,9 @@
             end: data_cur.setHours("19"),
             displayEventTime: false,
             editable: false,
-            color: '#FFCCCC',
-            textColor: '#000000',
-            descrizione: 'Chiusura',
+            color: "#FFCCCC",
+            textColor: "#000000",
+            descrizione: "Chiusura",
             numerosita: 0,
             giorno_id: -1,
             slot_id: -1,
@@ -188,9 +189,9 @@
                               end:data_cur.setHours("19"),
                               displayEventTime:false,
                               editable:false,
-                              color:'#DDDDDD',
-                              textColor:'#000000',
-                              descrizione:'Lezioni non previste',
+                              color:"#DDDDDD",
+                              textColor:"#000000",
+                              descrizione:"Lezioni non previste",
                               numerosita: 0,
                               giorno_id: -1,
                               slot_id: -1,
@@ -214,10 +215,10 @@
                   start: data_cur.setHours(ora_inizio),
                   end: data_cur.setHours(ora_fine),
                   color: arrOrario[i].colore_attivita,
-                  borderColor: '#000000',
-                  textColor: '#FFFFFF',
-                  descrizione: '<b>' + arrOrario[i].descrizione_attivita + '</b><br>'
-                          + '<i>' + arrOrario[i].cognome_docente + ' ' + arrOrario[i].nome_docente + '</i>',
+                  borderColor: "#000000",
+                  textColor: "#FFFFFF",
+                  descrizione: "<b>" + arrOrario[i].descrizione_attivita + "</b><br>"
+                          + "<i>" + arrOrario[i].cognome_docente + " " + arrOrario[i].nome_docente + "</i>",
                   numerosita: arrOrario[i].numerosita_modulo,
                   giorno_id: arrOrario[i].giorno_id,
                   slot_id: arrOrario[i].slot_id,
@@ -234,9 +235,9 @@
               end:data_cur.setHours("14"),
               displayEventTime:false,
               editable:false,
-              color:'#DDDDDD',
-              textColor:'#000000',
-              descrizione:'Pausa lezioni',
+              color:"#DDDDDD",
+              textColor:"#000000",
+              descrizione:"Pausa lezioni",
               numerosita: 0,
               giorno_id: -1,
               slot_id: -1,
@@ -258,12 +259,12 @@
     }
 
     function caricaAnni(arrAnni) {
-      let idc=$('#corso_id option:selected').val();
+      let idc=$("#corso_id option:selected").val();
       let anLen=arrAnni.length;
-      $('#anno_corso').empty();
+      $("#anno_corso").empty();
       for (let i=0; i<anLen; i++) {
           if (arrAnni[i].corso_id==idc) {
-            $('#anno_corso').append(new Option(arrAnni[i].anno_corso, arrAnni[i].anno_corso));
+            $("#anno_corso").append(new Option(arrAnni[i].anno_corso, arrAnni[i].anno_corso));
           }
       }
     }
@@ -274,11 +275,11 @@
       else
         newAula=evento.extendedProps.aula_id;
       $.ajax({
-        type: 'POST',
-        contentType: 'application/json',
+        type: "POST",
+        contentType: "application/json",
         data: JSON.stringify({evento: evento, giorno: giorno, slot: slot, aula:newAula}),
-        dataType: 'json',
-        url: '/calendarioview/cld_mod/',
+        dataType: "json",
+        url: "/calendarioview/cld_mod/",
         success: function (ris) {
           genera_calendario(ris["orario"], ris["chiusure"], true);
           $(".popover").remove();
@@ -286,26 +287,34 @@
       });
     }
 
-    function verificaOrario() {
-      $('#loader').css({'display':'block'});
-      $.ajax({
-        type: 'POST',
-        contentType: 'application/json',
-        dataType: 'json',
-        url: '/calendarioview/cld_ver/',
-        success: function (ris) {
-          $('#loader').css({'display':'none'});
-          alert(ris["status"]);
-        }
-      });
+    function verificaOrario(editabile) {
+      if (editabile) {
+        $("#loader").css({"display": "block"});
+        $.ajax({
+          type: "POST",
+          contentType: "application/json",
+          dataType: "json",
+          url: "/calendarioview/cld_ver/",
+          success: function (ris) {
+            $("#loader").css({"display": "none"});
+            alert(ris["status"]);
+          }
+        });
+      }
+      else {
+        $("#info-title").html("Informazione");
+        $("#info-msg").html("Questa funzione è disponibile solo nella modalità di modifica dell'orario settimanale");
+        $(document).on("click", "#modal-info-ok", function () {});
+        $("#modal-info-w").modal("show");
+      }
     }
 
     function inizializza(arrAnni) {
       caricaAnni(arrAnni);
       let today = new Date();
-      $("#data_avvio_lezioni").val(today.getFullYear() + '-' + ('0' + (today.getMonth() + 1)).slice(-2) + '-' + ('0' + today.getDate()).slice(-2));
-      $("#data_fine_lezioni").val(today.getFullYear() + '-' + ('0' + (today.getMonth() + 1)).slice(-2) + '-' + ('0' + today.getDate()).slice(-2));
-      $("#chk_modifica").prop('checked', false);
+      $("#data_avvio_lezioni").val(today.getFullYear() + "-" + ("0" + (today.getMonth() + 1)).slice(-2) + "-" + ("0" + today.getDate()).slice(-2));
+      $("#data_fine_lezioni").val(today.getFullYear() + "-" + ("0" + (today.getMonth() + 1)).slice(-2) + "-" + ("0" + today.getDate()).slice(-2));
+      $("#chk_modifica").prop("checked", false);
       $("#chk_modifica").click(function() {
         if($(this).is(":checked")) {
           imposta_intervallo_modifica();
@@ -322,10 +331,10 @@
 
     function carica_orario(editabile) {
       $.ajax({
-        type: 'POST',
-        contentType: 'application/json',
-        dataType: 'json',
-        url: '/calendarioview/cld_upd/',
+        type: "POST",
+        contentType: "application/json",
+        dataType: "json",
+        url: "/calendarioview/cld_upd/",
         success: function (ris) {
           genera_calendario(ris["orario"],ris["chiusure"],editabile);
           $(".popover").remove();
@@ -335,23 +344,23 @@
 
     function gestione_cambio_aula(evento) {
       $.ajax({
-        type: 'POST',
-        contentType: 'application/json',
+        type: "POST",
+        contentType: "application/json",
         data: JSON.stringify({aula: evento.event.extendedProps.aula_id,
                               numerosita: evento.event.extendedProps.numerosita,
                               giorno: evento.event.extendedProps.giorno_id,
                               slot: evento.event.extendedProps.slot_id}),
-        dataType: 'json',
-        url: '/calendarioview/cld_room/',
+        dataType: "json",
+        url: "/calendarioview/cld_room/",
         success: function(ris) {
           aule=ris["aule"];
-          $('#room-title').html("Modifica aula");
-          $('#aulaSel').empty();
+          $("#room-title").html("Modifica aula");
+          $("#aulaSel").empty();
           for (a in aule) {
-            $('#aulaSel').append(new Option(aule[a].descrizione+" ("+aule[a].capienza+")",aule[a].id));
+            $("#aulaSel").append(new Option(aule[a].descrizione+" ("+aule[a].capienza+")",aule[a].id));
           }
-          $('#modal-room-w').modal();
-          $(document).on('click', '#modal-room-ok', function () {
+          $("#modal-room-w").modal();
+          $(document).on("click", "#modal-room-ok", function () {
             modificaEventoInOrario(evento.event, evento.event.start.getDay(), evento.event.start.getHours(), parseInt($("#aulaSel option:selected").val()));
           });
         }
@@ -365,15 +374,17 @@
         primaDomenica++;
       giorno_inizio = new Date(anno, mese, primaDomenica).getDate();
       giorno_fine = new Date(anno, mese, primaDomenica+7).getDate();
-      $("#data_avvio_lezioni").val(anno + '-' + ('0' + (mese + 1)).slice(-2) + '-' + ('0' + giorno_inizio).slice(-2));
-      $("#data_fine_lezioni").val(anno + '-' + ('0' + (mese + 1)).slice(-2) + '-' + ('0' + giorno_fine).slice(-2));
+      $("#data_avvio_lezioni").val(anno + "-" + ("0" + (mese + 1)).slice(-2) + "-" + ("0" + giorno_inizio).slice(-2));
+      $("#data_fine_lezioni").val(anno + "-" + ("0" + (mese + 1)).slice(-2) + "-" + ("0" + giorno_fine).slice(-2));
+      $("#panel-periodo").css({"display":"none"});
       carica_orario(true);
     }
 
     function imposta_intervallo_iniziale() {
       let today = new Date();
-      $("#data_avvio_lezioni").val(today.getFullYear() + '-' + ('0' + (today.getMonth() + 1)).slice(-2) + '-' + ('0' + today.getDate()).slice(-2));
-      $("#data_fine_lezioni").val(today.getFullYear() + '-' + ('0' + (today.getMonth() + 1)).slice(-2) + '-' + ('0' + today.getDate()).slice(-2));
+      $("#data_avvio_lezioni").val(today.getFullYear() + "-" + ("0" + (today.getMonth() + 1)).slice(-2) + "-" + ("0" + today.getDate()).slice(-2));
+      $("#data_fine_lezioni").val(today.getFullYear() + "-" + ("0" + (today.getMonth() + 1)).slice(-2) + "-" + ("0" + today.getDate()).slice(-2));
+      $("#panel-periodo").css({"display":"block"});
       carica_orario(false);
     }
 

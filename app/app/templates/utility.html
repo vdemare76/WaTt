@@ -13,9 +13,9 @@
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.2/js/bootstrap-select.min.js"></script>
 
     <div class="container">
-		<form method="post" id="form_post" method="post" action="{{url_for('UtilitaView.srv_util')}}">
+		<form method="post" id="form_post" method="post" action="{{url_for("UtilitaView.srv_util")}}">
 			<div id="loader" class="loader" style="display:none"></div>
-			<p class="bg-primary" align="center">FUNZIONI DI UTILITA'</p><br>
+			<p class="bg-primary" align="center">FUNZIONI DI UTILITA"</p><br>
 
         <div class="panel panel-primary">
           <div class="panel-heading">Svuota il DB</div>
@@ -24,7 +24,7 @@
           </div>
         </div>
         <div class="panel panel-primary">
-          <div class="panel-heading">Carica dati di base per l'import da Esse3</div>
+          <div class="panel-heading">Carica dati di base per l"import da Esse3</div>
           <div class="panel-body">
 			  <button type="button" class="btn btn-info" onclick="caricaDatiBase()">Carica</button>
           </div>
@@ -47,46 +47,46 @@
 	
 	<script>
 	function svuotaDB() {
-		$('#title').html('Richiesta di conferma');
-		$('#msg').html('Si intende realmente svuotare il database?');
-		$(document).on('click', '#modal-confirm-ok', function () {
-			$('#target').val('svuotaDB');
-			$('#form_post').submit();
+		$("#title").html("Richiesta di conferma");
+		$("#msg").html("Si intende realmente svuotare il database?");
+		$(document).on("click", "#modal-confirm-ok", function () {
+			$("#target").val("svuotaDB");
+			$("#form_post").submit();
         });
-		$('#modal-confirm-w').modal('show');
+		$("#modal-confirm-w").modal("show");
 	}
 
 	function caricaDatiBase() {
-		$('#title').html('Richiesta di conferma');
-		$('#msg').html("Si intende realmente inizializzare il database con i dati di base per poi importare i dati da Esse3?");
-		$(document).on('click', '#modal-confirm-ok', function () {
-			$('#target').val('caricaDatiBase');
-			$('#loader').css({'display':'block'});
-			$('#form_post').submit();
+		$("#title").html("Richiesta di conferma");
+		$("#msg").html("Si intende realmente inizializzare il database con i dati di base per poi importare i dati da Esse3?");
+		$(document).on("click", "#modal-confirm-ok", function () {
+			$("#target").val("caricaDatiBase");
+			$("#loader").css({"display":"block"});
+			$("#form_post").submit();
         });
-		$('#modal-confirm-w').modal('show');
+		$("#modal-confirm-w").modal("show");
 	}
 
 	function caricaDatiTest7Cds1Mod() {
-		$('#title').html('Richiesta di conferma');
-		$('#msg').html("Si intende realmente inizializzare il database con i dati di test con 7 cds e 1 modulo per attività didattica offerta?");
-		$(document).on('click', '#modal-confirm-ok', function () {
-			$('#target').val('carica7Cds1Mod');
-			$('#loader').css({'display':'block'});
-			$('#form_post').submit();
+		$("#title").html("Richiesta di conferma");
+		$("#msg").html("Si intende realmente inizializzare il database con i dati di test con 7 cds e 1 modulo per attività didattica offerta?");
+		$(document).on("click", "#modal-confirm-ok", function () {
+			$("#target").val("carica7Cds1Mod");
+			$("#loader").css({"display":"block"});
+			$("#form_post").submit();
         });
-		$('#modal-confirm-w').modal('show');
+		$("#modal-confirm-w").modal("show");
 	}
 
 	function caricaDatiTest7CdsNMod() {
-		$('#title').html('Richiesta di conferma');
-		$('#msg').html("Si intende realmente inizializzare il database con i dati di test con 7 cds e moduli multipli per attività didattica offerta?");
-		$(document).on('click', '#modal-confirm-ok', function () {
-			$('#target').val('carica7CdsNMod');
-			$('#loader').css({'display':'block'});
-			$('#form_post').submit();
+		$("#title").html("Richiesta di conferma");
+		$("#msg").html("Si intende realmente inizializzare il database con i dati di test con 7 cds e moduli multipli per attività didattica offerta?");
+		$(document).on("click", "#modal-confirm-ok", function () {
+			$("#target").val("carica7CdsNMod");
+			$("#loader").css({"display":"block"});
+			$("#form_post").submit();
         });
-		$('#modal-confirm-w').modal('show');
+		$("#modal-confirm-w").modal("show");
 	}
 
 	</script>

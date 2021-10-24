@@ -4,15 +4,15 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h4 class="modal-title">
-                <p id="info-title" {% if tipo == 'success' %} style = "color:green"
-                   			{% elif tipo == 'error' %} style = "color:red"
+                <p id="info-title" {% if tipo == "success" %} style = "color:green"
+                   			{% elif tipo == "error" %} style = "color:red"
                             {% else %} style = "color:black"
                    			{% endif %}></p>
                 </h4>
             </div>
             <div class="modal-body">
                 <div>
-                	<h4 class="modal-text" id="info-msg"</h4>
+                	<h4 class="modal-text" id="info-msg"></h4>
                 </div>
             </div>
             <div class="modal-footer">
@@ -25,12 +25,12 @@
 <script>
 	{% if show %}
 		$(document).ready(function(){
-			$('#modal-alert-w').modal('show');
+			$("#modal-alert-w").modal("show");
 	    });
 	{% endif %}
 	
 	function redirect() {
-        window.location.href='{{ return_page }}';
+        //window.location.href="{{ return_page }}";
     }
 </script>
 {% endblock %}
