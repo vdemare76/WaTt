@@ -1,3 +1,6 @@
+import datetime
+import pytz
+
 from flask import flash, render_template, redirect, url_for, request, g, session, json, jsonify
 from flask_appbuilder import ModelView, BaseView, expose, has_access, action
 from flask_appbuilder.models.sqla.interface import SQLAInterface
@@ -16,7 +19,6 @@ from flask.templating import render_template
 from .util import svuotaDb, caricaDati7Cds, caricaDatiBase, getColori
 from .esse3_to_watt import getAnniAccademici, getCorsiInOfferta, importDatiEsse3
 from .solver import AlgoritmoCalcolo
-from datetime import timedelta
 
 class AnniAccademiciView(ModelView):
     datamodel = SQLAInterface(AnnoAccademico)
@@ -557,7 +559,16 @@ class CalendarioView(BaseView):
     @expose("/cld_app/", methods=["POST"])
     @has_access
     def cld_app(self):
-        None
+
+
+        #tz = pytz.timezone("Europe/Rome")
+        dati = json.loads(request.data)
+        db.session.query(OrarioTestata).filter(OrarioTestata.id == dati["id_orario"]) \
+            .update({OrarioTestata.data_ultima_modifica: datetime.datetime.now(pytz.utc)})
+        db.session.commit()
+        data = {"esito": "ok"}
+        return data, 200
+
 
     @expose("/cld_room/", methods=["POST"])
     @has_access

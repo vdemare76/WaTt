@@ -1,5 +1,6 @@
 import pulp as pl
 import datetime
+import pytz
 from sqlalchemy.exc import SQLAlchemyError
 from pulp.pulp import LpVariable, lpSum
 from abc import ABC, abstractmethod
@@ -8,7 +9,6 @@ from .util import caricaDatiDalDb, getColori
 from .solver_models import ModuloTt, AulaTt, CorsoDiStudioTt, SlotTt, GiornoTt
 from amply.amply import ParamDefStmt
 from .import db
-import pytz
 
 from .models import Orario, OrarioTestata, OrarioDettaglio
 

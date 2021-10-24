@@ -49,6 +49,7 @@
       <p class="bg-primary" align="center">CALENDARIO</p><br>
       <div id="calendar"></div><br>
     </div>
+    <input type="text" id="id_testata" name="id_testata" value="" style="display:none">
   </body>
 
 </html>
@@ -347,6 +348,7 @@
         url: "/calendarioview/cld_upd/",
         success: function (ris) {
           genera_calendario(ris["orario"],ris["chiusure"],editabile);
+          $("#id_testata").val(ris["orario"][0].testata_id);
           $(".popover").remove();
         }
       });
@@ -391,7 +393,7 @@
     }
 
     function impostaIntervalloIniziale() {
-      let now = new Date();
+      let today = new Date();
       $("#data_avvio_lezioni").val(today.getFullYear() + "-" + ("0" + (today.getMonth() + 1)).slice(-2) + "-" + ("0" + today.getDate()).slice(-2));
       $("#data_fine_lezioni").val(today.getFullYear() + "-" + ("0" + (today.getMonth() + 1)).slice(-2) + "-" + ("0" + today.getDate()).slice(-2));
       $("#panel-periodo").css({"display":"block"});
@@ -402,6 +404,7 @@
       $.ajax({
         type: "POST",
         contentType: "application/json",
+        data: JSON.stringify({id_orario: $("#id_testata").val()}),
         dataType: "json",
         url: "/calendarioview/cld_app/",
         success: function (ris) {
