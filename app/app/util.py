@@ -581,13 +581,13 @@ def caricaDatiDalDb(aa, semestre):
         moduli_tt=[]
         # Recupero delle informazioni dal DB per la formazione degli oggetti Modulo da collocare nell"orario
         moduli=db.session.query(Modulo, Offerta, AttivitaDidattica, AnnoAccademico, CorsoDiStudio, Docente)\
-        .join(Offerta, Modulo.offerta_id==Offerta.id)\
-        .join(AttivitaDidattica, Offerta.attivita_didattica_id==AttivitaDidattica.id)\
-        .join(CorsoDiStudio, Offerta.corso_di_studio_id==CorsoDiStudio.id)\
-        .join(AnnoAccademico, Offerta.anno_accademico_id==AnnoAccademico.id)\
-        .join(Docente, Offerta.docente_id==Docente.id)\
-        .filter(AnnoAccademico.id==aa)\
-        .filter(Offerta.semestre==semestre).all()   
+        .join(Offerta, Modulo.offerta_id == Offerta.id)\
+        .join(AttivitaDidattica, Offerta.attivita_didattica_id == AttivitaDidattica.id)\
+        .join(CorsoDiStudio, Offerta.corso_di_studio_id == CorsoDiStudio.id)\
+        .join(AnnoAccademico, Offerta.anno_accademico_id == AnnoAccademico.id)\
+        .join(Docente, Offerta.docente_id == Docente.id)\
+        .filter(Offerta.anno_accademico_id == aa)\
+        .filter(Offerta.semestre == semestre).all()
         for m in moduli:
             moduli_tt.append(ModuloTt(m.Modulo.id,m.Modulo.codice,m.Modulo.descrizione,m.AttivitaDidattica.codice,m.AttivitaDidattica.descrizione,\
                                       m.CorsoDiStudio.id,m.CorsoDiStudio.codice,m.CorsoDiStudio.descrizione,m.Docente.matricola,m.Docente.cognome,m.Docente.nome,\
@@ -637,23 +637,25 @@ def inizializza_db():
         None
 
 
-def getLdapToken(uid):
+def getAttributiLDap(uid):
 
     try:
         ldap_server=Server(config.AUTH_LDAP_SERVER+":"+config.AUTH_LDAP_PORT, get_info=ALL)
         ldap_connection=Connection(ldap_server, user="cn=admin,dc=uniparthenope,dc=it",password="wattpw01")
 
         if ldap_connection.bind()==True:
-            if ldap_connection.search(search_base=config.AUTH_LDAP_SEARCH, search_filter=f"(uid={uid})",search_scope=SUBTREE, attributes=["token"])==True:
+            if ldap_connection.search(search_base=config.AUTH_LDAP_SEARCH, search_filter=f"(uid={uid})",search_scope=SUBTREE, attributes=["token","role"])==True:
                 ent=ldap_connection.entries[0]
                 ldap_connection.unbind()
                 try:
+                    role=ent["role"][0]
                     token=ent["token"][0]
                 except IndexError:
+                    role=None
                     token=None
-                return token
+                return token, role
             else:
-                return None
+                return None, None
 
     except LDAPSocketOpenError:
         print("Unabled to connect to the LDAP server!")

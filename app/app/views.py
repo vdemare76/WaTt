@@ -16,7 +16,7 @@ from .models import AnnoAccademico, CorsoDiStudio, AttivitaDidattica, Docente, A
                     LogisticaDocente, Modulo, Giorno, Slot, Orario, OrarioTestata, OrarioDettaglio, Chiusura
 
 from flask.templating import render_template
-from .util import svuotaDb, caricaDati7Cds, caricaDatiBase, getColori
+from .util import svuotaDb, caricaDati7Cds, caricaDatiBase, getColori, getAttributiLDap
 from .esse3_to_watt import getAnniAccademici, getCorsiInOfferta, importDatiEsse3
 from .solver import AlgoritmoCalcolo
 
@@ -444,13 +444,26 @@ class CalendarioView(BaseView):
     @expose("/cld_home/")
     @has_access
     def cld_home(self):
-        corsi = db.session.query(Orario.corso_id, Orario.codice_corso, CorsoDiStudio.descrizione) \
-            .join(CorsoDiStudio, Orario.corso_id == CorsoDiStudio.id) \
-            .order_by(CorsoDiStudio.codice.asc()).distinct().all()
-        session["corsiCal"]=corsi
+        token, role = getAttributiLDap(g.user.username)
 
-        anniCorso = db.session.query(Orario.corso_id, Orario.codice_corso, Orario.anno_corso) \
-            .order_by(Orario.corso_id.asc(), Orario.anno_corso.asc()).distinct().all()
+        if role=="wattStud":
+            corsi = db.session.query(Orario.corso_id, Orario.codice_corso, CorsoDiStudio.descrizione, OrarioTestata.stato_orario_id) \
+                .join(CorsoDiStudio, Orario.corso_id == CorsoDiStudio.id) \
+                .join(OrarioTestata, OrarioTestata.id == Orario.testata_id) \
+                .filter(OrarioTestata.stato_orario_id == 1) \
+                .order_by(CorsoDiStudio.codice.asc()).distinct().all()
+            anniCorso = db.session.query(Orario.corso_id, Orario.codice_corso, Orario.anno_corso, OrarioTestata.stato_orario_id) \
+                .join(OrarioTestata, OrarioTestata.id == Orario.testata_id) \
+                .order_by(Orario.corso_id.asc(), Orario.anno_corso.asc()).distinct().all()
+        else:
+            corsi = db.session.query(Orario.corso_id, Orario.codice_corso, CorsoDiStudio.descrizione, OrarioTestata.stato_orario_id) \
+                .join(CorsoDiStudio, Orario.corso_id == CorsoDiStudio.id) \
+                .join(OrarioTestata, OrarioTestata.id == Orario.testata_id) \
+                .order_by(CorsoDiStudio.codice.asc()).distinct().all()
+            anniCorso = db.session.query(Orario.corso_id, Orario.codice_corso, Orario.anno_corso) \
+                .order_by(Orario.corso_id.asc(), Orario.anno_corso.asc()).distinct().all()
+
+        session["corsiCal"]=corsi
         session["anniCorsoCal"]=anniCorso
 
         vAnniCorso = []
@@ -559,12 +572,22 @@ class CalendarioView(BaseView):
     @expose("/cld_app/", methods=["POST"])
     @has_access
     def cld_app(self):
-
-
-        #tz = pytz.timezone("Europe/Rome")
         dati = json.loads(request.data)
         db.session.query(OrarioTestata).filter(OrarioTestata.id == dati["id_orario"]) \
-            .update({OrarioTestata.data_ultima_modifica: datetime.datetime.now(pytz.utc)})
+            .update({OrarioTestata.data_ultima_modifica: datetime.datetime.now(pytz.timezone("Europe/Rome"))})
+        db.session.query(OrarioDettaglio).filter(OrarioDettaglio.testata_id == dati["id_orario"]).delete()
+        orario = db.session.query(Orario).all()
+        for o in orario:
+            od = o.to_dict()
+            row = OrarioDettaglio(
+                       testata_id = od["testata_id"],
+                       corso_di_studio_id = od["corso_id"],
+                       modulo_id = od["modulo_id"],
+                       slot_id = od["slot_id"],
+                       giorno_id = od["giorno_id"],
+                       aula_id = od["aula_id"])
+            db.session.add(row)
+
         db.session.commit()
         data = {"esito": "ok"}
         return data, 200

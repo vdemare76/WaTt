@@ -7,13 +7,13 @@ from .util import getColori
 from .models import AnnoAccademico, CorsoDiStudio, AttivitaDidattica, Docente, Offerta, Modulo, NumerositaAnniCorso
 
 import requests, base64
-from .util import getLdapToken
+from .util import getAttributiLDap
 
 url="https://uniparthenope.esse3.cineca.it/e3rest/api/"
 
 def getAuthToken():
 
-    token=getLdapToken(g.user.username)
+    token, role=getAttributiLDap(g.user.username)
 
     headers={
         "Content-Type": "application/json",
@@ -373,8 +373,10 @@ def importDatiEsse3(annoAccademico,corsiDiStudio,semestre,flgSovrDatiCorsi,flgSo
                                                   filter(Offerta.corso_di_studio_id==corsi[c]["id"]).first()
         if corsoPresente is None or flgSovrDatiOfferta=="1":
             # Cancellazione delle offerte e dei moduli collegati relativi ai corsi e all"A.A. selezionato
-            off_id = db.session.query(Offerta.id).filter(Offerta.anno_accademico_id == int(idAnnoAccademico)).filter(
-                Offerta.corso_di_studio_id == corsi[c]["id"]).subquery()
+            off_id = db.session.query(Offerta.id).\
+                filter(Offerta.anno_accademico_id == int(idAnnoAccademico)).\
+                filter(Offerta.semestre == semestre).\
+                filter(Offerta.corso_di_studio_id == corsi[c]["id"]).subquery()
             db.session.query(Modulo).filter(Modulo.offerta_id.in_(off_id)).delete(synchronize_session="fetch")
             db.session.query(Offerta).filter(Offerta.anno_accademico_id==int(idAnnoAccademico)). \
                                       filter(Offerta.semestre == semestre). \

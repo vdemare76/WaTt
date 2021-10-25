@@ -408,7 +408,11 @@
         dataType: "json",
         url: "/calendarioview/cld_app/",
         success: function (ris) {
-          alert("Modifiche applicate!")
+            $("#loader").css({"display": "none"});
+            $("#info-title").html("Modifica orario");
+            $("#info-msg").html("L'orario è stato correttamente salvato secondo le modifiche effettuate in calendario");
+            $(document).on("click", "#modal-info-ok", function () {});
+            $("#modal-info-w").modal("show");
         }
       });
     }

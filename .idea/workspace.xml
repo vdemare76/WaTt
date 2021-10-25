@@ -3,8 +3,12 @@
   <component name="ChangeListManager">
     <list default="true" id="4bd4ca69-5fab-4bca-9aae-55bf4e9525ff" name="Default Changelist" comment="Update">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/app/esse3_to_watt.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/app/esse3_to_watt.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/app/solver.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/app/solver.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/app/templates/calendar.html" beforeDir="false" afterPath="$PROJECT_DIR$/app/app/templates/calendar.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/app/templates/preferences.html" beforeDir="false" afterPath="$PROJECT_DIR$/app/app/templates/preferences.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/app/templates/utility_esse3.html" beforeDir="false" afterPath="$PROJECT_DIR$/app/app/templates/utility_esse3.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/app/util.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/app/util.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/app/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/app/views.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -168,14 +172,8 @@
       <workItem from="1634922415753" duration="7527000" />
       <workItem from="1634935173960" duration="5259000" />
       <workItem from="1634983874447" duration="20907000" />
-      <workItem from="1635069964618" duration="13446000" />
-    </task>
-    <task id="LOCAL-00051" summary="Update">
-      <created>1629401502054</created>
-      <option name="number" value="00051" />
-      <option name="presentableId" value="LOCAL-00051" />
-      <option name="project" value="LOCAL" />
-      <updated>1629401502064</updated>
+      <workItem from="1635069964618" duration="13584000" />
+      <workItem from="1635179466034" duration="9301000" />
     </task>
     <task id="LOCAL-00052" summary="Update">
       <created>1629401660035</created>
@@ -513,7 +511,14 @@
       <option name="project" value="LOCAL" />
       <updated>1635107032746</updated>
     </task>
-    <option name="localTasksCounter" value="100" />
+    <task id="LOCAL-00100" summary="Update">
+      <created>1635112152101</created>
+      <option name="number" value="00100" />
+      <option name="presentableId" value="LOCAL-00100" />
+      <option name="project" value="LOCAL" />
+      <updated>1635112152101</updated>
+    </task>
+    <option name="localTasksCounter" value="101" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">

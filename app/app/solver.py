@@ -347,8 +347,6 @@ class AlgoritmoCalcolo(TemplateCalcoloOrario):
         skd=str_aux.get_schedulazione()  
         if (pl.LpStatus[model.status]) == "Optimal":
             try:
-                tz = pytz.timezone("Europe/Rome")
-
                 vincolo_sessione_unica=0
                 if request.form.get("chk_sessione_unica")=="1":
                     vincolo_sessione_unica=1
@@ -365,11 +363,12 @@ class AlgoritmoCalcolo(TemplateCalcoloOrario):
                 if request.form.get("chk_preferenze_docenti") == "1":
                     vincolo_logistica_docenti=1
 
+                data_operazione = datetime.datetime.now(pytz.timezone("Europe/Rome"))
                 row_test = OrarioTestata(descrizione = desc_orario,
                                          anno_accademico_id = aa,
                                          semestre = semestre,
-                                         data_creazione = datetime.datetime.now(tz),
-                                         data_ultima_modifica = datetime.datetime.now(tz),
+                                         data_creazione = data_operazione,
+                                         data_ultima_modifica = data_operazione,
                                          vincolo_sessione_unica = vincolo_sessione_unica,
                                          vincolo_sessioni_consecutive = vincolo_sessioni_consecutive,
                                          vincolo_max_slot = vincolo_max_slot,
