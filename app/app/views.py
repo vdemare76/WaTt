@@ -1,11 +1,7 @@
-import datetime
-import pytz
-
 from flask import flash, render_template, redirect, url_for, request, g, session, json, jsonify
 from flask_appbuilder import ModelView, BaseView, expose, has_access, action
 from flask_appbuilder.models.sqla.interface import SQLAInterface
 from sqlalchemy.exc import SQLAlchemyError
-from sqlalchemy import and_
 
 from flask_appbuilder.fieldwidgets import Select2AJAXWidget, Select2SlaveAJAXWidget
 from flask_appbuilder.fields import AJAXSelectField
@@ -13,12 +9,13 @@ from wtforms import validators
 
 from .import appbuilder, db
 from .models import AnnoAccademico, CorsoDiStudio, AttivitaDidattica, Docente, Aula, NumerositaAnniCorso, Offerta, \
-                    LogisticaDocente, Modulo, Giorno, Slot, Orario, OrarioTestata, OrarioDettaglio, Chiusura
+                    LogisticaDocente, Modulo, Giorno, Slot, OrarioTestata, OrarioDettaglio, Chiusura
 
 from flask.templating import render_template
 from .util import svuotaDb, caricaDati7Cds, caricaDatiBase, getColori, getAttributiLDap
 from .esse3_to_watt import getAnniAccademici, getCorsiInOfferta, importDatiEsse3
 from .solver import AlgoritmoCalcolo
+
 
 class AnniAccademiciView(ModelView):
     datamodel = SQLAInterface(AnnoAccademico)
@@ -236,11 +233,15 @@ class OrariGeneratiView(ModelView):
                 return -1
         return redirect(self.get_redirect())
 
-    @action("carica_schema", "Carica orario", "Vuoi visualizzare lo schema orario selezionato?", "fa-trash-alt", multiple=False, single=True)
+    @action("carica_schema", "Carica orario", "Carico lo schema orario selezionato?", "fa-trash-alt", multiple=False, single=True)
     def carica_schema(self, item):
         try:
+            orarioCorrente = []
             tst=db.session.query(OrarioTestata).filter(OrarioTestata.id==item.id).first()
-
+            # Dati dell'orario corrente caricato in memoria
+            session["annoAccademico"] = tst.anno_accademico_id
+            session["semestre"] = tst.semestre
+            session["testata_id"] = item.id
             session["chkSessioneUnica"]=str(tst.vincolo_sessione_unica)
             session["chkSessioniConsecutive"]=str(tst.vincolo_sessioni_consecutive)
             if tst.vincolo_max_slot>0:
@@ -249,11 +250,7 @@ class OrariGeneratiView(ModelView):
                 session["chkMaxOre"]="0"
             session["selMaxOre"]=tst.vincolo_max_slot
             session["chkPreferenzeDocenti"]=str(tst.vincolo_logistica_docenti)
-            session["annoAccademico"]=tst.anno_accademico_id
-            session["semestre"]=tst.semestre
 
-            db.session.query(Orario).delete()
-            db.session.execute("ALTER TABLE orario AUTO_INCREMENT = 1")
             rows=db.session.query(OrarioDettaglio, Modulo, Giorno, Offerta, AttivitaDidattica, CorsoDiStudio, Docente, Slot, Aula) \
             .join(CorsoDiStudio, OrarioDettaglio.corso_di_studio_id == CorsoDiStudio.id) \
             .join(Modulo, OrarioDettaglio.modulo_id == Modulo.id) \
@@ -265,33 +262,41 @@ class OrariGeneratiView(ModelView):
             .join(Aula, OrarioDettaglio.aula_id==Aula.id)\
             .filter(OrarioDettaglio.testata_id==item.id)\
             .order_by(CorsoDiStudio.codice.asc(), Giorno.id.asc(), Modulo.codice.asc(), Slot.id.asc(), Aula.codice.asc()).all()
+            id=1
             for r in rows:
+                id+=1
                 if r.Modulo.max_studenti > 0:
                     numerosita = r.Modulo.max_studenti
                 else:
                     numerosita = r.Offerta.max_studenti
-                row = Orario(testata_id=item.id,
-                             giorno_id=r.Giorno.id,
-                             giorno=r.Giorno.descrizione,
-                             corso_id=r.CorsoDiStudio.id,
-                             codice_corso=r.CorsoDiStudio.codice,
-                             colore_corso=getColori()[r.CorsoDiStudio.id],
-                             codice_attivita=r.AttivitaDidattica.codice,
-                             descrizione_attivita=r.AttivitaDidattica.descrizione,
-                             colore_attivita=r.AttivitaDidattica.colore,
-                             modulo_id=r.Modulo.id,
-                             descrizione_modulo=r.Modulo.descrizione,
-                             numerosita_modulo=numerosita,
-                             slot_id=r.Slot.id,
-                             descrizione_slot=r.Slot.descrizione,
-                             nome_docente=r.Docente.nome,
-                             cognome_docente=r.Docente.cognome,
-                             anno_corso=r.Offerta.anno_di_corso,
-                             aula_id=r.Aula.id,
-                             aula=r.Aula.descrizione,
-                             capienza_aula=r.Aula.capienza)
-                db.session.add(row)
-            db.session.commit()
+
+                rigaOrario = {
+                    "id": id,
+                    "testata_id": int(item.id),
+                    "giorno_id": int(r.Giorno.id),
+                    "giorno": str(r.Giorno.descrizione),
+                    "corso_id": int(r.CorsoDiStudio.id),
+                    "codice_corso": str(r.CorsoDiStudio.codice),
+                    "descrizione_corso": str(r.CorsoDiStudio.descrizione),
+                    "colore_corso": str(getColori()[r.CorsoDiStudio.id]),
+                    "codice_attivita": str(r.AttivitaDidattica.codice),
+                    "descrizione_attivita": str(r.AttivitaDidattica.descrizione),
+                    "colore_attivita": str(r.AttivitaDidattica.colore),
+                    "modulo_id": int(r.Modulo.id),
+                    "descrizione_modulo": str(r.Modulo.descrizione),
+                    "numerosita_modulo": int(numerosita),
+                    "slot_id": int(r.Slot.id),
+                    "descrizione_slot": str(r.Slot.descrizione),
+                    "nome_docente": str(r.Docente.nome),
+                    "cognome_docente": str(r.Docente.cognome),
+                    "anno_corso": int(r.Offerta.anno_di_corso),
+                    "aula_id": int(r.Aula.id),
+                    "aula": str(r.Aula.descrizione),
+                    "capienza_aula": int(r.Aula.capienza) }
+
+                orarioCorrente.append(rigaOrario)
+
+            session["orarioCorrente"]=orarioCorrente
             flash("Orario caricato correttamente! (Puoi visualizzarlo con Orario -> Schema settimanale","success")
         except SQLAlchemyError:
             db.sessione.rollback()
@@ -430,12 +435,12 @@ class SchemaSettimanaleView(BaseView):
     @has_access
     def wsk_home(self):
         slot=db.session.query(Slot).all()
-        orario=db.session.query(Orario).all()
+        orarioCorrente=session["orarioCorrente"]
         return render_template("timetable.html",
                                base_template=appbuilder.base_template,
                                appbuilder=appbuilder,
                                slot=slot,
-                               orario=orario)
+                               orario=orarioCorrente)
 
 
 class CalendarioView(BaseView):
@@ -445,71 +450,57 @@ class CalendarioView(BaseView):
     @has_access
     def cld_home(self):
         token, role = getAttributiLDap(g.user.username)
+        corsiOrarioCorrente = []
+        anniCorsoOrarioCorrente = []
 
         if role=="wattStud":
-            corsi = db.session.query(Orario.corso_id, Orario.codice_corso, CorsoDiStudio.descrizione, OrarioTestata.stato_orario_id) \
-                .join(CorsoDiStudio, Orario.corso_id == CorsoDiStudio.id) \
-                .join(OrarioTestata, OrarioTestata.id == Orario.testata_id) \
-                .filter(OrarioTestata.stato_orario_id == 1) \
-                .order_by(CorsoDiStudio.codice.asc()).distinct().all()
-            anniCorso = db.session.query(Orario.corso_id, Orario.codice_corso, Orario.anno_corso, OrarioTestata.stato_orario_id) \
-                .join(OrarioTestata, OrarioTestata.id == Orario.testata_id) \
-                .order_by(Orario.corso_id.asc(), Orario.anno_corso.asc()).distinct().all()
+            None
         else:
-            corsi = db.session.query(Orario.corso_id, Orario.codice_corso, CorsoDiStudio.descrizione, OrarioTestata.stato_orario_id) \
-                .join(CorsoDiStudio, Orario.corso_id == CorsoDiStudio.id) \
-                .join(OrarioTestata, OrarioTestata.id == Orario.testata_id) \
-                .order_by(CorsoDiStudio.codice.asc()).distinct().all()
-            anniCorso = db.session.query(Orario.corso_id, Orario.codice_corso, Orario.anno_corso) \
-                .order_by(Orario.corso_id.asc(), Orario.anno_corso.asc()).distinct().all()
+            orarioCorrente = session["orarioCorrente"]
+            for o in orarioCorrente:
+                risCorsi = list(filter(lambda ocr: ocr['corso_id'] == o["corso_id"], corsiOrarioCorrente))
+                if len(risCorsi)==0:
+                   corsiOrarioCorrente.append({"corso_id":o["corso_id"], "codice_corso":o["codice_corso"], "descrizione_corso":o["descrizione_corso"]})
+                corsiOrarioCorrente = sorted(corsiOrarioCorrente, key=lambda k: (k["descrizione_corso"]))
+                risAnniCorso = list(filter(lambda ocr: ocr["corso_id"] == o["corso_id"] and ocr["anno_corso"] == o["anno_corso"], anniCorsoOrarioCorrente))
+                if len(risAnniCorso)==0:
+                   anniCorsoOrarioCorrente.append({"corso_id": o["corso_id"], "codice_corso": o["codice_corso"], "anno_corso": o["anno_corso"]})
+                anniCorsoOrarioCorrente = sorted(anniCorsoOrarioCorrente, key=lambda k: (k["anno_corso"]))
 
-        session["corsiCal"]=corsi
-        session["anniCorsoCal"]=anniCorso
-
-        vAnniCorso = []
-        for a in anniCorso:
-            vAnniCorso.append({"corso_id":a[0],"codice_corso":a[1],"anno_corso":a[2]})
-
-        vOrario = []
-        orario = db.session.query(Orario).all()
-        for o in orario:
-            vOrario.append(o.to_dict())
-
-        chiusure = db.session.query(Chiusura).filter(Chiusura.testata_id==Orario.testata_id).all()
+        chiusure = db.session.query(Chiusura).filter(Chiusura.testata_id==session["testata_id"]).all()
         session["chiusure"]=chiusure
 
         vChiusure = []
         for c in chiusure:
             cur = c.data_inizio
             end = c.data_fine + timedelta(days=1)
-            while (cur<end):
+            while (cur < end):
                 if cur.strftime("%Y/%m/%d") not in vChiusure:
                     vChiusure.append(cur.strftime("%Y/%m/%d"))
                 cur = cur + timedelta(days=1)
 
+        orarioCorrente = session["orarioCorrente"]
+
         return render_template("calendar.html",
                                base_template=appbuilder.base_template,
                                appbuilder=appbuilder,
-                               corsi=corsi,
-                               anni_corso=vAnniCorso,
-                               orario=vOrario,
+                               corsi=corsiOrarioCorrente,
+                               anni_corso=anniCorsoOrarioCorrente,
+                               orario=orarioCorrente,
                                chiusure=vChiusure)
 
     @expose("/cld_ver/", methods=["POST"])
     @has_access
     def cld_ver(self):
         try:
-            orario = db.session.query(Orario).all()
-            vOrario = []
-            for o in orario:
-                vOrario.append(o.to_dict())
+            orarioCorrente = session["orarioCorrente"]
 
             vincoli = {"chkSessioneUnica": session["chkSessioneUnica"],
                        "chkSessioniConsecutive": session["chkSessioniConsecutive"],
                        "chkMaxOre": session["chkMaxOre"],
                        "selMaxOre": session["selMaxOre"],
                        "chkPreferenzeDocenti": session["chkPreferenzeDocenti"],
-                       "posizioniFisse": vOrario}
+                       "posizioniFisse": orarioCorrente}
 
             algoritmo=AlgoritmoCalcolo()
 
@@ -534,38 +525,31 @@ class CalendarioView(BaseView):
         giorno=db.session.query(Giorno).filter(Giorno.id==dati["giorno"]).first()
         if dati["aula"]>-1:
             aula=db.session.query(Aula).filter(Aula.id==dati["aula"]).first()
-        db.session.query(Orario).filter(Orario.corso_id==evento["extendedProps"]["corso_id"]) \
-                                .filter(Orario.modulo_id==evento["extendedProps"]["modulo_id"]) \
-                                .filter(Orario.aula_id==evento["extendedProps"]["aula_id"]) \
-                                .filter(Orario.giorno_id==evento["extendedProps"]["giorno_id"]) \
-                                .filter(Orario.slot_id==evento["extendedProps"]["slot_id"]) \
-                                .update({Orario.giorno_id: dati["giorno"],
-                                         Orario.slot_id: slot.id,
-                                         Orario.descrizione_slot: slot.descrizione,
-                                         Orario.giorno: giorno.descrizione,
-                                         Orario.aula_id: aula.id,
-                                         Orario.aula: aula.descrizione,
-                                         Orario.capienza_aula: aula.capienza})
-        db.session.commit()
 
-        orario = db.session.query(Orario).all()
-        vOrario = []
-        for o in orario:
-            vOrario.append(o.to_dict())
+        orarioCorrente = session["orarioCorrente"]
+        for row in orarioCorrente:
+            if (row["corso_id"] == evento["extendedProps"]["corso_id"] and row["modulo_id"] == evento["extendedProps"]["modulo_id"] and
+                row["aula_id"] == evento["extendedProps"]["aula_id"] and row["giorno_id"] == evento["extendedProps"]["giorno_id"] and
+                row["slot_id"] == evento["extendedProps"]["slot_id"]):
+                row["giorno_id"] = dati["giorno"]
+                row["slot_id"] = slot.id
+                row["descrizione_slot"] = slot.descrizione
+                row["giorno"] = giorno.descrizione
+                row["aula_id"] = aula.id
+                row["aula"] = aula.descrizione
+                row["capienza_aula"] = aula.capienza
+                break;
 
-        data = {"orario": vOrario,
+        session["orarioCorrente"] = orarioCorrente
+
+        data = {"orario": session["orarioCorrente"],
                 "chiusure": session["chiusure"]}
         return data, 200
 
     @expose("/cld_upd/", methods=["POST"])
     @has_access
     def cld_upd(self):
-        vOrario = []
-        orario = db.session.query(Orario).all()
-        for o in orario:
-            vOrario.append(o.to_dict())
-
-        data = {"orario": vOrario,
+        data = {"orario": session["orarioCorrente"],
                 "chiusure": session["chiusure"]}
         return data, 200
 
@@ -573,7 +557,7 @@ class CalendarioView(BaseView):
     @has_access
     def cld_app(self):
         dati = json.loads(request.data)
-        db.session.query(OrarioTestata).filter(OrarioTestata.id == dati["id_orario"]) \
+        '''db.session.query(OrarioTestata).filter(OrarioTestata.id == dati["id_orario"]) \
             .update({OrarioTestata.data_ultima_modifica: datetime.datetime.now(pytz.timezone("Europe/Rome"))})
         db.session.query(OrarioDettaglio).filter(OrarioDettaglio.testata_id == dati["id_orario"]).delete()
         orario = db.session.query(Orario).all()
@@ -588,7 +572,7 @@ class CalendarioView(BaseView):
                        aula_id = od["aula_id"])
             db.session.add(row)
 
-        db.session.commit()
+        db.session.commit()'''
         data = {"esito": "ok"}
         return data, 200
 
@@ -597,13 +581,13 @@ class CalendarioView(BaseView):
     @has_access
     def cld_room(self):
         dati = json.loads(request.data)
-        vAule = []
-        subquery = db.session.query(Orario.aula_id).filter(Orario.slot_id == dati["slot"]) \
-            .filter(Orario.giorno_id == dati["giorno"]).distinct()
+        auleOccupate = []
         aule = db.session.query(Aula) \
             .filter(Aula.id != dati["aula"]).filter(Aula.capienza >= dati["numerosita"]) \
-            .filter(Aula.id.notin_(subquery)). \
+            .filter(Aula.id.notin_(auleOccupate)). \
             order_by(Aula.descrizione).all()
+
+        vAule = []
         for a in aule:
             vAule.append(a.to_dict())
 

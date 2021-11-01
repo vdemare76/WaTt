@@ -4,10 +4,10 @@
     <list default="true" id="4bd4ca69-5fab-4bca-9aae-55bf4e9525ff" name="Default Changelist" comment="Update">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/app/esse3_to_watt.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/app/esse3_to_watt.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/app/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/app/models.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/app/solver.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/app/solver.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/app/templates/calendar.html" beforeDir="false" afterPath="$PROJECT_DIR$/app/app/templates/calendar.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/app/templates/preferences.html" beforeDir="false" afterPath="$PROJECT_DIR$/app/app/templates/preferences.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/app/templates/utility_esse3.html" beforeDir="false" afterPath="$PROJECT_DIR$/app/app/templates/utility_esse3.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/app/templates/room_cal.html" beforeDir="false" afterPath="$PROJECT_DIR$/app/app/templates/room_cal.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/app/util.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/app/util.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/app/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/app/views.py" afterDir="false" />
     </list>
@@ -47,12 +47,13 @@
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/app/app/static/FullCalendar" />
     <property name="nodejs_package_manager_path" value="npm" />
     <property name="settings.editor.selected.configurable" value="preferences.lookFeel" />
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\enzo\PyCharmProjects\Watt\app\app\static\FullCalendar" />
       <recent name="C:\Users\enzo\PyCharmProjects\Watt\app\app\templates" />
       <recent name="C:\Users\enzo\PyCharmProjects\Watt\app\app" />
     </key>
@@ -173,21 +174,14 @@
       <workItem from="1634935173960" duration="5259000" />
       <workItem from="1634983874447" duration="20907000" />
       <workItem from="1635069964618" duration="13584000" />
-      <workItem from="1635179466034" duration="9301000" />
-    </task>
-    <task id="LOCAL-00052" summary="Update">
-      <created>1629401660035</created>
-      <option name="number" value="00052" />
-      <option name="presentableId" value="LOCAL-00052" />
-      <option name="project" value="LOCAL" />
-      <updated>1629401660035</updated>
-    </task>
-    <task id="LOCAL-00053" summary="Update">
-      <created>1629402897064</created>
-      <option name="number" value="00053" />
-      <option name="presentableId" value="LOCAL-00053" />
-      <option name="project" value="LOCAL" />
-      <updated>1629402897064</updated>
+      <workItem from="1635179466034" duration="9653000" />
+      <workItem from="1635267223432" duration="2303000" />
+      <workItem from="1635349168686" duration="596000" />
+      <workItem from="1635435844977" duration="3559000" />
+      <workItem from="1635489826571" duration="25824000" />
+      <workItem from="1635588853721" duration="18749000" />
+      <workItem from="1635715380045" duration="1891000" />
+      <workItem from="1635762839840" duration="35148000" />
     </task>
     <task id="LOCAL-00054" summary="Update">
       <created>1629403025418</created>
@@ -518,7 +512,21 @@
       <option name="project" value="LOCAL" />
       <updated>1635112152101</updated>
     </task>
-    <option name="localTasksCounter" value="101" />
+    <task id="LOCAL-00101" summary="Update">
+      <created>1635198855754</created>
+      <option name="number" value="00101" />
+      <option name="presentableId" value="LOCAL-00101" />
+      <option name="project" value="LOCAL" />
+      <updated>1635198855754</updated>
+    </task>
+    <task id="LOCAL-00102" summary="Update">
+      <created>1635523276052</created>
+      <option name="number" value="00102" />
+      <option name="presentableId" value="LOCAL-00102" />
+      <option name="project" value="LOCAL" />
+      <updated>1635523276052</updated>
+    </task>
+    <option name="localTasksCounter" value="103" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">

@@ -1,7 +1,6 @@
-{% extends "appbuilder/base.html" %}
+{% extends 'appbuilder/base.html' %}
 
-{% block content %}	
-	{% include "confirm_msg.html" %}
+{% block content %}
     {% include "info_msg.html" %}
     {% include "room_cal.html" %}
 
@@ -13,7 +12,7 @@
     <script src="/static/FileSaver.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.7.2/main.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.7.2/locales-all.min.js"></script>
-    <link href="https://cdn.jsdelivr.net/npm/fullcalendar@5.7.2/main.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fullcalendar@5.7.2/main.min.css">
     <link rel="stylesheet" href="/static/watt.css">
   </head>
 
@@ -25,7 +24,7 @@
         <div class="panel-body">
           <select type="date" id="corso_id" name="corso_id" onchange="caricaAnni({{anni_corso}})">
             {% for c in corsi %}
-             <option value={{c.corso_id}}>{{c.codice_corso}} - {{c.descrizione}}</option>
+             <option value={{c.corso_id}}>{{c.codice_corso}} - {{c.descrizione_corso}}</option>
             {% endfor %}
           </select>
           <select type="date" id="anno_corso" name="anno_corso"></select>
@@ -38,7 +37,7 @@
           <input type="date" id="data_fine_lezioni">
         </div>
       </div><br>
-      <button type="button" id="genera_calendario" onclick="carica_orario(false)" class="btn bg-primary">Genera calendario per il corso selezionato</button><br><br>
+      <button type="button" id="genera_calendario" onclick="carica_orario()" class="btn bg-primary">Genera calendario per il corso selezionato</button><br><br>
       <input type="checkbox" name="chk_modifica" id="chk_modifica" value="1">
       <label for = "chk_modifica">
           Abilita modalità modifica schema orario settimanale
@@ -47,9 +46,10 @@
     <div id="loader" class="loader" style="display:none"></div>
     <div>
       <p class="bg-primary" align="center">CALENDARIO</p><br>
-      <div id="calendar"></div><br>
+      <div id="calendar" name="calendar"></div><br>
     </div>
     <input type="text" id="id_testata" name="id_testata" value="" style="display:none">
+    <input type="text" id="id_aula" name="id_aula" value="" style="display:none">
   </body>
 
 </html>
@@ -69,7 +69,7 @@
         return [year, month, day].join("/");
     }
 
-    function genera_calendario(arrOrario,arrChiusure,editabile) {
+    function genera_calendario(arrOrario,arrChiusure) {
       let day = 60 * 60 * 24 * 1000;
       let giorni_settimana = ["Domenica","Lunedì","Martedì","Mercoledì","Giovedì","Venerdì","Sabato"];
 
@@ -81,10 +81,15 @@
 
       let idc=$("#corso_id option:selected").val();
       let adc=$("#anno_corso option:selected").val();
+
       let orLen=arrOrario.length;
 
-      let calendarEl = document.getElementById("calendar");
-      let calendar = new FullCalendar.Calendar(calendarEl, {
+      let editabile=false;
+      if ($('#chk_modifica').is(":checked"))
+        editabile=true;
+
+      var calendarEl = document.getElementById("calendar");
+      var calendar = new FullCalendar.Calendar(calendarEl, {
           //headerToolbar: { center: "dayGridMonth,timeGridWeek" },
           locale:"itLocale",
           initialDate:data_avvio,
@@ -109,12 +114,13 @@
             });
           },
           eventChange: function(evento) {
-            modificaEventoInOrario(evento.event, evento.event.start.getDay(), evento.event.start.getHours(), 0);
+            modificaEventoInOrario(evento, evento, evento.event.start.getDay(), evento.event.start.getHours(), 0, calendar);
           },
           eventClick: function(evento) {
-            gestione_cambio_aula(evento)
+            gestione_cambio_aula(evento, calendar)
           },
           eventDragStop: function(evento) {
+            $("#id_aula").val(0);
             $(".popover").remove();
           },
           buttonText:
@@ -276,26 +282,33 @@
       }
     }
 
-    function modificaEventoInOrario(evento, giorno, slot, aula) {
-      if (aula>0)
-        newAula=aula;
+    function modificaEventoInOrario(eventoOld, eventoNew, giorno, slot, aula, cal) {
+      if (aula > 0) {
+        newAula = aula;
+        eventoOld.event.remove();
+        eventoNew.event.setExtendedProp("aula_id", aula);
+        alert(JSON.stringify(eventoNew));
+        //cal.addEvent(eventoNew.event);
+      }
       else
-        newAula=evento.extendedProps.aula_id;
+        newAula =  evento.event.extendedProps.aula_id;
+
       $.ajax({
         type: "POST",
         contentType: "application/json",
-        data: JSON.stringify({evento: evento, giorno: giorno, slot: slot, aula:newAula}),
+        data: JSON.stringify({evento: evento.event, giorno: giorno, slot: slot, aula:newAula}),
         dataType: "json",
         url: "/calendarioview/cld_mod/",
         success: function (ris) {
-          genera_calendario(ris["orario"], ris["chiusure"], true);
+          //genera_calendario(ris["orario"], ris["chiusure"]);
+          cal.refetchEvents();
           $(".popover").remove();
         }
       });
+
     }
 
-    function verificaOrario(editabile) {
-      if (editabile) {
+    function verificaOrario() {
         $("#loader").css({"display": "block"});
         $.ajax({
           type: "POST",
@@ -313,13 +326,6 @@
             $("#modal-info-w").modal("show");
           }
         });
-      }
-      else {
-        $("#info-title").html("Informazione");
-        $("#info-msg").html("Questa funzione è disponibile solo nella modalità \"modifica schema orario settimanale\"");
-        $(document).on("click", "#modal-info-ok", function () {});
-        $("#modal-info-w").modal("show");
-      }
     }
 
     function inizializza(arrAnni) {
@@ -340,21 +346,21 @@
       $("#data_fine_lezioni").val($("#data_avvio_lezioni").val());
     }
 
-    function carica_orario(editabile) {
+    function carica_orario() {
       $.ajax({
         type: "POST",
         contentType: "application/json",
         dataType: "json",
         url: "/calendarioview/cld_upd/",
         success: function (ris) {
-          genera_calendario(ris["orario"],ris["chiusure"],editabile);
+          genera_calendario(ris["orario"],ris["chiusure"]);
           $("#id_testata").val(ris["orario"][0].testata_id);
           $(".popover").remove();
         }
       });
     }
 
-    function gestione_cambio_aula(evento) {
+    function gestione_cambio_aula(evento, cal) {
       $.ajax({
         type: "POST",
         contentType: "application/json",
@@ -373,13 +379,13 @@
           }
           $("#modal-room-w").modal();
           $(document).on("click", "#modal-room-ok", function () {
-            modificaEventoInOrario(evento.event, evento.event.start.getDay(), evento.event.start.getHours(), parseInt($("#aulaSel option:selected").val()));
+            modificaEventoInOrario(evento, evento, evento.event.start.getDay(), evento.event.start.getHours(), parseInt($("#aulaSel option:selected").val()), cal);
           });
         }
       });
     }
 
-    function impostaIntervalloModifica() {
+    function impostaIntervalloModifica(cal) {
       let today = new Date(), anno=today.getFullYear(), mese=today.getMonth();
       primaDomenica=1;
       while (dy = new Date(anno, mese, primaDomenica).getDay() != 0)
@@ -389,7 +395,7 @@
       $("#data_avvio_lezioni").val(anno + "-" + ("0" + (mese + 1)).slice(-2) + "-" + ("0" + giorno_inizio).slice(-2));
       $("#data_fine_lezioni").val(anno + "-" + ("0" + (mese + 1)).slice(-2) + "-" + ("0" + giorno_fine).slice(-2));
       $("#panel-periodo").css({"display":"none"});
-      carica_orario(true);
+      carica_orario();
     }
 
     function impostaIntervalloIniziale() {
@@ -397,10 +403,10 @@
       $("#data_avvio_lezioni").val(today.getFullYear() + "-" + ("0" + (today.getMonth() + 1)).slice(-2) + "-" + ("0" + today.getDate()).slice(-2));
       $("#data_fine_lezioni").val(today.getFullYear() + "-" + ("0" + (today.getMonth() + 1)).slice(-2) + "-" + ("0" + today.getDate()).slice(-2));
       $("#panel-periodo").css({"display":"block"});
-      carica_orario(false);
+      carica_orario();
     }
 
-    function applicaModificaOrario(editabile) {
+    function applicaModificaOrario() {
       $.ajax({
         type: "POST",
         contentType: "application/json",
@@ -416,7 +422,6 @@
         }
       });
     }
-
 </script>
 	
 {% endblock %}

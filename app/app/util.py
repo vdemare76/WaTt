@@ -1,6 +1,6 @@
 from .models import AnnoAccademico, CorsoDiStudio, AttivitaDidattica, \
     Docente, Aula, Offerta, LogisticaDocente, Modulo, Giorno, Slot, \
-    OrarioTestata, OrarioDettaglio, Orario, StatoOrario, NumerositaAnniCorso
+    OrarioTestata, OrarioDettaglio, StatoOrario, NumerositaAnniCorso
 from .import db
 from flask import flash
 from sqlalchemy.exc import SQLAlchemyError

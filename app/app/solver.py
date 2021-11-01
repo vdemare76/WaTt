@@ -1,16 +1,13 @@
 import pulp as pl
-import datetime
-import pytz
+import datetime, pytz
 from sqlalchemy.exc import SQLAlchemyError
 from pulp.pulp import LpVariable, lpSum
 from abc import ABC, abstractmethod
 from flask import flash, request
-from .util import caricaDatiDalDb, getColori
-from .solver_models import ModuloTt, AulaTt, CorsoDiStudioTt, SlotTt, GiornoTt
-from amply.amply import ParamDefStmt
+from .util import caricaDatiDalDb
 from .import db
 
-from .models import Orario, OrarioTestata, OrarioDettaglio
+from .models import OrarioTestata, OrarioDettaglio
 
 class DatiDiBase(object):
 

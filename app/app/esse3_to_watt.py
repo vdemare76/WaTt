@@ -1,18 +1,13 @@
 from flask import flash, render_template, redirect, url_for, request, g, session
-from flask_appbuilder import ModelView, BaseView, expose, has_access, action
-from flask_appbuilder.models.sqla.interface import SQLAInterface
-from sqlalchemy.exc import SQLAlchemyError
 from .import db
-from .util import getColori
+from .util import getColori, getAttributiLDap
 from .models import AnnoAccademico, CorsoDiStudio, AttivitaDidattica, Docente, Offerta, Modulo, NumerositaAnniCorso
-
 import requests, base64
-from .util import getAttributiLDap
+
 
 url="https://uniparthenope.esse3.cineca.it/e3rest/api/"
 
 def getAuthToken():
-
     token, role=getAttributiLDap(g.user.username)
 
     headers={

@@ -1,4 +1,3 @@
-from flask import url_for
 from flask_appbuilder import Model
 from sqlalchemy import Column, ForeignKey, Integer, String, Table, Text, DateTime, Date
 from sqlalchemy.orm import relationship
@@ -181,34 +180,6 @@ class OrarioDettaglio(Model):
 
     def __repr__(self):
         return self.descrizione
-
-
-class Orario(Model):
-    id=Column(Integer, primary_key=True)
-    testata_id=Column(Integer)
-    giorno_id=Column(Integer)
-    giorno=Column(String(10))
-    corso_id=Column(Integer)
-    codice_corso=Column(String(10))
-    colore_corso=Column(String(10))
-    codice_attivita=Column(String(25))
-    descrizione_attivita=Column(String(150))
-    colore_attivita=Column(String(7))
-    modulo_id=Column(Integer)
-    descrizione_modulo=Column(String(100))
-    numerosita_modulo=Column(Integer)
-    slot_id=Column(Integer)
-    descrizione_slot=Column(String(20))
-    nome_docente=Column(String(50))
-    cognome_docente=Column(String(50))
-    anno_corso=Column(Integer)
-    aula_id=Column(Integer)
-    aula=Column(String(35))
-    capienza_aula=Column(Integer)
-
-    def to_dict(self):
-        return dict([(k, getattr(self, k)) for k in self.__dict__.keys() if not k.startswith("_")])
-
 
 class Chiusura(Model):
     id=Column(Integer, primary_key=True)
