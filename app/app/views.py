@@ -12,7 +12,7 @@ from .models import AnnoAccademico, CorsoDiStudio, AttivitaDidattica, Docente, A
                     LogisticaDocente, Modulo, Giorno, Slot, OrarioTestata, OrarioDettaglio, Chiusura
 
 from flask.templating import render_template
-from .util import svuotaDb, caricaDati7Cds, caricaDatiBase, getColori, getAttributiLDap
+from .util import svuotaDb, caricaDati7Cds, caricaDatiBase, getColori, getAttributiLDap, getOrarioCorrente
 from .esse3_to_watt import getAnniAccademici, getCorsiInOfferta, importDatiEsse3
 from .solver import AlgoritmoCalcolo
 
@@ -21,7 +21,7 @@ class AnniAccademiciView(ModelView):
     datamodel = SQLAInterface(AnnoAccademico)
     label_columns = {"anno":"Anno accademico",
                      "anno_esteso":"Anno accademico esteso"}
-    list_columns = ["anno", 
+    list_columns = ["anno",
                     "anno_esteso"]
 
 
@@ -235,74 +235,20 @@ class OrariGeneratiView(ModelView):
 
     @action("carica_schema", "Carica orario", "Carico lo schema orario selezionato?", "fa-trash-alt", multiple=False, single=True)
     def carica_schema(self, item):
-        try:
-            orarioCorrente = []
-            tst=db.session.query(OrarioTestata).filter(OrarioTestata.id==item.id).first()
-            # Dati dell'orario corrente caricato in memoria
-            session["annoAccademico"] = tst.anno_accademico_id
-            session["semestre"] = tst.semestre
-            session["testata_id"] = item.id
-            session["chkSessioneUnica"]=str(tst.vincolo_sessione_unica)
-            session["chkSessioniConsecutive"]=str(tst.vincolo_sessioni_consecutive)
-            if tst.vincolo_max_slot>0:
-                session["chkMaxOre"]="1"
-            else:
-                session["chkMaxOre"]="0"
-            session["selMaxOre"]=tst.vincolo_max_slot
-            session["chkPreferenzeDocenti"]=str(tst.vincolo_logistica_docenti)
+        tst=db.session.query(OrarioTestata).filter(OrarioTestata.id==item.id).first()
+        # Dati dell'orario corrente caricato in memoria
+        session["annoAccademico"] = tst.anno_accademico_id
+        session["semestre"] = tst.semestre
+        session["testata_id"] = item.id
+        session["chkSessioneUnica"]=str(tst.vincolo_sessione_unica)
+        session["chkSessioniConsecutive"]=str(tst.vincolo_sessioni_consecutive)
+        if tst.vincolo_max_slot>0:
+            session["chkMaxOre"]="1"
+        else:
+            session["chkMaxOre"]="0"
+        session["selMaxOre"]=tst.vincolo_max_slot
+        session["chkPreferenzeDocenti"]=str(tst.vincolo_logistica_docenti)
 
-            rows=db.session.query(OrarioDettaglio, Modulo, Giorno, Offerta, AttivitaDidattica, CorsoDiStudio, Docente, Slot, Aula) \
-            .join(CorsoDiStudio, OrarioDettaglio.corso_di_studio_id == CorsoDiStudio.id) \
-            .join(Modulo, OrarioDettaglio.modulo_id == Modulo.id) \
-            .join(Offerta, Modulo.offerta_id == Offerta.id) \
-            .join(Docente, Modulo.docente_id == Docente.id) \
-            .join(Slot, OrarioDettaglio.slot_id == Slot.id) \
-            .join(Giorno, OrarioDettaglio.giorno_id == Giorno.id) \
-            .join(AttivitaDidattica, Offerta.attivita_didattica_id == AttivitaDidattica.id) \
-            .join(Aula, OrarioDettaglio.aula_id==Aula.id)\
-            .filter(OrarioDettaglio.testata_id==item.id)\
-            .order_by(CorsoDiStudio.codice.asc(), Giorno.id.asc(), Modulo.codice.asc(), Slot.id.asc(), Aula.codice.asc()).all()
-            id=1
-            for r in rows:
-                id+=1
-                if r.Modulo.max_studenti > 0:
-                    numerosita = r.Modulo.max_studenti
-                else:
-                    numerosita = r.Offerta.max_studenti
-
-                rigaOrario = {
-                    "id": id,
-                    "testata_id": int(item.id),
-                    "giorno_id": int(r.Giorno.id),
-                    "giorno": str(r.Giorno.descrizione),
-                    "corso_id": int(r.CorsoDiStudio.id),
-                    "codice_corso": str(r.CorsoDiStudio.codice),
-                    "descrizione_corso": str(r.CorsoDiStudio.descrizione),
-                    "colore_corso": str(getColori()[r.CorsoDiStudio.id]),
-                    "codice_attivita": str(r.AttivitaDidattica.codice),
-                    "descrizione_attivita": str(r.AttivitaDidattica.descrizione),
-                    "colore_attivita": str(r.AttivitaDidattica.colore),
-                    "modulo_id": int(r.Modulo.id),
-                    "descrizione_modulo": str(r.Modulo.descrizione),
-                    "numerosita_modulo": int(numerosita),
-                    "slot_id": int(r.Slot.id),
-                    "descrizione_slot": str(r.Slot.descrizione),
-                    "nome_docente": str(r.Docente.nome),
-                    "cognome_docente": str(r.Docente.cognome),
-                    "anno_corso": int(r.Offerta.anno_di_corso),
-                    "aula_id": int(r.Aula.id),
-                    "aula": str(r.Aula.descrizione),
-                    "capienza_aula": int(r.Aula.capienza) }
-
-                orarioCorrente.append(rigaOrario)
-
-            session["orarioCorrente"]=orarioCorrente
-            flash(orarioCorrente)
-            flash("Orario caricato correttamente! (Puoi visualizzarlo con Orario -> Schema settimanale","success")
-        except SQLAlchemyError:
-            db.sessione.rollback()
-            flash("Errore durante la cancellazione degli orari selezionati","danger")
-            return -1
         return redirect(self.get_redirect())
 
 
@@ -368,15 +314,14 @@ class UtilitaEsse3View(BaseView):
             try:
                 anniAccademici=session["anniAccademici"]
                 corsiInOfferta=session["corsiInOfferta"]
-                corsi=request.form.getlist("corsi")
             except:
                 flash("Bisogna effettuare almeno una selezione nelle precedenti sezioni!", "warning")
 
-            if len(corsi)>0:
+            if len(request.form.getlist("corsi"))>0:
                 importDatiEsse3(request.form.get("anniAccademici"),request.form.getlist("corsi"), request.form.get("semestre"),
-                                request.form.get("cbSovrDatiCorsi"),request.form.get("cbSovrDatiAD"), request.form.get("cbSovrDatiDocenti"),
-                                request.form.get("cbSovrDatiOfferta"),request.form.get("cbImportaADObbligatorie"),request.form.get("cbImportaDatiIncompleti"),
-                                request.form.get("moduli"))
+                            request.form.get("cbSovrDatiCorsi"),request.form.get("cbSovrDatiAD"), request.form.get("cbSovrDatiDocenti"),
+                            request.form.get("cbSovrDatiOfferta"),request.form.get("cbImportaADObbligatorie"),request.form.get("cbImportaDatiIncompleti"),
+                            request.form.get("moduli"))
             else:
                 flash("Selezionare almeno un corso da importare!", "warning")
 
@@ -436,12 +381,11 @@ class SchemaSettimanaleView(BaseView):
     @has_access
     def wsk_home(self):
         slot=db.session.query(Slot).all()
-        orarioCorrente=session["orarioCorrente"]
         return render_template("timetable.html",
                                base_template=appbuilder.base_template,
                                appbuilder=appbuilder,
                                slot=slot,
-                               orario=orarioCorrente)
+                               orario=getOrarioCorrente())
 
 
 class CalendarioView(BaseView):
@@ -453,6 +397,8 @@ class CalendarioView(BaseView):
         token, role = getAttributiLDap(g.user.username)
         corsiOrarioCorrente = []
         anniCorsoOrarioCorrente = []
+
+        session["orarioCorrente"] = getOrarioCorrente()
 
         if role=="wattStud":
             None
@@ -479,8 +425,6 @@ class CalendarioView(BaseView):
                 if cur.strftime("%Y/%m/%d") not in vChiusure:
                     vChiusure.append(cur.strftime("%Y/%m/%d"))
                 cur = cur + timedelta(days=1)
-
-        orarioCorrente = session["orarioCorrente"]
 
         return render_template("calendar.html",
                                base_template=appbuilder.base_template,
@@ -544,7 +488,8 @@ class CalendarioView(BaseView):
         session["orarioCorrente"] = orarioCorrente
 
         data = {"orario": session["orarioCorrente"],
-                "chiusure": session["chiusure"]}
+                "chiusure": session["chiusure"],
+                "aula" : aula.descrizione}
         return data, 200
 
     @expose("/cld_upd/", methods=["POST"])

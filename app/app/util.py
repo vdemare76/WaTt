@@ -2,7 +2,7 @@ from .models import AnnoAccademico, CorsoDiStudio, AttivitaDidattica, \
     Docente, Aula, Offerta, LogisticaDocente, Modulo, Giorno, Slot, \
     OrarioTestata, OrarioDettaglio, StatoOrario, NumerositaAnniCorso
 from .import db
-from flask import flash
+from flask import flash, session
 from sqlalchemy.exc import SQLAlchemyError
 from .solver_models import ModuloTt, AulaTt, CorsoDiStudioTt, SlotTt, GiornoTt
 
@@ -636,7 +636,6 @@ def inizializza_db():
 
 
 def getAttributiLDap(uid):
-
     try:
         ldap_server=Server(config.AUTH_LDAP_SERVER+":"+config.AUTH_LDAP_PORT, get_info=ALL)
         ldap_connection=Connection(ldap_server, user="cn=admin,dc=uniparthenope,dc=it",password="wattpw01")
@@ -658,3 +657,55 @@ def getAttributiLDap(uid):
     except LDAPSocketOpenError:
         print("Unabled to connect to the LDAP server!")
         return None
+
+
+def getOrarioCorrente():
+
+    orarioCorrente = []
+    testata_id=session["testata_id"]
+    rows = db.session.query(OrarioDettaglio, Modulo, Giorno, Offerta, AttivitaDidattica, CorsoDiStudio, Docente, Slot, Aula) \
+        .join(CorsoDiStudio, OrarioDettaglio.corso_di_studio_id == CorsoDiStudio.id) \
+        .join(Modulo, OrarioDettaglio.modulo_id == Modulo.id) \
+        .join(Offerta, Modulo.offerta_id == Offerta.id) \
+        .join(Docente, Modulo.docente_id == Docente.id) \
+        .join(Slot, OrarioDettaglio.slot_id == Slot.id) \
+        .join(Giorno, OrarioDettaglio.giorno_id == Giorno.id) \
+        .join(AttivitaDidattica, Offerta.attivita_didattica_id == AttivitaDidattica.id) \
+        .join(Aula, OrarioDettaglio.aula_id == Aula.id) \
+        .filter(OrarioDettaglio.testata_id == testata_id) \
+        .order_by(CorsoDiStudio.codice.asc(), Giorno.id.asc(), Modulo.codice.asc(), Slot.id.asc(), Aula.codice.asc()).all()
+
+    id = 0
+    for r in rows:
+        id += 1
+        if r.Modulo.max_studenti > 0:
+            numerosita = r.Modulo.max_studenti
+        else:
+            numerosita = r.Offerta.max_studenti
+
+        rigaOrario = {
+            "id": id,
+            "testata_id": int(testata_id),
+            "giorno_id": int(r.Giorno.id),
+            "giorno": str(r.Giorno.descrizione),
+            "corso_id": int(r.CorsoDiStudio.id),
+            "codice_corso": str(r.CorsoDiStudio.codice),
+            "descrizione_corso": str(r.CorsoDiStudio.descrizione),
+            "colore_corso": str(getColori()[r.CorsoDiStudio.id]),
+            "codice_attivita": str(r.AttivitaDidattica.codice),
+            "descrizione_attivita": str(r.AttivitaDidattica.descrizione),
+            "colore_attivita": str(r.AttivitaDidattica.colore),
+            "modulo_id": int(r.Modulo.id),
+            "descrizione_modulo": str(r.Modulo.descrizione),
+            "numerosita_modulo": int(numerosita),
+            "slot_id": int(r.Slot.id),
+            "descrizione_slot": str(r.Slot.descrizione),
+            "nome_docente": str(r.Docente.nome),
+            "cognome_docente": str(r.Docente.cognome),
+            "anno_corso": int(r.Offerta.anno_di_corso),
+            "aula_id": int(r.Aula.id),
+            "aula": str(r.Aula.descrizione),
+            "capienza_aula": int(r.Aula.capienza) }
+
+        orarioCorrente.append(rigaOrario)
+    return orarioCorrente

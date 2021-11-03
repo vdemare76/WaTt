@@ -114,7 +114,7 @@
             });
           },
           eventChange: function(evento) {
-            modificaEventoInOrario(evento, evento, evento.event.start.getDay(), evento.event.start.getHours(), 0, calendar);
+            modificaEventoSlotGiorno(evento, evento.event.start.getDay(), evento.event.start.getHours());
           },
           eventClick: function(evento) {
             gestione_cambio_aula(evento, calendar)
@@ -217,7 +217,7 @@
           for (let i=0; i<orLen; i++) {
             if (arrOrario[i].corso_id==idc && arrOrario[i].anno_corso==adc) {
               let titolo_evento = "["+arrOrario[i].codice_attivita + "] - " + arrOrario[i].descrizione_attivita + " "
-                                     +arrOrario[i].descrizione_modulo + " (" + arrOrario[i].aula + ")";
+                                     +arrOrario[i].descrizione_modulo + " # " + arrOrario[i].aula;
               if (arrOrario[i].giorno == giorni_settimana[data_cur.getDay()]) {
                 ora_inizio = arrOrario[i].descrizione_slot.substring(0, 2);
                 ora_fine = arrOrario[i].descrizione_slot.substring(6, 8);
@@ -282,30 +282,57 @@
       }
     }
 
-    function modificaEventoInOrario(eventoOld, eventoNew, giorno, slot, aula, cal) {
+    function modificaEventoInOrario(evento, giorno, slot, aula, cal) {
       if (aula > 0) {
         newAula = aula;
-        eventoOld.event.remove();
-        eventoNew.event.setExtendedProp("aula_id", aula);
-        alert(JSON.stringify(eventoNew));
-        //cal.addEvent(eventoNew.event);
+        evento.event.remove();
       }
       else
         newAula =  evento.event.extendedProps.aula_id;
-
       $.ajax({
         type: "POST",
         contentType: "application/json",
-        data: JSON.stringify({evento: evento.event, giorno: giorno, slot: slot, aula:newAula}),
+        data: JSON.stringify({evento: evento.event, giorno: giorno, slot: slot, aula:newAula, tipo: "aula"}),
         dataType: "json",
         url: "/calendarioview/cld_mod/",
         success: function (ris) {
-          //genera_calendario(ris["orario"], ris["chiusure"]);
-          cal.refetchEvents();
+          titolo_evento = evento.event.title;
+          new_titolo_evento = titolo_evento.substr(0,titolo_evento.indexOf('#')-1) + ' # ' + ris["aula"];
+          cal.addEvent({
+            title: new_titolo_evento,
+            start: evento.event.start,
+            end: evento.event.end,
+            backgroundColor: evento.event.backgroundColor,
+            borderColor: evento.event.borderColor,
+            textColor: evento.event.textColor,
+            extendedProps: {
+              displayEventTime: evento.event.extendedProps.displayEventTime,
+              displayEventEnd: evento.event.extendedProps.displayEventEnd,
+              descrizione: evento.event.extendedProps.descrizione,
+              numerosita: evento.event.extendedProps.numerosita,
+              giorno_id: evento.event.extendedProps.giorno_id,
+              slot_id: evento.event.extendedProps.slot_id,
+              corso_id: evento.event.extendedProps.corso_id,
+              modulo_id: evento.event.extendedProps.modulo_id,
+              aula_id: newAula
+            }
+          });
           $(".popover").remove();
         }
       });
+    }
 
+    function modificaEventoSlotGiorno(evento, giorno, slot) {
+      $.ajax({
+        type: "POST",
+        contentType: "application/json",
+        data: JSON.stringify({evento: evento.event, giorno: giorno, slot: slot, aula:0, tipo:"slotgiorno"}),
+        dataType: "json",
+        url: "/calendarioview/cld_mod/",
+        success: function (ris) {
+          $(".popover").remove();
+        }
+      });
     }
 
     function verificaOrario() {
@@ -354,7 +381,7 @@
         url: "/calendarioview/cld_upd/",
         success: function (ris) {
           genera_calendario(ris["orario"],ris["chiusure"]);
-          $("#id_testata").val(ris["orario"][0].testata_id);
+          //$("#id_testata").val(ris["orario"][0].testata_id);
           $(".popover").remove();
         }
       });
@@ -379,7 +406,7 @@
           }
           $("#modal-room-w").modal();
           $(document).on("click", "#modal-room-ok", function () {
-            modificaEventoInOrario(evento, evento, evento.event.start.getDay(), evento.event.start.getHours(), parseInt($("#aulaSel option:selected").val()), cal);
+            modificaEventoInOrario(evento, evento.event.start.getDay(), evento.event.start.getHours(), parseInt($("#aulaSel option:selected").val()), cal);
           });
         }
       });
