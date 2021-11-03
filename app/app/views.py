@@ -297,6 +297,7 @@ class OrariGeneratiView(ModelView):
                 orarioCorrente.append(rigaOrario)
 
             session["orarioCorrente"]=orarioCorrente
+            flash(orarioCorrente)
             flash("Orario caricato correttamente! (Puoi visualizzarlo con Orario -> Schema settimanale","success")
         except SQLAlchemyError:
             db.sessione.rollback()

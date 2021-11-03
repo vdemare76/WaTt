@@ -26,7 +26,6 @@ colori={
 def __svuotaTabelle():
     db.session.query(OrarioDettaglio).delete()
     db.session.query(OrarioTestata).delete()
-    db.session.query(Orario).delete()
     db.session.query(LogisticaDocente).delete()
     db.session.query(Modulo).delete()
     db.session.query(Offerta).delete()
@@ -50,7 +49,6 @@ def __svuotaTabelle():
     db.session.execute("ALTER TABLE slot AUTO_INCREMENT=1")
     db.session.execute("ALTER TABLE aula AUTO_INCREMENT=1")
     db.session.execute("ALTER TABLE logistica_docente AUTO_INCREMENT=1")
-    db.session.execute("ALTER TABLE orario AUTO_INCREMENT=1")
     db.session.execute("ALTER TABLE orario_testata AUTO_INCREMENT=1")
     db.session.execute("ALTER TABLE orario_dettaglio AUTO_INCREMENT=1")
     db.session.commit()
