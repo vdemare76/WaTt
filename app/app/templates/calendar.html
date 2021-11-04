@@ -49,7 +49,6 @@
       <div id="calendar" name="calendar"></div><br>
     </div>
     <input type="text" id="id_testata" name="id_testata" value="" style="display:none">
-    <input type="text" id="id_aula" name="id_aula" value="" style="display:none">
   </body>
 
 </html>
@@ -85,6 +84,7 @@
       let orLen=arrOrario.length;
 
       let editabile=false;
+
       if ($('#chk_modifica').is(":checked"))
         editabile=true;
 
@@ -102,36 +102,35 @@
           slotMaxTime:"18:00:00",
           height:720,
           expandRows:true,
-          eventDidMount: function(evento) {
-            $(evento.el).popover({
-              title: evento.event.title,
+          eventDidMount: function(info) {
+            $(info.el).popover({
+              title: info.event.title,
               placement: "top",
               trigger: "hover",
-              content: evento.event.extendedProps.descrizione,
+              content: info.event.extendedProps.descrizione,
               background:"#FFF000",
               container: "body",
               html: true
             });
           },
-          eventChange: function(evento) {
-            modificaEventoSlotGiorno(evento, evento.event.start.getDay(), evento.event.start.getHours());
+          eventChange: function(info) {
+            modificaEventoInOrario(info.oldEvent, info.event, info.event.extendedProps.aula_id, calendar);
           },
-          eventClick: function(evento) {
-            gestione_cambio_aula(evento, calendar)
+          eventClick: function(info) {
+            gestione_cambio_aula(info.event, info.event, calendar)
           },
-          eventDragStop: function(evento) {
-            $("#id_aula").val(0);
+          eventDragStop: function(info) {
             $(".popover").remove();
           },
           buttonText:
           {
-            today:"oggi",
-            month:"mese",
-            week:"settimana",
-            day:"giorno",
-            list:"lista",
-            prev:"prec",
-            next:"succ"
+            today: "oggi",
+            month: "mese",
+            week: "settimana",
+            day: "giorno",
+            list: "lista",
+            prev: "prec",
+            next: "succ"
           },
           customButtons: {
             verifyButton: {
@@ -282,54 +281,42 @@
       }
     }
 
-    function modificaEventoInOrario(evento, giorno, slot, aula, cal) {
-      if (aula > 0) {
-        newAula = aula;
-        evento.event.remove();
-      }
-      else
-        newAula =  evento.event.extendedProps.aula_id;
+    function modificaEventoInOrario(eventoOld, eventoNew, aulaNew, calendar) {
+      if (aulaNew != eventoOld.extendedProps.aula_id)
+        eventoOld.remove();
       $.ajax({
         type: "POST",
         contentType: "application/json",
-        data: JSON.stringify({evento: evento.event, giorno: giorno, slot: slot, aula:newAula, tipo: "aula"}),
+        data: JSON.stringify({eventoOld: eventoOld,
+                              giornoNew: eventoNew.start.getDay(),
+                              slotNew: eventoNew.start.getHours(),
+                              aulaNew: aulaNew}),
         dataType: "json",
         url: "/calendarioview/cld_mod/",
         success: function (ris) {
-          titolo_evento = evento.event.title;
-          new_titolo_evento = titolo_evento.substr(0,titolo_evento.indexOf('#')-1) + ' # ' + ris["aula"];
-          cal.addEvent({
-            title: new_titolo_evento,
-            start: evento.event.start,
-            end: evento.event.end,
-            backgroundColor: evento.event.backgroundColor,
-            borderColor: evento.event.borderColor,
-            textColor: evento.event.textColor,
-            extendedProps: {
-              displayEventTime: evento.event.extendedProps.displayEventTime,
-              displayEventEnd: evento.event.extendedProps.displayEventEnd,
-              descrizione: evento.event.extendedProps.descrizione,
-              numerosita: evento.event.extendedProps.numerosita,
-              giorno_id: evento.event.extendedProps.giorno_id,
-              slot_id: evento.event.extendedProps.slot_id,
-              corso_id: evento.event.extendedProps.corso_id,
-              modulo_id: evento.event.extendedProps.modulo_id,
-              aula_id: newAula
-            }
-          });
-          $(".popover").remove();
-        }
-      });
-    }
-
-    function modificaEventoSlotGiorno(evento, giorno, slot) {
-      $.ajax({
-        type: "POST",
-        contentType: "application/json",
-        data: JSON.stringify({evento: evento.event, giorno: giorno, slot: slot, aula:0, tipo:"slotgiorno"}),
-        dataType: "json",
-        url: "/calendarioview/cld_mod/",
-        success: function (ris) {
+          if (aulaNew != eventoOld.extendedProps.aula_id) {
+            titolo_evento = eventoOld.title;
+            new_titolo_evento = titolo_evento.substr(0, titolo_evento.indexOf('#') - 1) + ' # ' + ris["aula"];
+            calendar.addEvent({
+              title: new_titolo_evento,
+              start: eventoOld.start,
+              end: eventoOld.end,
+              backgroundColor: eventoOld.backgroundColor,
+              borderColor: eventoOld.borderColor,
+              textColor: eventoOld.textColor,
+              extendedProps: {
+                displayEventTime: eventoOld.extendedProps.displayEventTime,
+                displayEventEnd: eventoOld.extendedProps.displayEventEnd,
+                descrizione: eventoOld.extendedProps.descrizione,
+                numerosita: eventoOld.extendedProps.numerosita,
+                giorno_id: eventoOld.extendedProps.giorno_id,
+                slot_id: eventoOld.extendedProps.slot_id,
+                corso_id: eventoOld.extendedProps.corso_id,
+                modulo_id: eventoOld.extendedProps.modulo_id,
+                aula_id: aulaNew
+              }
+            });
+          }
           $(".popover").remove();
         }
       });
@@ -387,14 +374,14 @@
       });
     }
 
-    function gestione_cambio_aula(evento, cal) {
+    function gestione_cambio_aula(eventoOld, eventoNew, calendar) {
       $.ajax({
         type: "POST",
         contentType: "application/json",
-        data: JSON.stringify({aula: evento.event.extendedProps.aula_id,
-                              numerosita: evento.event.extendedProps.numerosita,
-                              giorno: evento.event.extendedProps.giorno_id,
-                              slot: evento.event.extendedProps.slot_id}),
+        data: JSON.stringify({aula: eventoNew.extendedProps.aula_id,
+                              numerosita: eventoNew.extendedProps.numerosita,
+                              giorno: eventoNew.extendedProps.giorno_id,
+                              slot: eventoNew.extendedProps.slot_id}),
         dataType: "json",
         url: "/calendarioview/cld_room/",
         success: function(ris) {
@@ -406,7 +393,8 @@
           }
           $("#modal-room-w").modal();
           $(document).on("click", "#modal-room-ok", function () {
-            modificaEventoInOrario(evento, evento.event.start.getDay(), evento.event.start.getHours(), parseInt($("#aulaSel option:selected").val()), cal);
+            session["aula"]=parseInt($("#aulaSel option:selected").val());
+            //modificaEventoInOrario(eventoOld, eventoNew, parseInt($("#aulaSel option:selected").val()), calendar);
           });
         }
       });

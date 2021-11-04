@@ -249,6 +249,7 @@ class OrariGeneratiView(ModelView):
         session["selMaxOre"]=tst.vincolo_max_slot
         session["chkPreferenzeDocenti"]=str(tst.vincolo_logistica_docenti)
 
+        flash('Orario caricato correttamente! (Puoi visualizzarlo con Orario -> Schema settimanale', 'success')
         return redirect(self.get_redirect())
 
 
@@ -464,32 +465,39 @@ class CalendarioView(BaseView):
     @expose("/cld_mod/", methods=["POST"])
     @has_access
     def cld_mod(self):
+        #try:
         dati=json.loads(request.data)
-        evento=dati["evento"]
-        slot=db.session.query(Slot).filter(Slot.ora_slot_cal==dati["slot"]).first()
-        giorno=db.session.query(Giorno).filter(Giorno.id==dati["giorno"]).first()
-        if dati["aula"]>-1:
-            aula=db.session.query(Aula).filter(Aula.id==dati["aula"]).first()
 
         orarioCorrente = session["orarioCorrente"]
+        eventoOld=dati["eventoOld"]
+
+        slotNew=db.session.query(Slot).filter(Slot.ora_slot_cal==dati["slotNew"]).first()
+        giornoNew=db.session.query(Giorno).filter(Giorno.id==dati["giornoNew"]).first()
+        aulaNew=db.session.query(Aula).filter(Aula.id==dati["aulaNew"]).first()
+        descrizioneAula = aulaNew.descrizione
         for row in orarioCorrente:
-            if (row["corso_id"] == evento["extendedProps"]["corso_id"] and row["modulo_id"] == evento["extendedProps"]["modulo_id"] and
-                row["aula_id"] == evento["extendedProps"]["aula_id"] and row["giorno_id"] == evento["extendedProps"]["giorno_id"] and
-                row["slot_id"] == evento["extendedProps"]["slot_id"]):
-                row["giorno_id"] = dati["giorno"]
-                row["slot_id"] = slot.id
-                row["descrizione_slot"] = slot.descrizione
-                row["giorno"] = giorno.descrizione
-                row["aula_id"] = aula.id
-                row["aula"] = aula.descrizione
-                row["capienza_aula"] = aula.capienza
+            if (row["corso_id"] == eventoOld["extendedProps"]["corso_id"] and
+                row["modulo_id"] == eventoOld["extendedProps"]["modulo_id"] and
+                row["aula_id"] == eventoOld["extendedProps"]["aula_id"] and
+                row["giorno_id"] == eventoOld["extendedProps"]["giorno_id"] and
+                row["slot_id"] == eventoOld["extendedProps"]["slot_id"]):
+                row["giorno_id"] = dati["giornoNew"]
+                row["slot_id"] = slotNew.id
+                row["descrizione_slot"] = slotNew.descrizione
+                row["giorno"] = giornoNew.descrizione
+                row["aula_id"] = aulaNew.id
+                row["aula"] = aulaNew.descrizione
+                row["capienza_aula"] = aulaNew.capienza
                 break;
 
         session["orarioCorrente"] = orarioCorrente
+        #except:
+        #    flash("Si sono verificati problemi nell'aggiornamento dell'orario","success");
 
         data = {"orario": session["orarioCorrente"],
                 "chiusure": session["chiusure"],
-                "aula" : aula.descrizione}
+                "aula": descrizioneAula}
+
         return data, 200
 
     @expose("/cld_upd/", methods=["POST"])
