@@ -3,8 +3,11 @@
   <component name="ChangeListManager">
     <list default="true" id="4bd4ca69-5fab-4bca-9aae-55bf4e9525ff" name="Default Changelist" comment="Update">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/app/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/app/__init__.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/app/templates/calendar.html" beforeDir="false" afterPath="$PROJECT_DIR$/app/app/templates/calendar.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/app/util.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/app/util.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/app/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/app/views.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/config.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/config.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -179,6 +182,8 @@
       <workItem from="1635762839840" duration="35223000" />
       <workItem from="1635957089526" duration="16508000" />
       <workItem from="1636042129452" duration="8881000" />
+      <workItem from="1636131813491" duration="8431000" />
+      <workItem from="1636189227141" duration="22097000" />
     </task>
     <task id="LOCAL-00058" summary="Update">
       <created>1629666369829</created>

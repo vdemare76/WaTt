@@ -662,7 +662,7 @@ def getAttributiLDap(uid):
 def getOrarioCorrente():
 
     orarioCorrente = []
-    testata_id=session["testata_id"]
+    testata_id=session["testataId"]
     rows = db.session.query(OrarioDettaglio, Modulo, Giorno, Offerta, AttivitaDidattica, CorsoDiStudio, Docente, Slot, Aula) \
         .join(CorsoDiStudio, OrarioDettaglio.corso_di_studio_id == CorsoDiStudio.id) \
         .join(Modulo, OrarioDettaglio.modulo_id == Modulo.id) \

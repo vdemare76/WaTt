@@ -239,7 +239,7 @@ class OrariGeneratiView(ModelView):
         # Dati dell'orario corrente caricato in memoria
         session["annoAccademico"] = tst.anno_accademico_id
         session["semestre"] = tst.semestre
-        session["testata_id"] = item.id
+        session["testataId"] = item.id
         session["chkSessioneUnica"]=str(tst.vincolo_sessione_unica)
         session["chkSessioniConsecutive"]=str(tst.vincolo_sessioni_consecutive)
         if tst.vincolo_max_slot>0:
@@ -378,16 +378,19 @@ class PreferenzeView(BaseView):
 class SchemaSettimanaleView(BaseView):
     default_view = "wsk_home"
 
-    @expose("/wsk_home/")
+    @expose("/wsk_home/", methods=["GET","POST"])
     @has_access
     def wsk_home(self):
-        slot=db.session.query(Slot).all()
-        return render_template("timetable.html",
-                               base_template=appbuilder.base_template,
-                               appbuilder=appbuilder,
-                               slot=slot,
-                               orario=getOrarioCorrente())
-
+        if "testataId" in session:
+            slot=db.session.query(Slot).all()
+            return render_template("timetable.html",
+                                   base_template=appbuilder.base_template,
+                                   appbuilder=appbuilder,
+                                   slot=slot,
+                                   orario=getOrarioCorrente())
+        else:
+            flash("Caricare un orario generato come base su cui lavorare: Orari Generati -> Carica", "danger")
+        return redirect(self.get_redirect())
 
 class CalendarioView(BaseView):
     default_view = "cld_home"
@@ -395,45 +398,51 @@ class CalendarioView(BaseView):
     @expose("/cld_home/")
     @has_access
     def cld_home(self):
-        token, role = getAttributiLDap(g.user.username)
-        corsiOrarioCorrente = []
-        anniCorsoOrarioCorrente = []
-
-        session["orarioCorrente"] = getOrarioCorrente()
-
-        if role=="wattStud":
-            None
-        else:
+        if "testataId" in session:
+            if "orarioCorrente" not in session:
+                session["orarioCorrente"] = getOrarioCorrente()
             orarioCorrente = session["orarioCorrente"]
-            for o in orarioCorrente:
-                risCorsi = list(filter(lambda ocr: ocr['corso_id'] == o["corso_id"], corsiOrarioCorrente))
-                if len(risCorsi)==0:
-                   corsiOrarioCorrente.append({"corso_id":o["corso_id"], "codice_corso":o["codice_corso"], "descrizione_corso":o["descrizione_corso"]})
-                corsiOrarioCorrente = sorted(corsiOrarioCorrente, key=lambda k: (k["descrizione_corso"]))
-                risAnniCorso = list(filter(lambda ocr: ocr["corso_id"] == o["corso_id"] and ocr["anno_corso"] == o["anno_corso"], anniCorsoOrarioCorrente))
-                if len(risAnniCorso)==0:
-                   anniCorsoOrarioCorrente.append({"corso_id": o["corso_id"], "codice_corso": o["codice_corso"], "anno_corso": o["anno_corso"]})
-                anniCorsoOrarioCorrente = sorted(anniCorsoOrarioCorrente, key=lambda k: (k["anno_corso"]))
 
-        chiusure = db.session.query(Chiusura).filter(Chiusura.testata_id==session["testata_id"]).all()
-        session["chiusure"]=chiusure
+            token, role = getAttributiLDap(g.user.username)
+            corsiOrarioCorrente = []
+            anniCorsoOrarioCorrente = []
 
-        vChiusure = []
-        for c in chiusure:
-            cur = c.data_inizio
-            end = c.data_fine + timedelta(days=1)
-            while (cur < end):
-                if cur.strftime("%Y/%m/%d") not in vChiusure:
-                    vChiusure.append(cur.strftime("%Y/%m/%d"))
-                cur = cur + timedelta(days=1)
+            if role=="wattStud":
+                None
+            else:
+                for o in orarioCorrente:
+                    risCorsi = list(filter(lambda ocr: ocr['corso_id'] == o["corso_id"], corsiOrarioCorrente))
+                    if len(risCorsi)==0:
+                       corsiOrarioCorrente.append({"corso_id":o["corso_id"], "codice_corso":o["codice_corso"], "descrizione_corso":o["descrizione_corso"]})
+                    corsiOrarioCorrente = sorted(corsiOrarioCorrente, key=lambda k: (k["descrizione_corso"]))
+                    risAnniCorso = list(filter(lambda ocr: ocr["corso_id"] == o["corso_id"] and ocr["anno_corso"] == o["anno_corso"], anniCorsoOrarioCorrente))
+                    if len(risAnniCorso)==0:
+                       anniCorsoOrarioCorrente.append({"corso_id": o["corso_id"], "codice_corso": o["codice_corso"], "anno_corso": o["anno_corso"]})
+                    anniCorsoOrarioCorrente = sorted(anniCorsoOrarioCorrente, key=lambda k: (k["anno_corso"]))
 
-        return render_template("calendar.html",
-                               base_template=appbuilder.base_template,
-                               appbuilder=appbuilder,
-                               corsi=corsiOrarioCorrente,
-                               anni_corso=anniCorsoOrarioCorrente,
-                               orario=orarioCorrente,
-                               chiusure=vChiusure)
+            chiusure = db.session.query(Chiusura).filter(Chiusura.testata_id==session["testataId"]).all()
+            session["chiusure"]=chiusure
+
+            vChiusure = []
+            for c in chiusure:
+                cur = c.data_inizio
+                end = c.data_fine + timedelta(days=1)
+                while (cur < end):
+                    if cur.strftime("%Y/%m/%d") not in vChiusure:
+                        vChiusure.append(cur.strftime("%Y/%m/%d"))
+                    cur = cur + timedelta(days=1)
+
+            return render_template("calendar.html",
+                                   base_template=appbuilder.base_template,
+                                   appbuilder=appbuilder,
+                                   corsi=corsiOrarioCorrente,
+                                   anni_corso=anniCorsoOrarioCorrente,
+                                   orario=orarioCorrente,
+                                   chiusure=vChiusure)
+        else:
+            flash("Caricare un orario generato come base su cui lavorare: Orari Generati -> Carica", "danger")
+            return redirect(self.get_redirect())
+
 
     @expose("/cld_ver/", methods=["POST"])
     @has_access
@@ -465,16 +474,13 @@ class CalendarioView(BaseView):
     @expose("/cld_mod/", methods=["POST"])
     @has_access
     def cld_mod(self):
-        #try:
         dati=json.loads(request.data)
-
         orarioCorrente = session["orarioCorrente"]
         eventoOld=dati["eventoOld"]
 
         slotNew=db.session.query(Slot).filter(Slot.ora_slot_cal==dati["slotNew"]).first()
         giornoNew=db.session.query(Giorno).filter(Giorno.id==dati["giornoNew"]).first()
         aulaNew=db.session.query(Aula).filter(Aula.id==dati["aulaNew"]).first()
-        descrizioneAula = aulaNew.descrizione
         for row in orarioCorrente:
             if (row["corso_id"] == eventoOld["extendedProps"]["corso_id"] and
                 row["modulo_id"] == eventoOld["extendedProps"]["modulo_id"] and
@@ -491,13 +497,18 @@ class CalendarioView(BaseView):
                 break;
 
         session["orarioCorrente"] = orarioCorrente
-        #except:
-        #    flash("Si sono verificati problemi nell'aggiornamento dell'orario","success");
 
         data = {"orario": session["orarioCorrente"],
-                "chiusure": session["chiusure"],
-                "aula": descrizioneAula}
+                "chiusure": session["chiusure"]}
 
+        return data, 200
+
+    @expose("/cld_load/", methods=["POST"])
+    @has_access
+    def cld_upd(self):
+        session["orarioCorrente"] = getOrarioCorrente()
+        data = {"orario": session["orarioCorrente"],
+                "chiusure": session["chiusure"]}
         return data, 200
 
     @expose("/cld_upd/", methods=["POST"])
