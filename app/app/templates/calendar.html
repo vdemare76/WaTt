@@ -293,7 +293,7 @@
         dataType: "json",
         url: "/calendarioview/cld_mod/",
         success: function (ris) {
-          caricaOrario();
+          aggiornaOrario();
         }
       });
     }
@@ -346,7 +346,6 @@
           $(".popover").remove();
         }
       });
-      $("#id_aula").val(0);
     }
 
     function aggiornaOrario() {
@@ -359,7 +358,6 @@
           $(".popover").remove();
         }
       });
-      $("#id_aula").val(0);
     }
 
     function gestione_cambio_aula(eventoOld, eventoNew, calendar) {

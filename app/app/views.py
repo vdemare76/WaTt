@@ -315,6 +315,7 @@ class UtilitaEsse3View(BaseView):
             try:
                 anniAccademici=session["anniAccademici"]
                 corsiInOfferta=session["corsiInOfferta"]
+
             except:
                 flash("Bisogna effettuare almeno una selezione nelle precedenti sezioni!", "warning")
 
@@ -505,8 +506,11 @@ class CalendarioView(BaseView):
 
     @expose("/cld_load/", methods=["POST"])
     @has_access
-    def cld_upd(self):
+    def cld_load(self):
         session["orarioCorrente"] = getOrarioCorrente()
+        chiusure = db.session.query(Chiusura).filter(Chiusura.testata_id == session["testataId"]).all()
+        session["chiusure"] = chiusure
+
         data = {"orario": session["orarioCorrente"],
                 "chiusure": session["chiusure"]}
         return data, 200
@@ -521,23 +525,23 @@ class CalendarioView(BaseView):
     @expose("/cld_app/", methods=["POST"])
     @has_access
     def cld_app(self):
-        dati = json.loads(request.data)
-        '''db.session.query(OrarioTestata).filter(OrarioTestata.id == dati["id_orario"]) \
-            .update({OrarioTestata.data_ultima_modifica: datetime.datetime.now(pytz.timezone("Europe/Rome"))})
-        db.session.query(OrarioDettaglio).filter(OrarioDettaglio.testata_id == dati["id_orario"]).delete()
-        orario = db.session.query(Orario).all()
-        for o in orario:
-            od = o.to_dict()
-            row = OrarioDettaglio(
-                       testata_id = od["testata_id"],
-                       corso_di_studio_id = od["corso_id"],
-                       modulo_id = od["modulo_id"],
-                       slot_id = od["slot_id"],
-                       giorno_id = od["giorno_id"],
-                       aula_id = od["aula_id"])
-            db.session.add(row)
+        if "orarioCorrente" in session:
+            orarioCorrente = session["orarioCorrente"]
+            db.session.query(OrarioDettaglio).filter(OrarioDettaglio.testata_id == orarioCorrente[0]["testata_id"]).delete()
+            for o in orarioCorrente:
+                row = OrarioDettaglio(
+                    testata_id=o["testata_id"],
+                    corso_di_studio_id=o["corso_id"],
+                    modulo_id=o["modulo_id"],
+                    slot_id=o["slot_id"],
+                    giorno_id=o["giorno_id"],
+                    aula_id=o["aula_id"])
+                db.session.add(row)
+            db.session.commit()
+            flash("Orario salvato correttamente!", "success")
+        else:
+            flash("Caricare un orario generato come base su cui lavorare: Orari Generati -> Carica", "danger")
 
-        db.session.commit()'''
         data = {"esito": "ok"}
         return data, 200
 
