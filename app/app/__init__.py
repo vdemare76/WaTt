@@ -1,6 +1,6 @@
 import logging
 
-from flask import Flask
+from flask import Flask, session
 from flask_appbuilder import AppBuilder, SQLA
 from .security import MySecurityManager
 
@@ -20,4 +20,5 @@ from . import util
 
 @app.before_first_request
 def before_request_func():
+  session.clear()
   util.inizializza_db()
