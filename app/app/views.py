@@ -459,7 +459,6 @@ class CalendarioView(BaseView):
                        "posizioniFisse": orarioCorrente}
 
             algoritmo=AlgoritmoCalcolo()
-
             ris=algoritmo.genera_orario(session["annoAccademico"],
                                         session["semestre"],
                                         "Verifica Orario",
@@ -551,6 +550,10 @@ class CalendarioView(BaseView):
     def cld_room(self):
         dati = json.loads(request.data)
         auleOccupate = []
+        orarioCorrente=session['orarioCorrente']
+        for o in orarioCorrente:
+            if o["giorno_id"]==dati["giorno"] and o["slot_id"]==dati["slot"]:
+                auleOccupate.append(o["aula_id"])
         aule = db.session.query(Aula) \
             .filter(Aula.id != dati["aula"]).filter(Aula.capienza >= dati["numerosita"]) \
             .filter(Aula.id.notin_(auleOccupate)). \

@@ -3,8 +3,8 @@
   <component name="ChangeListManager">
     <list default="true" id="4bd4ca69-5fab-4bca-9aae-55bf4e9525ff" name="Default Changelist" comment="Update">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/app/templates/calendar.html" beforeDir="false" afterPath="$PROJECT_DIR$/app/app/templates/calendar.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/app/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/app/views.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docker-app" beforeDir="false" afterPath="$PROJECT_DIR$/docker-app" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -182,6 +182,9 @@
       <workItem from="1636131813491" duration="8431000" />
       <workItem from="1636189227141" duration="22636000" />
       <workItem from="1636316985638" duration="5366000" />
+      <workItem from="1636390624815" duration="28000" />
+      <workItem from="1636390789263" duration="149000" />
+      <workItem from="1636390941507" duration="4533000" />
     </task>
     <task id="LOCAL-00060" summary="Update">
       <created>1630792082272</created>
