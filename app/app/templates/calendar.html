@@ -98,6 +98,7 @@
           allDaySlot: false,
           displayEventTime: false,
           editable: editabile,
+          eventDurationEditable: false,
           eventOverlap: false,
           slotMinTime: "09:00:00",
           slotMaxTime: "18:00:00",
@@ -115,7 +116,8 @@
             });
           },
           eventClick: function(info) {
-            gestione_cambio_aula(info.event, info.event, calendar)
+            if (info.event.extendedProps.giorno_id>-1)
+              gestione_cambio_aula(info.event, info.event, calendar)
           },
           eventDragStop: function(info) {
             $(".popover").remove();

@@ -15,7 +15,7 @@ from flask.templating import render_template
 from .util import svuotaDb, caricaDati7Cds, caricaDatiBase, getColori, getAttributiLDap, getOrarioCorrente
 from .esse3_to_watt import getAnniAccademici, getCorsiInOfferta, importDatiEsse3
 from .solver import AlgoritmoCalcolo
-
+from datetime import timedelta
 
 class AnniAccademiciView(ModelView):
     datamodel = SQLAInterface(AnnoAccademico)
