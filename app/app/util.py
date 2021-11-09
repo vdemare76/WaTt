@@ -709,3 +709,19 @@ def getOrarioCorrente():
 
         orarioCorrente.append(rigaOrario)
     return orarioCorrente
+
+def getChiusureOrarioCorrente():
+    chiusure = db.session.query(Chiusura).filter(Chiusura.testata_id == session["testataId"]).all()
+    chiusureOrarioCorrente = []
+
+    for r in chiusure:
+        rigaChiusure = {
+            "data_inizio": r.Chiusura.data_inizio,
+            "data_fine": r.Chiusura.data_fine,
+            "note": r.Chiusura.nota
+        }
+
+        chiusureOrarioCorrente(rigaChiusure)
+    return chiusureOrarioCorrente
+
+

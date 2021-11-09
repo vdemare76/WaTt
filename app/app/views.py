@@ -507,8 +507,7 @@ class CalendarioView(BaseView):
     @has_access
     def cld_load(self):
         session["orarioCorrente"] = getOrarioCorrente()
-        chiusure = db.session.query(Chiusura).filter(Chiusura.testata_id == session["testataId"]).all()
-        session["chiusure"] = chiusure
+        session["chiusure"] = ge
 
         data = {"orario": session["orarioCorrente"],
                 "chiusure": session["chiusure"]}
