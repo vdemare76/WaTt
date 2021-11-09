@@ -12,7 +12,7 @@ from .models import AnnoAccademico, CorsoDiStudio, AttivitaDidattica, Docente, A
                     LogisticaDocente, Modulo, Giorno, Slot, OrarioTestata, OrarioDettaglio, Chiusura
 
 from flask.templating import render_template
-from .util import svuotaDb, caricaDati7Cds, caricaDatiBase, getColori, getAttributiLDap, getOrarioCorrente
+from .util import svuotaDb, caricaDati7Cds, caricaDatiBase, getAttributiLDap, getOrarioCorrente, getChiusureOrarioCorrente
 from .esse3_to_watt import getAnniAccademici, getCorsiInOfferta, importDatiEsse3
 from .solver import AlgoritmoCalcolo
 from datetime import timedelta
@@ -421,17 +421,17 @@ class CalendarioView(BaseView):
                        anniCorsoOrarioCorrente.append({"corso_id": o["corso_id"], "codice_corso": o["codice_corso"], "anno_corso": o["anno_corso"]})
                     anniCorsoOrarioCorrente = sorted(anniCorsoOrarioCorrente, key=lambda k: (k["anno_corso"]))
 
-            chiusure = db.session.query(Chiusura).filter(Chiusura.testata_id==session["testataId"]).all()
-            session["chiusure"]=chiusure
+            chiusure=getChiusureOrarioCorrente()
 
             vChiusure = []
             for c in chiusure:
-                cur = c.data_inizio
-                end = c.data_fine + timedelta(days=1)
+                cur = c["data_inizio"]
+                end = c["data_fine"] + timedelta(days=1)
                 while (cur < end):
                     if cur.strftime("%Y/%m/%d") not in vChiusure:
                         vChiusure.append(cur.strftime("%Y/%m/%d"))
                     cur = cur + timedelta(days=1)
+            flash(vChiusure);
 
             return render_template("calendar.html",
                                    base_template=appbuilder.base_template,
@@ -507,7 +507,7 @@ class CalendarioView(BaseView):
     @has_access
     def cld_load(self):
         session["orarioCorrente"] = getOrarioCorrente()
-        session["chiusure"] = ge
+        session["chiusure"] = getChiusureOrarioCorrente()
 
         data = {"orario": session["orarioCorrente"],
                 "chiusure": session["chiusure"]}

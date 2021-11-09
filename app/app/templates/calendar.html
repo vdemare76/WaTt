@@ -181,6 +181,8 @@
       while (data_cur < data_fine) {
         let new_date = data_cur.setTime(data_cur.getTime()+day);
         data_cur = new Date(new_date);
+        alert(formatarrChiusure[0]["data_inizio"]);
+        alert(formatDate(data_cur));
         if (arrChiusure.includes(formatDate(data_cur))) {
           calendar.addEvent({
             title: "",

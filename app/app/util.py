@@ -1,6 +1,6 @@
 from .models import AnnoAccademico, CorsoDiStudio, AttivitaDidattica, \
     Docente, Aula, Offerta, LogisticaDocente, Modulo, Giorno, Slot, \
-    OrarioTestata, OrarioDettaglio, StatoOrario, NumerositaAnniCorso
+    OrarioTestata, OrarioDettaglio, StatoOrario, NumerositaAnniCorso, Chiusura
 from .import db
 from flask import flash, session
 from sqlalchemy.exc import SQLAlchemyError
@@ -716,12 +716,12 @@ def getChiusureOrarioCorrente():
 
     for r in chiusure:
         rigaChiusure = {
-            "data_inizio": r.Chiusura.data_inizio,
-            "data_fine": r.Chiusura.data_fine,
-            "note": r.Chiusura.nota
+            "data_inizio": r.data_inizio,
+            "data_fine": r.data_fine,
+            "note": r.nota
         }
 
-        chiusureOrarioCorrente(rigaChiusure)
+        chiusureOrarioCorrente.append(rigaChiusure)
     return chiusureOrarioCorrente
 
 
