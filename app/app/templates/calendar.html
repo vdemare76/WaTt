@@ -37,7 +37,7 @@
           <input type="date" id="data_fine_lezioni">
         </div>
       </div><br>
-      <button type="button" id="genera_calendario" onclick="caricaOrario()" class="btn bg-primary">Genera calendario per il corso selezionato</button><br><br>
+      <button type="button" id="genera_calendario" onclick="caricaOrario(false)" class="btn bg-primary">Genera calendario per il corso selezionato</button><br><br>
       <input type="checkbox" name="chk_modifica" id="chk_modifica" value="1">
       <label for = "chk_modifica">
           Abilita modalità modifica schema orario settimanale
@@ -69,7 +69,7 @@
         return [year, month, day].join("/");
     }
 
-    function genera_calendario(arrOrario,arrChiusure) {
+    function genera_calendario(arrOrario, arrChiusure, modificaFlg) {
       let day = 60 * 60 * 24 * 1000;
       let giorni_settimana = ["Domenica","Lunedì","Martedì","Mercoledì","Giovedì","Venerdì","Sabato"];
 
@@ -162,7 +162,8 @@
                 let cal = ics();
                 for (e in evs)
                 {
-                  cal.addEvent(evs[e].title, evs[e].title, evs[e].title, evs[e].start, evs[e].end);
+                  if (evs[e].extendedProps.giorno_id>-1)
+                    cal.addEvent(evs[e].title, evs[e].title, evs[e].title, evs[e].start, evs[e].end);
                 }
                 cal.download("cal");
               }
@@ -181,9 +182,7 @@
       while (data_cur < data_fine) {
         let new_date = data_cur.setTime(data_cur.getTime()+day);
         data_cur = new Date(new_date);
-        alert(formatarrChiusure[0]["data_inizio"]);
-        alert(formatDate(data_cur));
-        if (arrChiusure.includes(formatDate(data_cur))) {
+        if ((modificaFlg==false) && (arrChiusure.includes(formatDate(data_cur)))) {
           calendar.addEvent({
             title: "",
             start: data_cur.setHours("09"),
@@ -341,13 +340,13 @@
       $("#data_fine_lezioni").val($("#data_avvio_lezioni").val());
     }
 
-    function caricaOrario() {
+    function caricaOrario(modificaFlg) {
       $.ajax({
         type: "POST",
         contentType: "application/json",
         url: "/calendarioview/cld_load/",
         success: function (ris) {
-          genera_calendario(ris["orario"], ris["chiusure"]);
+          genera_calendario(ris["orario"], ris["chiusure"], modificaFlg);
           $(".popover").remove();
         }
       });
@@ -359,7 +358,7 @@
         contentType: "application/json",
         url: "/calendarioview/cld_upd/",
         success: function (ris) {
-          genera_calendario(ris["orario"], ris["chiusure"]);
+          genera_calendario(ris["orario"], ris["chiusure"], true);
           $(".popover").remove();
         }
       });
@@ -405,7 +404,7 @@
       $("#data_avvio_lezioni").val(anno + "-" + ("0" + (mese + 1)).slice(-2) + "-" + ("0" + giorno_inizio).slice(-2));
       $("#data_fine_lezioni").val(anno + "-" + ("0" + (mese + 1)).slice(-2) + "-" + ("0" + giorno_fine).slice(-2));
       $("#panel-periodo").css({"display": "none"});
-      caricaOrario();
+      caricaOrario(true);
     }
 
     function impostaIntervalloIniziale() {
@@ -413,7 +412,7 @@
       $("#data_avvio_lezioni").val(today.getFullYear() + "-" + ("0" + (today.getMonth() + 1)).slice(-2) + "-" + ("0" + today.getDate()).slice(-2));
       $("#data_fine_lezioni").val(today.getFullYear() + "-" + ("0" + (today.getMonth() + 1)).slice(-2) + "-" + ("0" + today.getDate()).slice(-2));
       $("#panel-periodo").css({"display": "block"});
-      caricaOrario();
+      caricaOrario(false);
     }
 
     function applicaModificaOrario() {

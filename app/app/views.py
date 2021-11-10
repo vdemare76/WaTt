@@ -15,7 +15,6 @@ from flask.templating import render_template
 from .util import svuotaDb, caricaDati7Cds, caricaDatiBase, getAttributiLDap, getOrarioCorrente, getChiusureOrarioCorrente
 from .esse3_to_watt import getAnniAccademici, getCorsiInOfferta, importDatiEsse3
 from .solver import AlgoritmoCalcolo
-from datetime import timedelta
 
 class AnniAccademiciView(ModelView):
     datamodel = SQLAInterface(AnnoAccademico)
@@ -402,8 +401,12 @@ class CalendarioView(BaseView):
         if "testataId" in session:
             if "orarioCorrente" not in session:
                 session["orarioCorrente"] = getOrarioCorrente()
-            orarioCorrente = session["orarioCorrente"]
 
+            session["chiusure"] = getChiusureOrarioCorrente()
+
+            orarioCorrente = session["orarioCorrente"]
+            #chiusureOrarioCorrente = session["chiusure"]
+            chiusureOrarioCorrente = []
             token, role = getAttributiLDap(g.user.username)
             corsiOrarioCorrente = []
             anniCorsoOrarioCorrente = []
@@ -421,25 +424,13 @@ class CalendarioView(BaseView):
                        anniCorsoOrarioCorrente.append({"corso_id": o["corso_id"], "codice_corso": o["codice_corso"], "anno_corso": o["anno_corso"]})
                     anniCorsoOrarioCorrente = sorted(anniCorsoOrarioCorrente, key=lambda k: (k["anno_corso"]))
 
-            chiusure=getChiusureOrarioCorrente()
-
-            vChiusure = []
-            for c in chiusure:
-                cur = c["data_inizio"]
-                end = c["data_fine"] + timedelta(days=1)
-                while (cur < end):
-                    if cur.strftime("%Y/%m/%d") not in vChiusure:
-                        vChiusure.append(cur.strftime("%Y/%m/%d"))
-                    cur = cur + timedelta(days=1)
-            flash(vChiusure);
-
             return render_template("calendar.html",
                                    base_template=appbuilder.base_template,
                                    appbuilder=appbuilder,
                                    corsi=corsiOrarioCorrente,
                                    anni_corso=anniCorsoOrarioCorrente,
                                    orario=orarioCorrente,
-                                   chiusure=vChiusure)
+                                   chiusure=chiusureOrarioCorrente)
         else:
             flash("Caricare un orario generato come base su cui lavorare: Orari Generati -> Carica", "danger")
             return redirect(self.get_redirect())

@@ -9,6 +9,7 @@ from .solver_models import ModuloTt, AulaTt, CorsoDiStudioTt, SlotTt, GiornoTt
 from ldap3 import Server, Connection, ALL, SUBTREE
 from ldap3.core.exceptions import LDAPException, LDAPBindError, LDAPSocketOpenError
 import config
+from datetime import timedelta
 
 colori={
     1:"#0000FF",
@@ -711,17 +712,17 @@ def getOrarioCorrente():
     return orarioCorrente
 
 def getChiusureOrarioCorrente():
-    chiusure = db.session.query(Chiusura).filter(Chiusura.testata_id == session["testataId"]).all()
+    rows = db.session.query(Chiusura).filter(Chiusura.testata_id == session["testataId"]).all()
     chiusureOrarioCorrente = []
 
-    for r in chiusure:
-        rigaChiusure = {
-            "data_inizio": r.data_inizio,
-            "data_fine": r.data_fine,
-            "note": r.nota
-        }
+    for r in rows:
+        cur = r.data_inizio
+        end = r.data_fine + timedelta(days=1)
+        while (cur < end):
+            if cur.strftime("%Y/%m/%d") not in chiusureOrarioCorrente:
+                chiusureOrarioCorrente.append(cur.strftime("%Y/%m/%d"))
+            cur = cur + timedelta(days=1)
 
-        chiusureOrarioCorrente.append(rigaChiusure)
     return chiusureOrarioCorrente
 
 
