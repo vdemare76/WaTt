@@ -440,14 +440,24 @@ class CalendarioView(BaseView):
     @has_access
     def cld_ver(self):
         try:
+            dati = json.loads(request.data)
+
             orarioCorrente = session["orarioCorrente"]
 
-            vincoli = {"chkSessioneUnica": session["chkSessioneUnica"],
-                       "chkSessioniConsecutive": session["chkSessioniConsecutive"],
-                       "chkMaxOre": session["chkMaxOre"],
-                       "selMaxOre": session["selMaxOre"],
-                       "chkPreferenzeDocenti": session["chkPreferenzeDocenti"],
-                       "posizioniFisse": orarioCorrente}
+            if dati["vincoliFacoltativi"]=="S":
+                vincoli = {"chkSessioneUnica": session["chkSessioneUnica"],
+                           "chkSessioniConsecutive": session["chkSessioniConsecutive"],
+                           "chkMaxOre": session["chkMaxOre"],
+                           "selMaxOre": session["selMaxOre"],
+                           "chkPreferenzeDocenti": session["chkPreferenzeDocenti"],
+                           "posizioniFisse": orarioCorrente}
+            else:
+                vincoli = {"chkSessioneUnica": "0",
+                           "chkSessioniConsecutive": "0",
+                           "chkMaxOre": "0",
+                           "selMaxOre": "0",
+                           "chkPreferenzeDocenti": "0",
+                           "posizioniFisse": orarioCorrente}
 
             algoritmo=AlgoritmoCalcolo()
             ris=algoritmo.genera_orario(session["annoAccademico"],

@@ -137,10 +137,16 @@
             next: "succ"
           },
           customButtons: {
-            verifyButton: {
-              text: "Verifica vincoli",
+            verifyObbButton: {
+              text: "Verifica vincoli obbligatori",
               click: function() {
-                verificaOrario(editabile);
+                verificaOrario("obb");
+              }
+            },
+            verifyAllButton: {
+              text: "Verifica tutti i vincoli",
+              click: function() {
+                verificaOrario("all");
               }
             },
             applyButton: {
@@ -170,7 +176,7 @@
             }
           },
           headerToolbar: {
-            left: "verifyButton applyButton",
+            left: "verifyObbButton verifyAllButton applyButton",
             center: "title",
           },
           footerToolbar: {
@@ -302,11 +308,17 @@
       });
     }
 
-    function verificaOrario() {
+    function verificaOrario(tipo) {
+        vinObb = "S"
+        vinFac = "N"
+        if (tipo == "all")
+          vinFac = "S"
         $("#loader").css({"display": "block"});
         $.ajax({
           type: "POST",
           contentType: "application/json",
+          data: JSON.stringify({vincoliObbligatori: vinObb,
+                                vincoliFacoltativi: vinFac}),
           dataType: "json",
           url: "/calendarioview/cld_ver/",
           success: function (ris) {

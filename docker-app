@@ -8,6 +8,7 @@ RUN apt-get update && apt-get install -y \
 
 RUN pip install flask
 RUN pip install flask-SQLAlchemy
+RUN pip install flask_session
 RUN pip install mysql-connector-python
 RUN pip install flask-appbuilder
 RUN pip install python-ldap
