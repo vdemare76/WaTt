@@ -444,7 +444,7 @@ class CalendarioView(BaseView):
 
             orarioCorrente = session["orarioCorrente"]
 
-            if dati["vincoliFacoltativi"]=="S":
+            if dati["vincoliFacoltativi"] == "S":
                 vincoli = {"chkSessioneUnica": session["chkSessioneUnica"],
                            "chkSessioniConsecutive": session["chkSessioniConsecutive"],
                            "chkMaxOre": session["chkMaxOre"],
