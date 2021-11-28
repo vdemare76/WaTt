@@ -12,7 +12,7 @@ from .models import AnnoAccademico, CorsoDiStudio, AttivitaDidattica, Docente, A
                     LogisticaDocente, Modulo, Giorno, Slot, OrarioTestata, OrarioDettaglio, Chiusura
 
 from flask.templating import render_template
-from .util import svuotaDb, caricaDati7Cds, caricaDatiBase, getAttributiLDap, getOrarioCorrente, getChiusureOrarioCorrente
+from .util import svuotaDb, caricaDati7Cds, caricaDati13Cds, caricaDatiBase, getAttributiLDap, getOrarioCorrente, getChiusureOrarioCorrente
 from .esse3_to_watt import getAnniAccademici, getCorsiInOfferta, importDatiEsse3
 from .solver import AlgoritmoCalcolo
 
@@ -272,6 +272,8 @@ class UtilitaView(BaseView):
             caricaDati7Cds("1")
         elif target=="carica7CdsNMod":
             caricaDati7Cds("N")
+        elif target=="carica13Cds1Mod":
+            caricaDati13Cds("1")
 
         return render_template("utility.html", base_template=appbuilder.base_template, appbuilder=appbuilder)
 

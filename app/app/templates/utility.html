@@ -30,15 +30,21 @@
           </div>
         </div>
     	<div class="panel panel-primary">
-          <div class="panel-heading">Carica dati di test - TIPO 1 - (7 Corsi di Studio e 1 Modulo per ogni Attività Didattica)</div>
+          <div class="panel-heading">Carica dati di test - TIPO 1 - (7 Corsi di Studio e modulo unico per ogni Attività Didattica)</div>
           <div class="panel-body">
 			  <button type="button" class="btn btn-info" onclick="caricaDatiTest7Cds1Mod()">Carica</button>
           </div>
         </div>
-		    <div class="panel panel-primary">
+	    <div class="panel panel-primary">
           <div class="panel-heading">Carica dati di test - TIPO 2 - (7 Corsi di Studio e Moduli multipli per ogni Attività Didattica)</div>
           <div class="panel-body">
 			  <button type="button" class="btn btn-info" onclick="caricaDatiTest7CdsNMod()">Carica</button>
+          </div>
+        </div>
+        <div class="panel panel-primary">
+          <div class="panel-heading">Carica dati di test - TIPO 3 - (13 Corsi di Studio e modulo unico per ogni Attività Didattica)</div>
+          <div class="panel-body">
+			  <button type="button" class="btn btn-info" onclick="caricaDatiTest13Cds1Mod()">Carica</button>
           </div>
         </div>
 		<input type="text" id="target" name="target" value="" style="display:none">
@@ -69,7 +75,7 @@
 
 	function caricaDatiTest7Cds1Mod() {
 		$("#title").html("Richiesta di conferma");
-		$("#msg").html("Si intende realmente inizializzare il database con i dati di test con 7 cds e 1 modulo per attività didattica offerta?");
+		$("#msg").html("Si intende realmente inizializzare il database con i dati di test con 7 cds e modulo unico per attività didattica offerta?");
 		$(document).on("click", "#modal-confirm-ok", function () {
 			$("#target").val("carica7Cds1Mod");
 			$("#loader").css({"display":"block"});
@@ -83,6 +89,17 @@
 		$("#msg").html("Si intende realmente inizializzare il database con i dati di test con 7 cds e moduli multipli per attività didattica offerta?");
 		$(document).on("click", "#modal-confirm-ok", function () {
 			$("#target").val("carica7CdsNMod");
+			$("#loader").css({"display":"block"});
+			$("#form_post").submit();
+        });
+		$("#modal-confirm-w").modal("show");
+	}
+
+	function caricaDatiTest13Cds1Mod() {
+		$("#title").html("Richiesta di conferma");
+		$("#msg").html("Si intende realmente inizializzare il database con i dati di test con 13 cds e moduli unico per attività didattica offerta?");
+		$(document).on("click", "#modal-confirm-ok", function () {
+			$("#target").val("carica13Cds1Mod");
 			$("#loader").css({"display":"block"});
 			$("#form_post").submit();
         });

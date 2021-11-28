@@ -932,6 +932,16 @@ def caricaDati7Cds(tipoModuli):
         flash("Errore nella fase di caricamento dei dati Esse3 preimpostati", "danger")
 
 
+def caricaDati13Cds(tipoModuli):
+    try:
+        __svuotaTabelle()
+        giorni, slot, anni_accademici, aule, corsi_di_studio, numerosita,  attivita_didattiche, docenti, offerta, moduli, logistica_docenti = __impostaDati13Cds(tipoModuli)
+        __registraDatiInDb(giorni, slot, anni_accademici, aule, corsi_di_studio, numerosita,  attivita_didattiche, docenti, offerta, moduli, logistica_docenti)
+        flash("Caricamento effettuato correttamente!", "success")
+    except SQLAlchemyError:
+        flash("Errore nella fase di caricamento dei dati Esse3 preimpostati", "danger")
+
+
 def svuotaDb():
     try:
         __svuotaTabelle()
