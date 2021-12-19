@@ -401,8 +401,8 @@ class CalendarioView(BaseView):
     @has_access
     def cld_home(self):
         if "testataId" in session:
-            if "orarioCorrente" not in session:
-                session["orarioCorrente"] = getOrarioCorrente()
+            #if "orarioCorrente" not in session:
+            session["orarioCorrente"] = getOrarioCorrente()
 
             session["chiusure"] = getChiusureOrarioCorrente()
 
