@@ -162,9 +162,16 @@ class TemplateCalcoloOrario(ABC):
         for a in dati.get_aule():
             for g in dati.get_giorni():
                 for s in dati.get_slot():
-                    model+=lpSum(skd[(c,m,a,g,s)] for m in dati.get_moduli() for c in dati.get_corsi())<=1  
-        
-        # Vincoli che permettono di assegnare ad un corso solo aule compatibili con la numerosità del corso stesso       
+                    model+=lpSum(skd[(c,m,a,g,s)] for m in dati.get_moduli() for c in dati.get_corsi())<=1
+
+        # Un corso per un dato giorno in un dato slot può essere assegnato ad una sola aula
+        for c in dati.get_corsi():
+            for m in dati.get_moduli():
+                for g in dati.get_giorni():
+                    for s in dati.get_slot():
+                        model += lpSum(skd[(c, m, a, g, s)] for a in dati.get_aule()) <= 1
+
+        # Vincoli che permettono di assegnare ad un corso solo aule compatibili con la numerosità del corso stesso
         for c in dati.get_corsi():
             for m in dati.get_moduli():
                 for g in dati.get_giorni():
@@ -172,7 +179,7 @@ class TemplateCalcoloOrario(ABC):
                         for a in dati.get_aule():
                             if str_aux.get_compatibilita_aule()[(m,a)]==0:
                                 model+=skd[(c,m,a,g,s)]==0
-                            
+
         # Vincolo che non consente la sovrapposizione di attivita_didattiche relativi allo stenno anno di corso                              
         for c in dati.get_corsi():
             for g in dati.get_giorni():
@@ -227,20 +234,20 @@ class AlgoritmoCalcolo(TemplateCalcoloOrario):
 
         if vincoli["chkSessioniConsecutive"]=="1":
             # Un corso per un dato giorno in un dato slot può essere assegnato ad una sola aula
-            for c in dati.get_corsi():   
-                for m in dati.get_moduli():
-                    for g in dati.get_giorni():
-                        for s in dati.get_slot():
-                           model+=lpSum(skd[(c,m,a,g,s)] for a in dati.get_aule())<=1
+            #for c in dati.get_corsi():
+            #    for m in dati.get_moduli():
+            #        for g in dati.get_giorni():
+            #            for s in dati.get_slot():
+            #               model+=lpSum(skd[(c,m,a,g,s)] for a in dati.get_aule())<=1
                         
             # Vincoli che permettono di assegnare ad un corso solo aule compatibili con la numerosità del corso stesso       
-            for c in dati.get_corsi():   
-                for m in dati.get_moduli():
-                    for g in dati.get_giorni():
-                        for s in dati.get_slot():
-                            for a in dati.get_aule():
-                                if str_aux.get_compatibilita_aule()[(m,a)]==0:
-                                    model+=skd[(c,m,a,g,s)]==0
+            #for c in dati.get_corsi():
+            #    for m in dati.get_moduli():
+            #        for g in dati.get_giorni():
+            #            for s in dati.get_slot():
+            #                for a in dati.get_aule():
+            #                    if str_aux.get_compatibilita_aule()[(m,a)]==0:
+            #                       model+=skd[(c,m,a,g,s)]==0
                                 
             # Vincoli di consecutività delle sessioni
             for c in dati.get_corsi():

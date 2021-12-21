@@ -40,9 +40,9 @@
 				  <div class="panel-heading">Vincoli OBBLIGATORI</div>
 				  <div class="panel-body">
 					<ul>
-						<li>Uno slot orario deve essere assegnato ad un unico modulo per un dato giorno della settimana</li>
-						<li>Non devono essere assegnati allo stesso slot orario, anche se in aule diverse, due moduli di cui risulta titolare di insegnamento lo stesso docente</li>
-						<li>Non devono essere assegnati allo stesso slot orario, anche se in aule diverse, due moduli di insegnamento dello stesso anno di corso (gli studenti destinatari dei corsi devono potenzialmente poter seguire tutti i corsi del proprio anno di iscrizione)</li>
+						<li>Uno slot orario può essere assegnato ad un unico modulo per un dato giorno della settimana in una data aula</li>
+						<li>Non devono essere assegnati allo stesso slot orario per un dato giorno due moduli di cui risulta titolare di insegnamento lo stesso docente</li>
+						<li>Non devono essere assegnati allo stesso slot orario per un dato giorno due moduli di insegnamento dello stesso anno di corso (gli studenti destinatari dei corsi devono potenzialmente poter seguire tutti i corsi del proprio anno di iscrizione)</li>
 						<li>Le aule assegnate ai moduli devono avere una capienza compatibile con il numero massimo di studenti attesi per l’anno di corso in cui l’insegnamento è collocato nel percorso di studio in esame</li>
 						<li>L’aula assegnata al modulo deve essere di tipologia compatibile con quanto fissato nell’offerta didattica (aula normale, laboratorio informatico, altri tipi di laboratorio, etc.)</li>
 					</ul>
@@ -62,7 +62,7 @@
 					</label>
 					<br>
 					<input type="checkbox" name="chk_max_ore" id="chk_max_ore" value="1">
-					<label for="chk_max_ore">Numero massimo di slot di lezioni da destinare in una settimana per ogni anno di corso</label>
+					<label for="chk_max_ore">Non superare il massimo di slot di lezioni fissate in una settimana per ogni anno di corso</label>
 					<select name="sel_max_ore">
 					  <option value="4">4</option>
 					  <option value="5">5</option>
@@ -77,7 +77,7 @@
 					<br>
 					<input type="checkbox" name="chk_preferenze_docenti" id="chk_preferenze_docenti" value="1">
 					<label for = "chk_preferenze_docenti">
-						Devono essere considerate le indicazioni dei docenti
+						Indicazioni dei docenti per inderogabili esigenze
 					</label>
 				  </div>
 				</div>
