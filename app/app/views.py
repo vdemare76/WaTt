@@ -18,6 +18,10 @@ from .solver import AlgoritmoCalcolo
 
 class AnniAccademiciView(ModelView):
     datamodel = SQLAInterface(AnnoAccademico)
+    list_title = 'Anni accademici'
+    add_title = 'Nuovo anno accademico'
+    show_title = 'Anno accademico'
+    edit_title = 'Modifica anno accademico'
     label_columns = {"anno":"Anno accademico",
                      "anno_esteso":"Anno accademico esteso"}
     list_columns = ["anno",
@@ -26,18 +30,30 @@ class AnniAccademiciView(ModelView):
 
 class SlotView(ModelView):
     datamodel = SQLAInterface(Slot)
+    list_title = 'Slot orari'
+    add_title = 'Nuovo slot orario'
+    show_title = 'Slot orario'
+    edit_title = 'Modifica slot orario'
     label_columns = {"descrizione":"Descrizione"}
     list_columns = ["descrizione"]
 
 
 class GiorniView(ModelView):
     datamodel = SQLAInterface(Giorno)
+    list_title = 'Giorni disponibili'
+    add_title = 'Nuovo giorno'
+    show_title = 'Giorno'
+    edit_title = 'Modifica Giorno'
     label_columns = {"descrizione":"Descrizione"}
     list_columns = ["descrizione"]
 
 
 class CorsiDiStudioView(ModelView):
     datamodel = SQLAInterface(CorsoDiStudio)
+    list_title = 'Corsi di studio'
+    add_title = 'Nuovo corso di studio'
+    show_title = 'Corso di studio'
+    edit_title = 'Modifica corso di studio'
     label_columns = {"codice":"Codice CdS",
                      "descrizione":"Descrizione",
                      "cfu":"Cfu",
@@ -50,6 +66,10 @@ class CorsiDiStudioView(ModelView):
 
 class AttivitaDidatticheView(ModelView):
     datamodel = SQLAInterface(AttivitaDidattica)
+    list_title = 'Attività didattiche'
+    add_title = 'Nuova attività didattica'
+    show_title = 'Attività didattica'
+    edit_title = 'Modifica attività didattica'
     label_columns = {"codice":"Codice AD",
                      "Descrizione":"Descrizione",
                      "cfu":"Cfu",
@@ -62,6 +82,10 @@ class AttivitaDidatticheView(ModelView):
 
 class AuleView(ModelView):
     datamodel = SQLAInterface(Aula)
+    list_title = 'Aule'
+    add_title = 'Nuova aula'
+    show_title = 'Aula'
+    edit_title = 'Modifica aula'
     label_columns = {"codice":"Codice aula",
                      "descrizione":"Descrizione",
                      "capienza":"Capienza",
@@ -74,6 +98,10 @@ class AuleView(ModelView):
 
 class NumerositaAnniCorsoView(ModelView):
     datamodel = SQLAInterface(NumerositaAnniCorso)
+    list_title = 'Numerosità anni di corso'
+    add_title = 'Nuova numerosità anno di corso'
+    show_title = 'Numerosità anno di corso'
+    edit_title = 'Modifica numerosità anno di corso'
     label_columns = {"codice_corso":"Corso di studio",
                      "anno_di_corso":"Anno di corso",
                      "numerosita":"Numerosità"}
@@ -84,6 +112,10 @@ class NumerositaAnniCorsoView(ModelView):
 
 class DocentiView(ModelView):
     datamodel = SQLAInterface(Docente)
+    list_title = 'Docenti'
+    add_title = 'Nuovo docente'
+    show_title = 'Docente'
+    edit_title = 'Modifica docente'
     label_columns = {"codice_fiscale":"Codice fiscale",
                      "cognome":"Cognome",
                      "nome":"Nome"}
@@ -97,6 +129,10 @@ class DocentiView(ModelView):
 
 class OffertaView(ModelView):
     datamodel = SQLAInterface(Offerta)
+    list_title = 'Offerta didattica'
+    add_title = 'Nuova voce di offerta'
+    show_title = 'Voce di offerta didattica'
+    edit_title = 'Modifica voce di offerta didattica'
     label_columns = {"anno_accademico.anno_esteso":"Anno accademico",
                      "corso_di_studio.descrizione":"Corso di studio",
                      "attivita_didattica.descrizione":"Attività didattica",
@@ -116,6 +152,10 @@ class OffertaView(ModelView):
 
 class ModuliView(ModelView):
     datamodel = SQLAInterface(Modulo)
+    list_title = 'Moduli di attività didattica'
+    add_title = 'Nuovo modulo'
+    show_title = 'Modulo di attività didattica'
+    edit_title = 'Modifica modulo'
     label_columns = {"codice":"Codice modulo",
                      "descrizione":"Descrizione",
                      "offerta.anno_accademico":"A.A. Offerta",
@@ -150,6 +190,10 @@ class ModuliView(ModelView):
 
 class ChiusuraView(ModelView):
     datamodel = SQLAInterface(Chiusura)
+    list_title = 'Periodi di chiusura'
+    add_title = 'Nuova chiusura'
+    show_title = 'Periodo di chiusura'
+    edit_title = 'Modifica periodo di chiusura'
     label_columns = {"orario_testata.descrizione":"Descrizione orario",
                      "data_inizio":"Data chiusura",
                      "data_fine":"Data fine",
@@ -162,6 +206,10 @@ class ChiusuraView(ModelView):
 
 class LogisticaDocentiView(ModelView):
     datamodel = SQLAInterface(LogisticaDocente)
+    list_title = 'Logistiche docenti'
+    add_title = 'Nuova logistica'
+    show_title = 'Logistica docente'
+    edit_title = 'Modifica logistica'
     label_columns = {"offerta.attivita_didattica":"Offerta",
                      "modulo.descrizione":"Modulo",
                      "slot.descrizione":"Slot",
