@@ -338,7 +338,7 @@ class UtilitaEsse3View(BaseView):
         return render_template("utility_esse3.html", base_template=appbuilder.base_template, appbuilder=appbuilder)
 
 
-class PreferenzeView(BaseView):
+class GeneraOrarioView(BaseView):
     default_view = "prf_home"
 
     @expose("/prf_home/", methods=["GET","POST"])
@@ -369,12 +369,13 @@ class PreferenzeView(BaseView):
                                     request.form.get("semestre"),
                                     request.form.get("txt_desc_orario"),
                                     True,
-                                    vincoli)
+                                    vincoli,
+                                    "all")
             if (ris) == "Optimal":
                 flash("Orario correttamente generato sulla base dei vincoli impostati", "success")
             else:
                 flash("Orario non generabile nel rispetto dei vincoli impostati", "danger")
-        return redirect(url_for("PreferenzeView.prf_home"));
+        return redirect(url_for("GeneraOrarioView.prf_home"));
 
 
 class SchemaSettimanaleView(BaseView):
@@ -445,28 +446,28 @@ class CalendarioView(BaseView):
             dati = json.loads(request.data)
 
             orarioCorrente = session["orarioCorrente"]
-
-            if dati["vincoliFacoltativi"] == "S":
-                vincoli = {"chkSessioneUnica": session["chkSessioneUnica"],
-                           "chkSessioniConsecutive": session["chkSessioniConsecutive"],
-                           "chkMaxOre": session["chkMaxOre"],
-                           "selMaxOre": session["selMaxOre"],
-                           "chkPreferenzeDocenti": session["chkPreferenzeDocenti"],
-                           "posizioniFisse": orarioCorrente}
-            else:
-                vincoli = {"chkSessioneUnica": "0",
-                           "chkSessioniConsecutive": "0",
-                           "chkMaxOre": "0",
-                           "selMaxOre": "0",
-                           "chkPreferenzeDocenti": "0",
-                           "posizioniFisse": orarioCorrente}
+            vincoli = {"chkSessioneUnica": session["chkSessioneUnica"],
+                       "chkSessioniConsecutive": session["chkSessioniConsecutive"],
+                       "chkMaxOre": session["chkMaxOre"],
+                       "selMaxOre": session["selMaxOre"],
+                       "chkPreferenzeDocenti": session["chkPreferenzeDocenti"],
+                       "posizioniFisse": orarioCorrente}
 
             algoritmo=AlgoritmoCalcolo()
-            ris=algoritmo.genera_orario(session["annoAccademico"],
-                                        session["semestre"],
-                                        "Verifica Orario",
-                                        False,
-                                        vincoli)
+            if dati["tipoVerifica"] == -1:
+                ris=algoritmo.genera_orario(session["annoAccademico"],
+                                            session["semestre"],
+                                            "Verifica Orario",
+                                            False,
+                                            vincoli,
+                                            -1)
+            else:
+                ris = algoritmo.genera_orario(session["annoAccademico"],
+                                              session["semestre"],
+                                              "Verifica Orario",
+                                              False,
+                                              vincoli,
+                                              dati["tipoVerifica"])
             data={"status": ris}
 
             return data, 200
@@ -598,7 +599,7 @@ appbuilder.add_view(UtilitaView, "Funzioni utilità",  icon="fa-briefcase", cate
 
 appbuilder.add_view(UtilitaEsse3View, "Connettore Esse3",  icon="fa-share-square", category="Utilità")
 
-appbuilder.add_view(PreferenzeView, "Elaborazione orario",  icon="fa-cogs", category="Orario")
+appbuilder.add_view(GeneraOrarioView, "Elaborazione orario",  icon="fa-cogs", category="Orario")
 
 appbuilder.add_view(OrariGeneratiView, "Orari generati",  icon="fa-table", category="Orario")
 

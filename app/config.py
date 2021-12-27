@@ -144,12 +144,16 @@ FAB_ROLES = {
 
         ["Funzioni utilità", "menu_access"],
         ["UtilitaView", "can_srv_home"], ["UtilitaView", "can_srv_util"],
+
         ["Connettore Esse3", "menu_access"],
         ["UtilitaEsse3View", "can_srv_esse3_home"], ["UtilitaEsse3View", "can_srv_esse3_util"],
+
         ["Elaborazione orario", "menu_access"],   
-        ["PreferenzeView", "can_prf_home"], ["PreferenzeView", "can_prf_calc"],
+        ["GeneraOrarioView", "can_prf_home"], ["GeneraOrarioView", "can_prf_calc"],
+
         ["Schema settimanale", "menu_access"],
         ["SchemaSettimanaleView", "can_wsk_home"],
+
         ["Calendario orario", "menu_access"],
         ["CalendarioView", "can_cld_home"], ["CalendarioView", "can_cld_ver"],
         ["CalendarioView", "can_cld_mod"], ["CalendarioView", "can_cld_upd"],

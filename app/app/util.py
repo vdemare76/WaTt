@@ -651,17 +651,17 @@ def __impostaDati13Cds(tipoModuli):
         [62, 1, 12, 61, 55, 1, 1, 45],
         [63, 1, 12, 62, 56, 1, 1, 45],
         [64, 1, 12, 63, 57, 1, 1, 45],
-        [64, 1, 12, 64, 51, 2, 1, 30],
-        [65, 1, 12, 65, 52, 2, 1, 30],
-        [66, 1, 12, 66, 54, 2, 1, 30],
-        [67, 1, 13, 67, 64, 1, 1, 35],
-        [68, 1, 13, 68, 65, 1, 1, 35],
-        [69, 1, 13, 69, 38, 1, 1, 35],
-        [70, 1, 13, 70, 35, 2, 1, 20],
-        [71, 1, 13, 71, 59, 2, 1, 20],
-        [72, 1, 13, 72, 60, 2, 1, 20],
-        [73, 1, 13, 73, 61, 2, 1, 20],
-        [74, 1, 13, 74, 62, 2, 1, 20]
+        [65, 1, 12, 64, 51, 2, 1, 30],
+        [66, 1, 12, 65, 52, 2, 1, 30],
+        [67, 1, 12, 66, 54, 2, 1, 30],
+        [68, 1, 13, 67, 64, 1, 1, 35],
+        [69, 1, 13, 68, 65, 1, 1, 35],
+        [70, 1, 13, 69, 38, 1, 1, 35],
+        [71, 1, 13, 70, 35, 2, 1, 20],
+        [72, 1, 13, 71, 59, 2, 1, 20],
+        [73, 1, 13, 72, 60, 2, 1, 20],
+        [74, 1, 13, 73, 61, 2, 1, 20],
+        [75, 1, 13, 74, 62, 2, 1, 20]
     ]
     offerta.extend(offerta_i)
 
@@ -913,10 +913,14 @@ def svuotaDb():
         return -1
 
 
-def caricaDatiDalDb(aa, semestre):
+def caricaDatiDalDb(aa, semestre, cod_cds):
     try:
         corsi_tt=[]
-        corsi=db.session.query(CorsoDiStudio).all()
+        if cod_cds == "all":
+            corsi = db.session.query(CorsoDiStudio).all()
+        else:
+            corsi = db.session.query(CorsoDiStudio).filter(CorsoDiStudio.id == cod_cds).all()
+            flash(corsi)
         for c in corsi:
             corsi_tt.append(CorsoDiStudioTt(c.id, c.codice, c.descrizione, c.cfu, c.durata_legale))
     except SQLAlchemyError:
@@ -924,8 +928,8 @@ def caricaDatiDalDb(aa, semestre):
         return -1   
     
     try:
-        giorni_tt=[]
-        giorni=db.session.query(Giorno).all()
+        giorni_tt = []
+        giorni = db.session.query(Giorno).all()
         for g in giorni:
             giorni_tt.append(GiornoTt(g.id, g.descrizione))
     except SQLAlchemyError:
@@ -953,14 +957,25 @@ def caricaDatiDalDb(aa, semestre):
     try:
         moduli_tt=[]
         # Recupero delle informazioni dal DB per la formazione degli oggetti Modulo da collocare nell"orario
-        moduli=db.session.query(Modulo, Offerta, AttivitaDidattica, AnnoAccademico, CorsoDiStudio, Docente)\
-        .join(Offerta, Modulo.offerta_id == Offerta.id)\
-        .join(AttivitaDidattica, Offerta.attivita_didattica_id == AttivitaDidattica.id)\
-        .join(CorsoDiStudio, Offerta.corso_di_studio_id == CorsoDiStudio.id)\
-        .join(AnnoAccademico, Offerta.anno_accademico_id == AnnoAccademico.id)\
-        .join(Docente, Offerta.docente_id == Docente.id)\
-        .filter(Offerta.anno_accademico_id == aa)\
-        .filter(Offerta.semestre == semestre).all()
+        if cod_cds == "all":
+            moduli=db.session.query(Modulo, Offerta, AttivitaDidattica, AnnoAccademico, CorsoDiStudio, Docente)\
+            .join(Offerta, Modulo.offerta_id == Offerta.id)\
+            .join(AttivitaDidattica, Offerta.attivita_didattica_id == AttivitaDidattica.id)\
+            .join(CorsoDiStudio, Offerta.corso_di_studio_id == CorsoDiStudio.id)\
+            .join(AnnoAccademico, Offerta.anno_accademico_id == AnnoAccademico.id)\
+            .join(Docente, Offerta.docente_id == Docente.id)\
+            .filter(Offerta.anno_accademico_id == aa)\
+            .filter(Offerta.semestre == semestre).all()
+        else:
+            moduli = db.session.query(Modulo, Offerta, AttivitaDidattica, AnnoAccademico, CorsoDiStudio, Docente) \
+            .join(Offerta, Modulo.offerta_id == Offerta.id) \
+            .join(AttivitaDidattica, Offerta.attivita_didattica_id == AttivitaDidattica.id) \
+            .join(CorsoDiStudio, Offerta.corso_di_studio_id == CorsoDiStudio.id) \
+            .join(AnnoAccademico, Offerta.anno_accademico_id == AnnoAccademico.id) \
+            .join(Docente, Offerta.docente_id == Docente.id) \
+            .filter(Offerta.anno_accademico_id == aa) \
+            .filter(CorsoDiStudio.id == cod_cds) \
+            .filter(Offerta.semestre == semestre).all()
         for m in moduli:
             moduli_tt.append(ModuloTt(m.Modulo.id,m.Modulo.codice,m.Modulo.descrizione,m.AttivitaDidattica.codice,m.AttivitaDidattica.descrizione,\
                                       m.CorsoDiStudio.id,m.CorsoDiStudio.codice,m.CorsoDiStudio.descrizione,m.Docente.matricola,m.Docente.cognome,m.Docente.nome,\

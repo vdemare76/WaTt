@@ -63,12 +63,12 @@ class StruttureAusiliarie(object):
 
 class TemplateCalcoloOrario(ABC):
     
-    def genera_orario(self, aa, semestre, desc_orario, registra, vincoli):
+    def genera_orario(self, aa, semestre, desc_orario, registra, vincoli, cod_cds):
         # Modello risolutivo di calcolo del timetable
 
         # Step 1
         # CARICAMENTO DEI DATI su cui viene effettuato il calcolo dell'orario
-        dati = self.carica_dati(aa, semestre)
+        dati = self.carica_dati(aa, semestre, cod_cds)
         
         # Step 2
         # GENERA LE STRUTTURE DATI DI SUPPORTO AL CALCOLO dell'orario
@@ -84,7 +84,7 @@ class TemplateCalcoloOrario(ABC):
         
         # Step 5 - abstract
         # IMPLEMENTA EVENTUALMENTE I VINCOLI ADDIZIONALI
-        self.imposta_vincoli_addizionali(model, dati, strutture_ausiliarie, vincoli)
+        self.imposta_vincoli_addizionali(model, dati, strutture_ausiliarie, vincoli, cod_cds)
         
         # Step 6
         ris = self.calcola_orario(model, dati, strutture_ausiliarie)
@@ -95,8 +95,8 @@ class TemplateCalcoloOrario(ABC):
 
         return ris
 
-    def carica_dati(self, aa, semestre):
-        corsi, giorni, slot, aule, moduli, logistica = caricaDatiDalDb(aa, semestre)
+    def carica_dati(self, aa, semestre, cod_cds):
+        corsi, giorni, slot, aule, moduli, logistica = caricaDatiDalDb(aa, semestre, cod_cds)
         return DatiDiBase(corsi, giorni, slot, aule, moduli, logistica)
 
     def genera_strutture_ausiliarie(self, dati) -> None:
@@ -212,7 +212,7 @@ class TemplateCalcoloOrario(ABC):
         pass
         
     @abstractmethod
-    def imposta_vincoli_addizionali(self, model, dati, str_aux, vincoli):
+    def imposta_vincoli_addizionali(self, model, dati, str_aux, vincoli, cod_cds):
         pass
     
     @abstractmethod
@@ -307,7 +307,7 @@ class AlgoritmoCalcolo(TemplateCalcoloOrario):
                     model+=lpSum(skd[(c,m,a,g,s)] for m in dati.get_moduli() if m.get_anno_corso()==3 for s in dati.get_slot() for a in dati.get_aule())<=limsup
 
                                                                   
-    def imposta_vincoli_addizionali(self, model, dati, str_aux, vincoli):
+    def imposta_vincoli_addizionali(self, model, dati, str_aux, vincoli, cod_cds):
         if vincoli["chkPreferenzeDocenti"]=="1":
             skd=str_aux.get_schedulazione()    
             for l in dati.get_logistica():
@@ -325,7 +325,11 @@ class AlgoritmoCalcolo(TemplateCalcoloOrario):
             None
         else:
             skd = str_aux.get_schedulazione()
-            posizioniFisse=vincoli["posizioniFisse"]
+            global posizioniFisse
+            if (cod_cds == -1):
+                posizioniFisse = vincoli["posizioniFisse"]
+            else:
+                posizioniFisse = [pf for pf in vincoli["posizioniFisse"] if pf['corso_id'] == int(cod_cds)]
             for p in posizioniFisse:
                 if (p["corso_id"]!=-1 and p["modulo_id"]!=-1 and
                     p["aula_id"]!=-1 and p["giorno_id"]!=-1 and
