@@ -4,7 +4,6 @@
     <list default="true" id="4bd4ca69-5fab-4bca-9aae-55bf4e9525ff" name="Default Changelist" comment="Update">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/app/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/app/__init__.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docker-app" beforeDir="false" afterPath="$PROJECT_DIR$/docker-app" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -199,14 +198,7 @@
       <workItem from="1640626600512" duration="4393000" />
       <workItem from="1640639015277" duration="4230000" />
       <workItem from="1640714248229" duration="4799000" />
-      <workItem from="1640793075033" duration="12734000" />
-    </task>
-    <task id="LOCAL-00075" summary="Update">
-      <created>1632692107412</created>
-      <option name="number" value="00075" />
-      <option name="presentableId" value="LOCAL-00075" />
-      <option name="project" value="LOCAL" />
-      <updated>1632692107412</updated>
+      <workItem from="1640793075033" duration="13958000" />
     </task>
     <task id="LOCAL-00076" summary="Update">
       <created>1632950714980</created>
@@ -544,7 +536,14 @@
       <option name="project" value="LOCAL" />
       <updated>1640815869025</updated>
     </task>
-    <option name="localTasksCounter" value="124" />
+    <task id="LOCAL-00124" summary="Update">
+      <created>1640816492349</created>
+      <option name="number" value="00124" />
+      <option name="presentableId" value="LOCAL-00124" />
+      <option name="project" value="LOCAL" />
+      <updated>1640816492349</updated>
+    </task>
+    <option name="localTasksCounter" value="125" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
