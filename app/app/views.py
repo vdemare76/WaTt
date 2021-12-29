@@ -404,27 +404,21 @@ class GeneraOrarioView(BaseView):
     @expose("/prf_calc/", methods=["GET","POST"])
     @has_access
     def prf_calc(self):
-        target=request.form.get("target")
-        vincoli={"chkSessioneUnica":request.form.get("chk_sessione_unica"),
-                 "chkSessioniConsecutive":request.form.get("chk_slot_sessioni_consecutive"),
-                 "chkMaxOre":request.form.get("chk_max_ore"),
-                 "selMaxOre":int(request.form.get("sel_max_ore")),
-                 "chkPreferenzeDocenti":request.form.get("chk_preferenze_docenti"),
-                 "posizioniFisse":None}
-        if target=="genera_orario" :
+        try:
+            dati = json.loads(request.data)
+            vincoli={"chkSessioneUnica": dati["chkSessioneUnica"],
+                     "chkSessioniConsecutive": dati["chkSlotSessioniConsecutive"],
+                     "chkMaxOre": dati["chkMaxOre"],
+                     "selMaxOre": int("4"),
+                     "chkPreferenzeDocenti": dati["chkPreferenzeDocenti"],
+                     "posizioniFisse": None}
             algoritmo=AlgoritmoCalcolo()
-            ris=algoritmo.genera_orario(request.form.get("aa"),
-                                    request.form.get("semestre"),
-                                    request.form.get("txt_desc_orario"),
-                                    True,
-                                    vincoli,
-                                    "all")
-            if (ris) == "Optimal":
-                flash("Orario correttamente generato sulla base dei vincoli impostati", "success")
-            else:
-                flash("Orario non generabile nel rispetto dei vincoli impostati", "danger")
-        return redirect(url_for("GeneraOrarioView.prf_home"));
-
+            ris=algoritmo.genera_orario(dati["aa"], dati["semestre"], dati["txtDescOrario"], True, vincoli, "all")
+            data = {"status": ris}
+            return data, 200
+        except:
+            data = {"status": "Verifica fallita"}
+            return data, 200
 
 class SchemaSettimanaleView(BaseView):
     default_view = "wsk_home"
@@ -492,7 +486,6 @@ class CalendarioView(BaseView):
     def cld_ver(self):
         try:
             dati = json.loads(request.data)
-
             orarioCorrente = session["orarioCorrente"]
             vincoli = {"chkSessioneUnica": session["chkSessioneUnica"],
                        "chkSessioniConsecutive": session["chkSessioniConsecutive"],
@@ -500,24 +493,14 @@ class CalendarioView(BaseView):
                        "selMaxOre": session["selMaxOre"],
                        "chkPreferenzeDocenti": session["chkPreferenzeDocenti"],
                        "posizioniFisse": orarioCorrente}
-
             algoritmo=AlgoritmoCalcolo()
             if dati["tipoVerifica"] == -1:
-                ris=algoritmo.genera_orario(session["annoAccademico"],
-                                            session["semestre"],
-                                            "Verifica Orario",
-                                            False,
-                                            vincoli,
-                                            -1)
+                ris=algoritmo.genera_orario(session["annoAccademico"], session["semestre"], "Verifica Orario",
+                                            False, vincoli, -1)
             else:
-                ris = algoritmo.genera_orario(session["annoAccademico"],
-                                              session["semestre"],
-                                              "Verifica Orario",
-                                              False,
-                                              vincoli,
-                                              dati["tipoVerifica"])
+                ris = algoritmo.genera_orario(session["annoAccademico"], session["semestre"], "Verifica Orario",
+                                              False, vincoli, dati["tipoVerifica"])
             data={"status": ris}
-
             return data, 200
         except:
             data = {"status": "Verifica fallita"}

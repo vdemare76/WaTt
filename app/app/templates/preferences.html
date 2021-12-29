@@ -18,16 +18,16 @@
 				<div id="loader" class="loader" style="display:none"></div>
 				<br>
 				<div class="panel panel-info">
-					<div class="panel-heading">Scegli l"anno accademico ed il semestre di riferimento</div>
+					<div class="panel-heading">Scegli l'anno accademico ed il semestre di riferimento</div>
 					<div class="panel-body">
 					  Anno Accademico
-					  <select name="aa" id="aa_select">
+					  <select name="aa" id="aa">
 						{% for a in anni_accademici %}
 						  <option value={{a.id}}>{{a.anno_esteso}}</option>
 						{% endfor %}
 					  </select>
 					  Semestre
-					  <select name="semestre" id="semestri_select">
+					  <select name="semestre" id="semestre">
 					    {% for s in semestri %}
 						  <option value={{s.semestre}}>{{s.semestre}}</option>
 					    {% endfor %}
@@ -87,16 +87,44 @@
 			<label for="txt_desc_orario">Descrizione orario:</label>
   			<input type="text" id="txt_desc_orario" name="txt_desc_orario" size="80"><br><br>
 			<button type="button" id="form_post" name="form_post" onclick="calcola_orario()" class="btn btn-primary">Calcola schema orario</button>
-			<input type="text" id="target" name="target" value="" style="display:none">
+			<!--<input type="text" id="target" name="target" value="" style="display:none">-->
 		</form>
 	</div>
 	
 	<script>
 		function calcola_orario() {
 			if ($("#txt_desc_orario").val().length > 0) {
+				if ($("#chk_sessione_unica").is(":checked")) csu="1"; else csu="0";
+				if ($("#chk_slot_sessioni_consecutive").is(":checked")) csc="1"; else csc="0";
+				if ($("#chk_max_ore").is(":checked")) cmo="1"; else cmo="0";
+				if ($("#chk_preferenze_docenti").is(":checked")) cpd="1"; else cpd="0";
 				$("#loader").css({"display":"block"});
-				$("#target").val("genera_orario");
-				$("#form_post").submit();
+				// $("#target").val("genera_orario");
+				$.ajax({
+        			type: "POST",
+					data: JSON.stringify({
+						chkSessioneUnica: csu,
+						chkSlotSessioniConsecutive: csc,
+						chkMaxOre: cmo,
+						selMaxOre: $("#sel_max_ore").val(),
+						chkPreferenzeDocenti: cpd,
+						aa: $("#aa").val(),
+						semestre: $("#semestre").val(),
+						txtDescOrario: $("#txt_desc_orario").val()
+					}),
+        			contentType: "application/json",
+        			url: "/generaorarioview/prf_calc/",
+        			success: function (ris) {
+          				$("#loader").css({"display": "none"});
+						$("#info-title").html("Risultato della generazione");
+						if (ris["status"] == "Optimal")
+						  $("#info-msg").html("Orario generato in modo corretto!");
+						else
+						  $("#info-msg").html("Violazione dei vincoli. Orario NON generato!");
+						$(document).on("click", "#modal-info-ok", function () {});
+						$("#modal-info-w").modal("show");
+        			}
+      			});
 			}
 			else {
 				$("#info-title").html("Completare i dati");
