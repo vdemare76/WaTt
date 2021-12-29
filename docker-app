@@ -23,4 +23,4 @@ COPY app/ ./
 COPY app/custom/manager.py /usr/local/lib/python3.6/site-packages/flask_appbuilder/security/
 ENV FLASK_APP=app/__init__.py
 ENV FLASK_DEBUG=True
-CMD flask run --host=0.0.0.0 --port=5000 --timeout=600 --cert=cert.pem --key=key.pem
+CMD flask run --host=0.0.0.0 --port=5000 --cert=cert.pem --key=key.pem
