@@ -46,12 +46,12 @@ def getHeaders():
 # Esempio 2020 stands for 2020-21.
 def getAnniAccademici():
     try:
-        response=requests.request("GET", url+"offerta-service-v1/offerte", headers=getHeaders(), timeout=60)
+        response=requests.request("GET", url+"offerta-service-v1/offerte?statoAttCod=A&limit=100&order=-aaOffId", headers=getHeaders(), timeout=60)
         data=response.json()
         size=len(data)
         annoAccademiciDistinti=[]
         for i in range(0, size, 1):
-            if (data[i]["aaOffId"] not in annoAccademiciDistinti and data[i]["aaOffId"]>=2017):
+            if (data[i]["aaOffId"] not in annoAccademiciDistinti and data[i]["aaOffId"]>=2020):
                 annoAccademiciDistinti.append(data[i]["aaOffId"])
         annoAccademiciDistinti.sort()
         return annoAccademiciDistinti
@@ -62,7 +62,7 @@ def getAnniAccademici():
     except requests.exceptions.RequestException as e:
         return {"errMsg": str(e)}, 500
 
-# Returns all courses on offer for the selected academic year.
+# Restituisce tutti i corsi offerta per l'A.A. di riferimento.
 def getCorsiInOfferta(annoAccademico):
     try:
         response=requests.request("GET", url+"offerta-service-v1/offerte?aaOffId="+ str(annoAccademico), headers=getHeaders(), timeout=60)
