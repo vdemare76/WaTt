@@ -6,6 +6,7 @@ from abc import ABC, abstractmethod
 from flask import flash, request
 from .util import caricaDatiDalDb
 from .import db
+from glpk import glpk, GLPK
 
 from .models import OrarioTestata, OrarioDettaglio
 
@@ -92,7 +93,6 @@ class TemplateCalcoloOrario(ABC):
         # Step 7 - abstract
         if registra==True:
             self.registra_orario(model, dati, strutture_ausiliarie, aa, semestre, desc_orario)
-
         return ris
 
     def carica_dati(self, aa, semestre, cod_cds):
@@ -199,7 +199,6 @@ class TemplateCalcoloOrario(ABC):
                
     def calcola_orario(self, model, dati, str_aux):
         skd=str_aux.get_schedulazione()
-
          # Funzione obiettivo
         model+=lpSum(skd[(c,m,a,g,s)] for c in dati.get_corsi() for m in dati.get_moduli() for a in dati.get_aule() 
                                       for g in dati.get_giorni() for s in dati.get_slot()) 
