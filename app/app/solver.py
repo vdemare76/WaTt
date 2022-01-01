@@ -6,7 +6,6 @@ from abc import ABC, abstractmethod
 from flask import flash, request
 from .util import caricaDatiDalDb
 from .import db
-from glpk import glpk, GLPK
 
 from .models import OrarioTestata, OrarioDettaglio
 
