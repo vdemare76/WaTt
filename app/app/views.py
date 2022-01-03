@@ -395,7 +395,7 @@ class GeneraOrarioView(BaseView):
         anni_accademici=db.session.query(AnnoAccademico.id, AnnoAccademico.anno, AnnoAccademico.anno_esteso)\
         .join(Offerta, Offerta.anno_accademico_id==AnnoAccademico.id).distinct()
         semestri=db.session.query(Offerta.semestre).distinct()
-        return render_template("preferences.html",
+        return render_template("generator.html",
                                 base_template=appbuilder.base_template,
                                 appbuilder=appbuilder,
                                 anni_accademici=anni_accademici,
