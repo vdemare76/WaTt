@@ -145,7 +145,7 @@ def getSchema(regSchema):
     except requests.exceptions.RequestException as e:
         return {"errMsg": str(e)}, 500
 
-# Restituisce le attività didattiche dei corsi nell"ambito dell"offerta formativa selezionata
+# Prelievo dei dati delle attività didattiche a partire anno accademico e semestre selezionati
 def getAttivitaDidattiche(annoAccademico, corsi, semestre, flgImportaADObbligatorie, flgImportaDatiIncompleti):
     attivitaDidattiche=[]
     try:
@@ -201,7 +201,7 @@ def getAttivitaDidattiche(annoAccademico, corsi, semestre, flgImportaADObbligato
         return {"errMsg": str(e)}, 500
     return attivitaDidattiche
 
-# Returns the information of the selected courses to be loaded into the database.
+# Prelievo dei dati relativi ai corsi di studio
 def getDatiCorsi(corsi):
     try:
         listaCorsi=[]
@@ -235,6 +235,7 @@ def getDatiCorsi(corsi):
     except requests.exceptions.RequestException as e:
         return {"errMsg": str(e)}, 500
 
+# Prelievo dei dati relativi ai docenti
 def getDocenti(attivitaDidattiche):
     try:
         docenti={}

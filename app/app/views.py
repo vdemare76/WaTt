@@ -444,21 +444,16 @@ class CalendarioView(BaseView):
     @has_access
     def cld_home(self):
         if "testataId" in session:
-            #if "orarioCorrente" not in session:
             session["orarioCorrente"] = getOrarioCorrente()
-
             session["chiusure"] = getChiusureOrarioCorrente()
 
             orarioCorrente = session["orarioCorrente"]
-            #chiusureOrarioCorrente = session["chiusure"]
             chiusureOrarioCorrente = []
             token, role = getAttributiLDap(g.user.username)
             corsiOrarioCorrente = []
             anniCorsoOrarioCorrente = []
 
-            if role=="wattStud":
-                None
-            else:
+            if role!="wattStud":
                 for o in orarioCorrente:
                     risCorsi = list(filter(lambda ocr: ocr['corso_id'] == o["corso_id"], corsiOrarioCorrente))
                     if len(risCorsi)==0:
@@ -480,6 +475,75 @@ class CalendarioView(BaseView):
             flash("Caricare un orario generato come base su cui lavorare: Orari Generati -> Carica", "danger")
             return redirect(self.get_redirect())
 
+    @expose("/cld_load/", methods=["POST"])
+    @has_access
+    def cld_load(self):
+        session["orarioCorrente"] = getOrarioCorrente()
+        session["chiusure"] = getChiusureOrarioCorrente()
+
+        data = {"orario": session["orarioCorrente"],
+                "chiusure": session["chiusure"]}
+        return data, 200
+
+    @expose("/cld_upd/", methods=["POST"])
+    @has_access
+    def cld_upd(self):
+        data = {"orario": session["orarioCorrente"],
+                "chiusure": session["chiusure"]}
+        return data, 200
+
+    @expose("/cld_mod/", methods=["POST"])
+    @has_access
+    def cld_mod(self):
+        dati = json.loads(request.data)
+        orarioCorrente = session["orarioCorrente"]
+        eventoOld = dati["eventoOld"]
+
+        slotNew = db.session.query(Slot).filter(Slot.ora_slot_cal == dati["slotNew"]).first()
+        giornoNew = db.session.query(Giorno).filter(Giorno.id == dati["giornoNew"]).first()
+        aulaNew = db.session.query(Aula).filter(Aula.id == dati["aulaNew"]).first()
+        for row in orarioCorrente:
+            if (row["corso_id"] == eventoOld["extendedProps"]["corso_id"] and
+                    row["modulo_id"] == eventoOld["extendedProps"]["modulo_id"] and
+                    row["aula_id"] == eventoOld["extendedProps"]["aula_id"] and
+                    row["giorno_id"] == eventoOld["extendedProps"]["giorno_id"] and
+                    row["slot_id"] == eventoOld["extendedProps"]["slot_id"]):
+                row["giorno_id"] = dati["giornoNew"]
+                row["slot_id"] = slotNew.id
+                row["descrizione_slot"] = slotNew.descrizione
+                row["giorno"] = giornoNew.descrizione
+                row["aula_id"] = aulaNew.id
+                row["aula"] = aulaNew.descrizione
+                row["capienza_aula"] = aulaNew.capienza
+                break;
+
+        session["orarioCorrente"] = orarioCorrente
+
+        data = {"orario": session["orarioCorrente"],
+                "chiusure": session["chiusure"]}
+
+        return data, 200
+
+    @expose("/cld_room/", methods=["POST"])
+    @has_access
+    def cld_room(self):
+        dati = json.loads(request.data)
+        auleOccupate = []
+        orarioCorrente=session['orarioCorrente']
+        for o in orarioCorrente:
+            if o["giorno_id"]==dati["giorno"] and o["slot_id"]==dati["slot"]:
+                auleOccupate.append(o["aula_id"])
+        aule = db.session.query(Aula) \
+            .filter(Aula.id != dati["aula"]).filter(Aula.capienza >= dati["numerosita"]) \
+            .filter(Aula.id.notin_(auleOccupate)). \
+            order_by(Aula.descrizione).all()
+
+        vAule = []
+        for a in aule:
+            vAule.append(a.to_dict())
+
+        data = {"aule": vAule}
+        return data, 200
 
     @expose("/cld_ver/", methods=["POST"])
     @has_access
@@ -506,55 +570,6 @@ class CalendarioView(BaseView):
             data = {"status": "Verifica fallita"}
             return data, 200
 
-    @expose("/cld_mod/", methods=["POST"])
-    @has_access
-    def cld_mod(self):
-        dati=json.loads(request.data)
-        orarioCorrente = session["orarioCorrente"]
-        eventoOld=dati["eventoOld"]
-
-        slotNew=db.session.query(Slot).filter(Slot.ora_slot_cal==dati["slotNew"]).first()
-        giornoNew=db.session.query(Giorno).filter(Giorno.id==dati["giornoNew"]).first()
-        aulaNew=db.session.query(Aula).filter(Aula.id==dati["aulaNew"]).first()
-        for row in orarioCorrente:
-            if (row["corso_id"] == eventoOld["extendedProps"]["corso_id"] and
-                row["modulo_id"] == eventoOld["extendedProps"]["modulo_id"] and
-                row["aula_id"] == eventoOld["extendedProps"]["aula_id"] and
-                row["giorno_id"] == eventoOld["extendedProps"]["giorno_id"] and
-                row["slot_id"] == eventoOld["extendedProps"]["slot_id"]):
-                row["giorno_id"] = dati["giornoNew"]
-                row["slot_id"] = slotNew.id
-                row["descrizione_slot"] = slotNew.descrizione
-                row["giorno"] = giornoNew.descrizione
-                row["aula_id"] = aulaNew.id
-                row["aula"] = aulaNew.descrizione
-                row["capienza_aula"] = aulaNew.capienza
-                break;
-
-        session["orarioCorrente"] = orarioCorrente
-
-        data = {"orario": session["orarioCorrente"],
-                "chiusure": session["chiusure"]}
-
-        return data, 200
-
-    @expose("/cld_load/", methods=["POST"])
-    @has_access
-    def cld_load(self):
-        session["orarioCorrente"] = getOrarioCorrente()
-        session["chiusure"] = getChiusureOrarioCorrente()
-
-        data = {"orario": session["orarioCorrente"],
-                "chiusure": session["chiusure"]}
-        return data, 200
-
-    @expose("/cld_upd/", methods=["POST"])
-    @has_access
-    def cld_upd(self):
-        data = {"orario": session["orarioCorrente"],
-                "chiusure": session["chiusure"]}
-        return data, 200
-
     @expose("/cld_app/", methods=["POST"])
     @has_access
     def cld_app(self):
@@ -576,28 +591,6 @@ class CalendarioView(BaseView):
             flash("Caricare un orario generato come base su cui lavorare: Orari Generati -> Carica", "danger")
 
         data = {"esito": "ok"}
-        return data, 200
-
-
-    @expose("/cld_room/", methods=["POST"])
-    @has_access
-    def cld_room(self):
-        dati = json.loads(request.data)
-        auleOccupate = []
-        orarioCorrente=session['orarioCorrente']
-        for o in orarioCorrente:
-            if o["giorno_id"]==dati["giorno"] and o["slot_id"]==dati["slot"]:
-                auleOccupate.append(o["aula_id"])
-        aule = db.session.query(Aula) \
-            .filter(Aula.id != dati["aula"]).filter(Aula.capienza >= dati["numerosita"]) \
-            .filter(Aula.id.notin_(auleOccupate)). \
-            order_by(Aula.descrizione).all()
-
-        vAule = []
-        for a in aule:
-            vAule.append(a.to_dict())
-
-        data = {"aule": vAule}
         return data, 200
 
 db.create_all()

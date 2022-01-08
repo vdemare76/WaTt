@@ -67,29 +67,31 @@ class TemplateCalcoloOrario(ABC):
         # Modello risolutivo di calcolo del timetable
 
         # Step 1
-        # CARICAMENTO DEI DATI su cui viene effettuato il calcolo dell'orario
+        # Caricamento dei dati su cui viene effettuato il calcolo dell'orario
         dati = self.carica_dati(aa, semestre, cod_cds)
         
         # Step 2
-        # GENERA LE STRUTTURE DATI DI SUPPORTO AL CALCOLO dell'orario
+        # Genera le strutture dati di supporto al calcolo dell'orario
         model, strutture_ausiliarie = self.genera_strutture_ausiliarie(dati)
         
         # Step 3
-        # IMPLEMENTA I VINCOLI OBBLIGATORI
+        # Implementa i vincoli obbligatori
         self.imposta_vincoli_obbligatori(model, dati, strutture_ausiliarie)
         
         # Step 4 - abstract
-        # IMPLEMENTA EVENTUALMENTE I VINCOLI FACOLTATIVI
+        # Implementa gli eventuali vincoli facoltativi
         self.imposta_vincoli_facoltativi(model, dati, strutture_ausiliarie, vincoli)
         
         # Step 5 - abstract
-        # IMPLEMENTA EVENTUALMENTE I VINCOLI ADDIZIONALI
+        # Implementa gli eventuali vincoli addizionali
         self.imposta_vincoli_addizionali(model, dati, strutture_ausiliarie, vincoli, cod_cds)
         
         # Step 6
+        # Calcola la soluzione
         ris = self.calcola_orario(model, dati, strutture_ausiliarie)
         
         # Step 7 - abstract
+        # Memorizza nel db la soluzione calcolata.
         if registra==True:
             self.registra_orario(model, dati, strutture_ausiliarie, aa, semestre, desc_orario)
         return ris
