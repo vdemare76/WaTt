@@ -63,16 +63,16 @@
 					<br>
 					<input type="checkbox" name="chk_max_ore" id="chk_max_ore" value="1">
 					<label for="chk_max_ore">Non superare il massimo di slot di lezioni fissate in una settimana per ogni anno di corso</label>
-					<select name="sel_max_ore">
-					  <option value="4">4</option>
-					  <option value="5">5</option>
-					  <option value="6">6</option>
-					  <option value="7">7</option>
-					  <option value="8">8</option>
-					  <option value="9">9</option>
-					  <option value="10">10</option>
-					  <option value="11">11</option>
-					  <option value="12">12</option>
+					<select id="sel_max_ore" name="sel_max_ore">
+					  <option value=4>4</option>
+					  <option value=5>5</option>
+					  <option value=6>6</option>
+					  <option value=7>7</option>
+					  <option value=8>8</option>
+					  <option value=9>9</option>
+					  <option value=10>10</option>
+					  <option value=11>11</option>
+					  <option value=12>12</option>
 					</select>
 					<br>
 					<input type="checkbox" name="chk_preferenze_docenti" id="chk_preferenze_docenti" value="1">
@@ -94,10 +94,10 @@
 	<script>
 		function calcola_orario() {
 			if ($("#txt_desc_orario").val().length > 0) {
-				if ($("#chk_sessione_unica").is(":checked")) csu="1"; else csu="0";
-				if ($("#chk_slot_sessioni_consecutive").is(":checked")) csc="1"; else csc="0";
-				if ($("#chk_max_ore").is(":checked")) cmo="1"; else cmo="0";
-				if ($("#chk_preferenze_docenti").is(":checked")) cpd="1"; else cpd="0";
+				if ($("#chk_sessione_unica").is(":checked")) csu=1; else csu=0;
+				if ($("#chk_slot_sessioni_consecutive").is(":checked")) csc=1; else csc=0;
+				if ($("#chk_max_ore").is(":checked")) cmo=1; else cmo=0;
+				if ($("#chk_preferenze_docenti").is(":checked")) cpd=1; else cpd=0;
 				$("#loader").css({"display":"block"});
 				// $("#target").val("genera_orario");
 				$.ajax({

@@ -354,16 +354,16 @@ def __impostaDati7Cds(tipoModuli):
     elif tipoModuli == "N":
         modulo_i = [
             [1, "MOD-1/2", "MOD12", 1, 4, "N", 2, 2, 0],
-            [2, "MOD-2/2", "MOD22", 1, 5, "N", 2, 2, 0],
+            [2, "MOD-2/2", "MOD22", 1, 5, "L", 1, 2, 25],
             [3, "MOD-1/1", "MOD11", 2, 6, "N", 2, 2, 0],
             [4, "MOD-1/2", "MOD12", 3, 3, "N", 2, 2, 0],
-            [5, "MOD-2/2", "MOD22", 3, 7, "N", 2, 2, 0],
+            [5, "MOD-2/2", "MOD22", 3, 7, "L", 1, 2, 25],
             [6, "MOD-1/1", "MOD11", 4, 8, "N", 2, 2, 0],
             [7, "MOD-1/1", "MOD11", 5, 1, "N", 2, 2, 0],
             [8, "MOD-1/1", "MOD11", 6, 2, "N", 2, 2, 0],
             [9, "MOD-1/1", "MOD11", 7, 3, "N", 2, 2, 0],
             [10, "MOD-1/2", "MOD12", 8, 4, "N", 2, 2, 0],
-            [11, "MOD-2/2", "MOD22", 8, 5, "N", 2, 2, 0],
+            [11, "MOD-2/2", "MOD22", 8, 5, "L", 1, 2, 25],
             [12, "MOD-1/1", "MOD11", 9, 10, "N", 2, 2, 0],
             [13, "MOD-1/1", "MOD11", 10, 13, "N", 2, 2, 0],
             [14, "MOD-1/1", "MOD11", 11, 9, "N", 2, 2, 0],
@@ -381,16 +381,16 @@ def __impostaDati7Cds(tipoModuli):
             [26, "MOD-1/1", "MOD11", 23, 17, "N", 2, 2, 0],
             [27, "MOD-1/1", "MOD11", 24, 19, "N", 2, 2, 0],
             [28, "MOD-1/2", "MOD12", 25, 15, "N", 2, 2, 0],
-            [29, "MOD-2/2", "MOD22", 25, 25, "N", 2, 2, 0],
+            [29, "MOD-2/2", "MOD22", 25, 25, "L", 1, 2, 25],
             [30, "MOD-1/2", "MOD12", 26, 7, "N", 2, 2, 0],
-            [31, "MOD-2/2", "MOD22", 26, 5, "N", 2, 2, 0],
+            [31, "MOD-2/2", "MOD22", 26, 5, "L", 1, 2, 25],
             [32, "MOD-1/2", "MOD12", 27, 3, "N", 2, 2, 0],
-            [33, "MOD-2/2", "MOD22", 27, 2, "N", 2, 2, 0],
+            [33, "MOD-2/2", "MOD22", 27, 2, "L", 1, 2, 25],
             [34, "MOD-1/1", "MOD11", 28, 12, "N", 2, 2, 0],
             [35, "MOD-1/1", "MOD11", 29, 26, "N", 2, 2, 0],
             [36, "MOD-1/1", "MOD11", 30, 24, "N", 2, 2, 0],
             [37, "MOD-1/2", "MOD12", 31, 25, "N", 2, 2, 0],
-            [38, "MOD-2/2", "MOD22", 31, 7, "N", 2, 2, 0],
+            [38, "MOD-2/2", "MOD22", 31, 7, "L", 1, 2, 25],
             [39, "MOD-1/1", "MOD11", 32, 2, "N", 2, 2, 0],
             [40, "MOD-1/1", "MOD11", 33, 27, "N", 2, 2, 0],
             [41, "MOD-1/1", "MOD11", 34, 15, "N", 2, 2, 0],
@@ -916,11 +916,10 @@ def svuotaDb():
 def caricaDatiDalDb(aa, semestre, cod_cds):
     try:
         corsi_tt=[]
-        if cod_cds == "all":
+        if cod_cds == -1:
             corsi = db.session.query(CorsoDiStudio).all()
         else:
             corsi = db.session.query(CorsoDiStudio).filter(CorsoDiStudio.id == cod_cds).all()
-            flash(corsi)
         for c in corsi:
             corsi_tt.append(CorsoDiStudioTt(c.id, c.codice, c.descrizione, c.cfu, c.durata_legale))
     except SQLAlchemyError:
@@ -957,7 +956,7 @@ def caricaDatiDalDb(aa, semestre, cod_cds):
     try:
         moduli_tt=[]
         # Recupero delle informazioni dal DB per la formazione degli oggetti Modulo da collocare nell"orario
-        if cod_cds == "all":
+        if cod_cds == -1:
             moduli=db.session.query(Modulo, Offerta, AttivitaDidattica, AnnoAccademico, CorsoDiStudio, Docente)\
             .join(Offerta, Modulo.offerta_id == Offerta.id)\
             .join(AttivitaDidattica, Offerta.attivita_didattica_id == AttivitaDidattica.id)\

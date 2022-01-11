@@ -287,14 +287,14 @@ class OrariGeneratiView(ModelView):
         session["annoAccademico"] = tst.anno_accademico_id
         session["semestre"] = tst.semestre
         session["testataId"] = item.id
-        session["chkSessioneUnica"]=str(tst.vincolo_sessione_unica)
-        session["chkSessioniConsecutive"]=str(tst.vincolo_sessioni_consecutive)
+        session["chkSessioneUnica"] = int(tst.vincolo_sessione_unica)
+        session["chkSessioniConsecutive"] = int(tst.vincolo_sessioni_consecutive)
         if tst.vincolo_max_slot>0:
-            session["chkMaxOre"]="1"
+            session["chkMaxOre"] = 1
         else:
-            session["chkMaxOre"]="0"
-        session["selMaxOre"]=tst.vincolo_max_slot
-        session["chkPreferenzeDocenti"]=str(tst.vincolo_logistica_docenti)
+            session["chkMaxOre"] = 0
+        session["selMaxOre"] = int(tst.vincolo_max_slot)
+        session["chkPreferenzeDocenti"] = int(tst.vincolo_logistica_docenti)
 
         flash('Orario caricato correttamente! (Puoi visualizzarlo con Orario -> Schema settimanale', 'success')
         return redirect(self.get_redirect())
@@ -409,11 +409,11 @@ class GeneraOrarioView(BaseView):
             vincoli={"chkSessioneUnica": dati["chkSessioneUnica"],
                      "chkSessioniConsecutive": dati["chkSlotSessioniConsecutive"],
                      "chkMaxOre": dati["chkMaxOre"],
-                     "selMaxOre": int("4"),
+                     "selMaxOre": int(dati["selMaxOre"]),
                      "chkPreferenzeDocenti": dati["chkPreferenzeDocenti"],
                      "posizioniFisse": None}
             algoritmo=AlgoritmoCalcolo()
-            ris=algoritmo.genera_orario(dati["aa"], dati["semestre"], dati["txtDescOrario"], True, vincoli, "all")
+            ris=algoritmo.genera_orario(dati["aa"], dati["semestre"], dati["txtDescOrario"], True, vincoli, -1)
             data = {"status": ris}
             return data, 200
         except:
@@ -528,6 +528,8 @@ class CalendarioView(BaseView):
     @has_access
     def cld_room(self):
         dati = json.loads(request.data)
+        aula = db.session.query(Aula).filter(Aula.id == dati["aula"]).first()
+
         auleOccupate = []
         orarioCorrente=session['orarioCorrente']
         for o in orarioCorrente:
@@ -535,8 +537,8 @@ class CalendarioView(BaseView):
                 auleOccupate.append(o["aula_id"])
         aule = db.session.query(Aula) \
             .filter(Aula.id != dati["aula"]).filter(Aula.capienza >= dati["numerosita"]) \
-            .filter(Aula.id.notin_(auleOccupate)). \
-            order_by(Aula.descrizione).all()
+            .filter(Aula.id.notin_(auleOccupate)).filter(Aula.tipo_aula == aula.tipo_aula) \
+            .order_by(Aula.descrizione).all()
 
         vAule = []
         for a in aule:
@@ -551,11 +553,11 @@ class CalendarioView(BaseView):
         try:
             dati = json.loads(request.data)
             orarioCorrente = session["orarioCorrente"]
-            vincoli = {"chkSessioneUnica": session["chkSessioneUnica"],
-                       "chkSessioniConsecutive": session["chkSessioniConsecutive"],
-                       "chkMaxOre": session["chkMaxOre"],
-                       "selMaxOre": session["selMaxOre"],
-                       "chkPreferenzeDocenti": session["chkPreferenzeDocenti"],
+            vincoli = {"chkSessioneUnica": int(session["chkSessioneUnica"]),
+                       "chkSessioniConsecutive": int(session["chkSessioniConsecutive"]),
+                       "chkMaxOre": int(session["chkMaxOre"]),
+                       "selMaxOre": int(session["selMaxOre"]),
+                       "chkPreferenzeDocenti": int(session["chkPreferenzeDocenti"]),
                        "posizioniFisse": orarioCorrente}
             algoritmo=AlgoritmoCalcolo()
             if dati["tipoVerifica"] == -1:

@@ -118,7 +118,7 @@
           },
           eventClick: function(info) {
             if (info.event.extendedProps.giorno_id>-1)
-              gestione_cambio_aula(info.event, info.event, calendar)
+              gestione_cambio_aula(info.event, info.event)
           },
           eventDragStop: function(info) {
             $(".popover").remove();
@@ -371,7 +371,7 @@
       });
     }
 
-    function gestione_cambio_aula(eventoOld, eventoNew, calendar) {
+    function gestione_cambio_aula(eventoOld, eventoNew) {
       $.ajax({
         type: "POST",
         contentType: "application/json",

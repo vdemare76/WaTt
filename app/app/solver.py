@@ -92,8 +92,8 @@ class TemplateCalcoloOrario(ABC):
         
         # Step 7 - abstract
         # Memorizza nel db la soluzione calcolata.
-        if registra==True:
-            self.registra_orario(model, dati, strutture_ausiliarie, aa, semestre, desc_orario)
+        if registra == True:
+            self.registra_orario(model, dati, strutture_ausiliarie, vincoli, aa, semestre, desc_orario)
         return ris
 
     def carica_dati(self, aa, semestre, cod_cds):
@@ -122,7 +122,7 @@ class TemplateCalcoloOrario(ABC):
         # valore 1 -> docente ha la titolarità di un dato modulo
         for m in dati.get_moduli():
             for d in doc:
-                if d==m.get_matricola():
+                if d == m.get_matricola():
                     tit[m,d]=1
                 else:
                     tit[m,d]=0
@@ -130,7 +130,7 @@ class TemplateCalcoloOrario(ABC):
         # valore 1 -> l'aula è compatibile con la numerosità di un dato corso    
         for m in dati.get_moduli():
             for a in dati.get_aule():
-                if a.get_tipo()==m.get_tipo_aula() and a.get_capienza()>=m.get_max_studenti():
+                if a.get_tipo() == m.get_tipo_aula() and a.get_capienza()>=m.get_max_studenti():
                     cpt[m,a]=1
                 else:    
                     cpt[m,a]=0
@@ -157,7 +157,7 @@ class TemplateCalcoloOrario(ABC):
         
         # Vincolo che fissa il numero di slot da assegnare per un modulo di un'attività didattica in una settimana
         for m in dati.get_moduli():
-            model += lpSum(skd[(c,m,a,g,s)] for a in dati.get_aule() for g in dati.get_giorni() for s in dati.get_slot() for c in dati.get_corsi())==(m.get_num_sessioni()*m.get_dur_sessioni())
+            model += lpSum(skd[(c,m,a,g,s)] for a in dati.get_aule() for g in dati.get_giorni() for s in dati.get_slot() for c in dati.get_corsi()) == (m.get_num_sessioni()*m.get_dur_sessioni())
         
         # Vincolo che impedisce che ad un aula venga assegnato più di un corso in uno slot di un dato giorno     
         for a in dati.get_aule():
@@ -178,16 +178,16 @@ class TemplateCalcoloOrario(ABC):
                 for g in dati.get_giorni():
                     for s in dati.get_slot():
                         for a in dati.get_aule():
-                            if str_aux.get_compatibilita_aule()[(m,a)]==0:
-                                model+=skd[(c,m,a,g,s)]==0
+                            if str_aux.get_compatibilita_aule()[(m,a)] == 0:
+                                model+=skd[(c,m,a,g,s)] == 0
 
         # Vincolo che non consente la sovrapposizione di moduli inerenti ad attività didattiche previste allo stesso anno di corso
         for c in dati.get_corsi():
             for g in dati.get_giorni():
                 for s in dati.get_slot():
-                    model+=lpSum(skd[(c,m,a,g,s)] for m in dati.get_moduli() if m.get_anno_corso()==1 for a in dati.get_aule())<=1
-                    model+=lpSum(skd[(c,m,a,g,s)] for m in dati.get_moduli() if m.get_anno_corso()==2 for a in dati.get_aule())<=1
-                    model+=lpSum(skd[(c,m,a,g,s)] for m in dati.get_moduli() if m.get_anno_corso()==3 for a in dati.get_aule())<=1
+                    model+=lpSum(skd[(c,m,a,g,s)] for m in dati.get_moduli() if m.get_anno_corso() == 1 for a in dati.get_aule())<=1
+                    model+=lpSum(skd[(c,m,a,g,s)] for m in dati.get_moduli() if m.get_anno_corso() == 2 for a in dati.get_aule())<=1
+                    model+=lpSum(skd[(c,m,a,g,s)] for m in dati.get_moduli() if m.get_anno_corso() == 3 for a in dati.get_aule())<=1
         
         # Rende impossibili gli abbinamenti di assegnazioni di moduli di codici corso diversi dal codice del corso in esame
         for c in dati.get_corsi():
@@ -196,7 +196,7 @@ class TemplateCalcoloOrario(ABC):
                     for m in dati.get_moduli():
                         for a in dati.get_aule():
                             if c.get_codice()!=m.get_cod_corso():
-                                model+=skd[(c,m,a,g,s)]==0
+                                model+=skd[(c,m,a,g,s)] == 0
                
     def calcola_orario(self, model, dati, str_aux):
         skd=str_aux.get_schedulazione()
@@ -216,7 +216,7 @@ class TemplateCalcoloOrario(ABC):
         pass
     
     @abstractmethod
-    def registra_orario(self, model, dati, str_aux, aa, desc_orario):
+    def registra_orario(self, model, dati, str_aux, vincoli, aa, desc_orario):
         pass
     
     
@@ -224,7 +224,7 @@ class AlgoritmoCalcolo(TemplateCalcoloOrario):
     def imposta_vincoli_facoltativi(self, model, dati, str_aux, vincoli):
         skd=str_aux.get_schedulazione()
 
-        if vincoli["chkSessioneUnica"]=="1":
+        if vincoli["chkSessioneUnica"] == 1:
             # Per ogni giorno, ogni corso ed ogni aula il numero di slot massimo consentito è pari alla durata delle sessioni
             # ciò evita che ci possano essere due sessioni nello stesso giorno    
             for c in dati.get_corsi():   
@@ -232,12 +232,12 @@ class AlgoritmoCalcolo(TemplateCalcoloOrario):
                     for g in dati.get_giorni():
                         model+= lpSum(skd[(c,m,a,g,s)] for s in dati.get_slot() for a in dati.get_aule())<=m.get_dur_sessioni()
 
-        if vincoli["chkSessioniConsecutive"]=="1":
+        if vincoli["chkSessioniConsecutive"] == 1:
             # Vincoli di consecutività delle sessioni
             for c in dati.get_corsi():
                 for m in dati.get_moduli():
                     dur_sessione=m.get_dur_sessioni()
-                    if dur_sessione==2:
+                    if dur_sessione == 2:
                         for a in dati.get_aule():
                             for g in dati.get_giorni():
                                 for s in (0,4):
@@ -246,7 +246,7 @@ class AlgoritmoCalcolo(TemplateCalcoloOrario):
                                     model+=skd[(c,m,a,g,dati.get_slot()[s])]-skd[(c,m,a,g,dati.get_slot()[s+1])]-skd[(c,m,a,g,dati.get_slot()[s-1])]<=0 
                                 for s in (3,7):
                                     model+=skd[(c,m,a,g,dati.get_slot()[s])]-skd[(c,m,a,g,dati.get_slot()[s-1])]<=0
-                    elif dur_sessione==3:
+                    elif dur_sessione == 3:
                         for a in dati.get_aule():
                             for g in dati.get_giorni():                   
                                 for s in (0,4):
@@ -261,7 +261,7 @@ class AlgoritmoCalcolo(TemplateCalcoloOrario):
                                 for s in (3,7):
                                     model+=skd[(c,m,a,g,dati.get_slot()[s])]-skd[(c,m,a,g,dati.get_slot()[s-1])]<=0 
                                     model+=skd[(c,m,a,g,dati.get_slot()[s])]-skd[(c,m,a,g,dati.get_slot()[s-2])]<=0
-                    elif dur_sessione==4:
+                    elif dur_sessione == 4:
                         for a in dati.get_aule():
                             for g in dati.get_giorni():                   
                                 for s in (0,4):
@@ -282,78 +282,68 @@ class AlgoritmoCalcolo(TemplateCalcoloOrario):
                                     model+=skd[(c,m,a,g,dati.get_slot()[s])]-skd[(c,m,a,g,dati.get_slot()[s-3])]<=0
 
         # Vincolo che fissa  il numero massimo di slot per giorno per un anno di corso
-        if vincoli["chkMaxOre"]=="1":
+        if vincoli["chkMaxOre"]  ==  1:
             limsup=vincoli["selMaxOre"]
             for c in dati.get_corsi():
                 for g in dati.get_giorni():
-                    model+=lpSum(skd[(c,m,a,g,s)] for m in dati.get_moduli() if m.get_anno_corso()==1 for s in dati.get_slot() for a in dati.get_aule())<=limsup
-                    model+=lpSum(skd[(c,m,a,g,s)] for m in dati.get_moduli() if m.get_anno_corso()==2 for s in dati.get_slot() for a in dati.get_aule())<=limsup
-                    model+=lpSum(skd[(c,m,a,g,s)] for m in dati.get_moduli() if m.get_anno_corso()==3 for s in dati.get_slot() for a in dati.get_aule())<=limsup
+                    model+=lpSum(skd[(c,m,a,g,s)] for m in dati.get_moduli() if m.get_anno_corso() == 1 for s in dati.get_slot() for a in dati.get_aule())<=limsup
+                    model+=lpSum(skd[(c,m,a,g,s)] for m in dati.get_moduli() if m.get_anno_corso() == 2 for s in dati.get_slot() for a in dati.get_aule())<=limsup
+                    model+=lpSum(skd[(c,m,a,g,s)] for m in dati.get_moduli() if m.get_anno_corso() == 3 for s in dati.get_slot() for a in dati.get_aule())<=limsup
 
                                                                   
     def imposta_vincoli_addizionali(self, model, dati, str_aux, vincoli, cod_cds):
-        if vincoli["chkPreferenzeDocenti"]=="1":
+        if vincoli["chkPreferenzeDocenti"] == 1:
             skd=str_aux.get_schedulazione()    
             for l in dati.get_logistica():
                 s = l[2]
                 for m in dati.get_moduli():
-                    if (m.get_offerta_id()==l[0] and m.get_id()==l[1]):
+                    if (m.get_offerta_id() == l[0] and m.get_id() == l[1]):
                         break
                 for c in dati.get_corsi():
-                    if c.get_id()==m.get_corso_id():
+                    if c.get_id() == m.get_corso_id():
                         break
                 g=dati.get_giorni()
-                model+=lpSum(skd[(c,m,a,g[l[3]-1],dati.get_slot()[s-1])] for a in dati.get_aule())==1
+                model+=lpSum(skd[(c,m,a,g[l[3]-1],dati.get_slot()[s-1])] for a in dati.get_aule()) == 1
 
-        if vincoli["posizioniFisse"]==None:
+        if vincoli["posizioniFisse"] == None:
             None
         else:
             skd = str_aux.get_schedulazione()
             global posizioniFisse
+
             if (cod_cds == -1):
                 posizioniFisse = vincoli["posizioniFisse"]
             else:
-                posizioniFisse = [pf for pf in vincoli["posizioniFisse"] if pf['corso_id'] == int(cod_cds)]
+                posizioniFisse = [pf for pf in vincoli["posizioniFisse"] if pf['corso_id']==int(cod_cds)]
             for p in posizioniFisse:
                 if (p["corso_id"]!=-1 and p["modulo_id"]!=-1 and
                     p["aula_id"]!=-1 and p["giorno_id"]!=-1 and
                     p["slot_id"]!=-1):
                     for c in dati.get_corsi():
-                        if c.get_id()==p["corso_id"]:
+                        if c.get_id() == p["corso_id"]:
                             break
                     for m in dati.get_moduli():
-                        if m.get_id()==p["modulo_id"]:
+                        if m.get_id() == p["modulo_id"]:
                             break
                     for a in dati.get_aule():
-                        if a.get_id()==p["aula_id"]:
+                        if a.get_id() == p["aula_id"]:
                             break
                     for g in dati.get_giorni():
-                        if g.get_id()==p["giorno_id"]:
+                        if g.get_id() == p["giorno_id"]:
                             break
                     for s in dati.get_slot():
-                        if s.get_id()==p["slot_id"]:
+                        if s.get_id() == p["slot_id"]:
                             break
-                    model+=skd[(c,m,a,g,s)]==1
+                    model+=skd[(c,m,a,g,s)] == 1
 
-    def registra_orario(self, model, dati, str_aux, aa, semestre, desc_orario):
+    def registra_orario(self, model, dati, str_aux, vincoli, aa, semestre, desc_orario):
+        flash(vincoli)
         skd=str_aux.get_schedulazione()  
         if (pl.LpStatus[model.status]) == "Optimal":
             try:
-                vincolo_sessione_unica=0
-                if request.form.get("chk_sessione_unica")=="1":
-                    vincolo_sessione_unica=1
-
-                vincolo_sessioni_consecutive=0
-                if request.form.get("chk_slot_sessioni_consecutive") == "1":
-                    vincolo_sessioni_consecutive=1
-
                 vincolo_max_slot=0
-                if request.form.get("chk_max_ore") == "1":
-                    vincolo_max_slot=request.form.get("sel_max_ore")
-
-                vincolo_logistica_docenti=0
-                if request.form.get("chk_preferenze_docenti") == "1":
-                    vincolo_logistica_docenti=1
+                if vincoli["chkMaxOre"] == 1:
+                    vincolo_max_slot=vincoli["selMaxOre"]
 
                 data_operazione = datetime.datetime.now(pytz.timezone("Europe/Rome"))
                 row_test = OrarioTestata(descrizione = desc_orario,
@@ -361,10 +351,10 @@ class AlgoritmoCalcolo(TemplateCalcoloOrario):
                                          semestre = semestre,
                                          data_creazione = data_operazione,
                                          data_ultima_modifica = data_operazione,
-                                         vincolo_sessione_unica = vincolo_sessione_unica,
-                                         vincolo_sessioni_consecutive = vincolo_sessioni_consecutive,
+                                         vincolo_sessione_unica = vincoli["chkSessioneUnica"],
+                                         vincolo_sessioni_consecutive = vincoli["chkSessioniConsecutive"],
                                          vincolo_max_slot = vincolo_max_slot,
-                                         vincolo_logistica_docenti = vincolo_logistica_docenti,
+                                         vincolo_logistica_docenti = vincoli["chkPreferenzeDocenti"],
                                          stato_orario_id = 2)
                 db.session.add(row_test)
                 db.session.flush()
