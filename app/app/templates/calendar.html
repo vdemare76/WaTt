@@ -296,7 +296,7 @@
       }
     }
 
-    function modificaEventoInOrario(info, eventoOld, eventoNew, aulaNew, tipo) {
+    function modificaEventoInOrario(info, eventoOld, eventoNew, aulaNew, tipo_variazione) {
       let tipo_conflitto;
       $.ajax({
         type: "POST",
@@ -304,17 +304,18 @@
         data: JSON.stringify({eventoOld: eventoOld,
                               giornoNew: eventoNew.start.getDay(),
                               slotNew: eventoNew.start.getHours(),
-                              aulaNew: aulaNew}),
+                              aulaNew: aulaNew,
+                              tipo_variazione: tipo_variazione}),
         dataType: "json",
         url: "/calendarioview/cld_mod/",
         success: function (ris) {
           tipo_conflitto=ris["tipo_conflitto"];
           alert(tipo_conflitto);
           descrizione_conflitto=ris["descrizione_conflitto"];
-          if ((tipo=="aula") || (tipo=="slot" && tipo_conflitto=="N"))
+          if ((tipo_variazione=="aula") || (tipo_variazione=="slot" && tipo_conflitto=="N"))
             aggiornaOrario();
           else
-            if (tipo=="slot" && tipo_conflitto=="A") {
+            if (tipo_variazione=="slot" && tipo_conflitto=="A") {
             $("#info-title").html("CONFLITTO DI AULA");
             $("#info-msg").html(descrizione_conflitto + "\n Il modulo viene riportato nella posizione di partenza");
             $(document).on("click", "#modal-info-ok", function () {
@@ -322,7 +323,7 @@
             });
             $("#modal-info-w").modal("show");
           }
-          else if (tipo=="slot" && tipo_conflitto=="D") {
+          else if (tipo_variazione=="slot" && tipo_conflitto=="D") {
             $("#info-title").html("CONFLITTO DI DOCENTE");
             $("#info-msg").html(descrizione_conflitto + "\n Il modulo viene riportato nella posizione di partenza");
             $(document).on("click", "#modal-info-ok", function () {

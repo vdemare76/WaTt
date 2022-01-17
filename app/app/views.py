@@ -503,25 +503,27 @@ class CalendarioView(BaseView):
         dati = json.loads(request.data)
         orarioCorrente = session["orarioCorrente"]
         eventoOld = dati["eventoOld"]
+        tipo_variazione = dati["tipo_variazione"]
 
         slotNew = db.session.query(Slot).filter(Slot.ora_slot_cal == dati["slotNew"]).first()
         giornoNew = db.session.query(Giorno).filter(Giorno.id == dati["giornoNew"]).first()
         aulaNew = db.session.query(Aula).filter(Aula.id == dati["aulaNew"]).first()
 
-        conflittiAula = list(filter(lambda ocr: ocr["slot_id"] == slotNew.id and
-                                                ocr["giorno_id"] == giornoNew.id and
-                                                ocr["aula_id"] == aulaNew.id,
-                                                orarioCorrente))
+        if tipo_variazione=="slot":
+            conflittiAula = list(filter(lambda ocr: ocr["slot_id"] == slotNew.id and
+                                                    ocr["giorno_id"] == giornoNew.id and
+                                                    ocr["aula_id"] == aulaNew.id,
+                                                    orarioCorrente))
 
-        conflittiDocente = list(filter(lambda ocr: ocr["slot_id"] == slotNew.id and
-                                                   ocr["giorno_id"] == giornoNew.id and
-                                                   ocr["docente_id"] == eventoOld["extendedProps"]["docente_id"],
-                                                   orarioCorrente))
+            conflittiDocente = list(filter(lambda ocr: ocr["slot_id"] == slotNew.id and
+                                                       ocr["giorno_id"] == giornoNew.id and
+                                                       ocr["docente_id"] == eventoOld["extendedProps"]["docente_id"],
+                                                       orarioCorrente))
 
-        if len(conflittiAula) > 0 :
+        if (tipo_variazione=="slot" and len(conflittiAula) > 0) :
             tipo_conflitto = "A"
             descrizione_conflitto = "Corso: " + conflittiAula[0]["descrizione_corso"] + " - Anno di corso: " + str(conflittiAula[0]["anno_corso"])
-        elif len(conflittiDocente) > 0 :
+        elif (tipo_variazione=="slot" and len(conflittiDocente) > 0) :
             tipo_conflitto = "D"
             descrizione_conflitto = "Corso: " + conflittiDocente[0]["descrizione_corso"] + " - Anno di corso: " + str(conflittiDocente[0]["anno_corso"])
         else:
