@@ -247,6 +247,9 @@ class LogisticaDocentiView(ModelView):
 
 class OrariGeneratiView(ModelView):
     datamodel = SQLAInterface(OrarioTestata)
+    list_title = 'Orari generati'
+    show_title = 'Orario generato'
+    edit_title = 'Modifica dati di testata dell\'orario generato'
     label_columns = {"id":"identificativo",
                      "descrizione":"Descrizione",
                      "anno_accademico.anno_esteso":"Anno Accademico",
@@ -312,7 +315,7 @@ class UtilitaView(BaseView):
     @has_access
     def srv_util(self):
         target=request.form.get("target")
-        if target=="svuotaDB":
+        if target=="svuotaDb":
             svuotaDb()
         elif target=="caricaDatiBase":
             caricaDatiBase()
@@ -495,6 +498,8 @@ class CalendarioView(BaseView):
     @expose("/cld_mod/", methods=["POST"])
     @has_access
     def cld_mod(self):
+        global tipo_conflitto
+        global descrizione_conflitto
         dati = json.loads(request.data)
         orarioCorrente = session["orarioCorrente"]
         eventoOld = dati["eventoOld"]
@@ -502,24 +507,46 @@ class CalendarioView(BaseView):
         slotNew = db.session.query(Slot).filter(Slot.ora_slot_cal == dati["slotNew"]).first()
         giornoNew = db.session.query(Giorno).filter(Giorno.id == dati["giornoNew"]).first()
         aulaNew = db.session.query(Aula).filter(Aula.id == dati["aulaNew"]).first()
-        for row in orarioCorrente:
-            if (row["corso_id"] == eventoOld["extendedProps"]["corso_id"] and
-                    row["modulo_id"] == eventoOld["extendedProps"]["modulo_id"] and
-                    row["aula_id"] == eventoOld["extendedProps"]["aula_id"] and
-                    row["giorno_id"] == eventoOld["extendedProps"]["giorno_id"] and
-                    row["slot_id"] == eventoOld["extendedProps"]["slot_id"]):
-                row["giorno_id"] = dati["giornoNew"]
-                row["slot_id"] = slotNew.id
-                row["descrizione_slot"] = slotNew.descrizione
-                row["giorno"] = giornoNew.descrizione
-                row["aula_id"] = aulaNew.id
-                row["aula"] = aulaNew.descrizione
-                row["capienza_aula"] = aulaNew.capienza
-                break;
 
-        session["orarioCorrente"] = orarioCorrente
+        conflittiAula = list(filter(lambda ocr: ocr["slot_id"] == slotNew.id and
+                                                ocr["giorno_id"] == giornoNew.id and
+                                                ocr["aula_id"] == aulaNew.id,
+                                                orarioCorrente))
 
-        data = {"orario": session["orarioCorrente"],
+        conflittiDocente = list(filter(lambda ocr: ocr["slot_id"] == slotNew.id and
+                                                   ocr["giorno_id"] == giornoNew.id and
+                                                   ocr["docente_id"] == eventoOld["extendedProps"]["docente_id"],
+                                                   orarioCorrente))
+
+        if len(conflittiAula) > 0 :
+            tipo_conflitto = "A"
+            descrizione_conflitto = "Corso: " + conflittiAula[0]["descrizione_corso"] + " - Anno di corso: " + str(conflittiAula[0]["anno_corso"])
+        elif len(conflittiDocente) > 0 :
+            tipo_conflitto = "D"
+            descrizione_conflitto = "Corso: " + conflittiDocente[0]["descrizione_corso"] + " - Anno di corso: " + str(conflittiDocente[0]["anno_corso"])
+        else:
+            tipo_conflitto = "N"
+            descrizione_conflitto = "Nessun conflitto"
+            for row in orarioCorrente:
+                if (row["corso_id"] == eventoOld["extendedProps"]["corso_id"] and
+                        row["modulo_id"] == eventoOld["extendedProps"]["modulo_id"] and
+                        row["aula_id"] == eventoOld["extendedProps"]["aula_id"] and
+                        row["giorno_id"] == eventoOld["extendedProps"]["giorno_id"] and
+                        row["slot_id"] == eventoOld["extendedProps"]["slot_id"]):
+                    row["giorno_id"] = dati["giornoNew"]
+                    row["slot_id"] = slotNew.id
+                    row["descrizione_slot"] = slotNew.descrizione
+                    row["giorno"] = giornoNew.descrizione
+                    row["aula_id"] = aulaNew.id
+                    row["aula"] = aulaNew.descrizione
+                    row["capienza_aula"] = aulaNew.capienza
+                    break;
+
+            session["orarioCorrente"] = orarioCorrente
+
+        data = {"tipo_conflitto": tipo_conflitto,
+                "descrizione_conflitto": descrizione_conflitto,
+                "orario": session["orarioCorrente"],
                 "chiusure": session["chiusure"]}
 
         return data, 200

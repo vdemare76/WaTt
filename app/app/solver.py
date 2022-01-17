@@ -337,8 +337,7 @@ class AlgoritmoCalcolo(TemplateCalcoloOrario):
                     model+=skd[(c,m,a,g,s)] == 1
 
     def registra_orario(self, model, dati, str_aux, vincoli, aa, semestre, desc_orario):
-        flash(vincoli)
-        skd=str_aux.get_schedulazione()  
+        skd=str_aux.get_schedulazione()
         if (pl.LpStatus[model.status]) == "Optimal":
             try:
                 vincolo_max_slot=0

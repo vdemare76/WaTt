@@ -18,7 +18,7 @@
 			<p class="bg-primary" align="center">FUNZIONI DI UTILITA"</p><br>
 
         <div class="panel panel-primary">
-          <div class="panel-heading">Svuota il DB</div>
+          <div class="panel-heading">Svuota l'intero DB</div>
           <div class="panel-body">
 			  <button type="button" class="btn btn-info" onclick="svuotaDB()">Svuota</button>
           </div>
@@ -56,7 +56,7 @@
 		$("#title").html("Richiesta di conferma");
 		$("#msg").html("Si intende realmente svuotare il database?");
 		$(document).on("click", "#modal-confirm-ok", function () {
-			$("#target").val("svuotaDB");
+            $("#target").val("svuotaDb");
 			$("#form_post").submit();
         });
 		$("#modal-confirm-w").modal("show");
