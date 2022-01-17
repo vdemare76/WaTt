@@ -522,10 +522,12 @@ class CalendarioView(BaseView):
 
         if (tipo_variazione=="slot" and len(conflittiAula) > 0) :
             tipo_conflitto = "A"
-            descrizione_conflitto = "Corso: " + conflittiAula[0]["descrizione_corso"] + " - Anno di corso: " + str(conflittiAula[0]["anno_corso"])
+            descrizione_conflitto = conflittiAula[0]["codice_corso"] + " - " + conflittiAula[0]["descrizione_corso"] + \
+                                    " - (Anno di corso: " + str(conflittiAula[0]["anno_corso"]) + ")"
         elif (tipo_variazione=="slot" and len(conflittiDocente) > 0) :
             tipo_conflitto = "D"
-            descrizione_conflitto = "Corso: " + conflittiDocente[0]["descrizione_corso"] + " - Anno di corso: " + str(conflittiDocente[0]["anno_corso"])
+            descrizione_conflitto =  conflittiDocente[0]["codice_corso"] + " - " + conflittiDocente[0]["descrizione_corso"] + \
+                                     " - (Anno di corso: " + str(conflittiDocente[0]["anno_corso"]) + ")"
         else:
             tipo_conflitto = "N"
             descrizione_conflitto = "Nessun conflitto"
