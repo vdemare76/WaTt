@@ -13,4 +13,4 @@ class MyUserDBView(UserDBModelView):
 
 
 class MySecurityManager(SecurityManager):
-    userdbmodelview=MyUserDBView
+    userdbmodelview = MyUserDBView

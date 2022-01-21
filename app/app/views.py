@@ -526,8 +526,8 @@ class CalendarioView(BaseView):
                                     " - (Anno di corso: " + str(conflittiAula[0]["anno_corso"]) + ")"
         elif (tipo_variazione == "slot" and len(conflittiDocente) > 0) :
             tipo_conflitto = "D"
-            descrizione_conflitto =  conflittiDocente[0]["codice_corso"] + " - " + conflittiDocente[0]["descrizione_corso"] + \
-                                     " - (Anno di corso: " + str(conflittiDocente[0]["anno_corso"]) + ")"
+            descrizione_conflitto = conflittiDocente[0]["codice_corso"] + " - " + conflittiDocente[0]["descrizione_corso"] + \
+                                    " - (Anno di corso: " + str(conflittiDocente[0]["anno_corso"]) + ")"
         else:
             tipo_conflitto = "N"
             descrizione_conflitto = "Nessun conflitto"
@@ -546,6 +546,7 @@ class CalendarioView(BaseView):
                     row["capienza_aula"] = aulaNew.capienza
                     break;
 
+            flash("ci sono")
             session["orarioCorrente"] = orarioCorrente
 
         data = {"tipo_conflitto": tipo_conflitto,
@@ -562,9 +563,9 @@ class CalendarioView(BaseView):
         aula = db.session.query(Aula).filter(Aula.id == dati["aula"]).first()
 
         auleOccupate = []
-        orarioCorrente=session['orarioCorrente']
+        orarioCorrente = session['orarioCorrente']
         for o in orarioCorrente:
-            if o["giorno_id"]==dati["giorno"] and o["slot_id"]==dati["slot"]:
+            if o["giorno_id"] == dati["giorno"] and o["slot_id"] == dati["slot"]:
                 auleOccupate.append(o["aula_id"])
         aule = db.session.query(Aula) \
             .filter(Aula.id != dati["aula"]).filter(Aula.capienza >= dati["numerosita"]) \

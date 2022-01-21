@@ -18,7 +18,7 @@ app.config.from_object("config")
 
 Session(app)
 db = SQLA(app)
-appbuilder = AppBuilder(app, db.session, security_manager_class=MySecurityManager)
+appbuilder = AppBuilder(app, db.session, security_manager_class = MySecurityManager)
 
 from . import models, views  # noqa
 from . import util
