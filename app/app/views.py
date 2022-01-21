@@ -223,21 +223,21 @@ class LogisticaDocentiView(ModelView):
     add_form_extra_fields = {
          "offerta": AJAXSelectField(
             "Offerta",
-            datamodel=datamodel,
-            validators=[validators.DataRequired()],
-            col_name="offerta",
-            widget=Select2AJAXWidget(
-                endpoint="/logisticadocentiview/api/column/add/offerta"
+            datamodel = datamodel,
+            validators = [validators.DataRequired()],
+            col_name = "offerta",
+            widget = Select2AJAXWidget(
+                endpoint = "/logisticadocentiview/api/column/add/offerta"
             ),
         ),
         "modulo": AJAXSelectField(
             "Modulo",
-            datamodel=datamodel,
-            validators=[validators.DataRequired()],
-            col_name="modulo",
-            widget=Select2SlaveAJAXWidget(
-                master_id="offerta",
-                endpoint="/logisticadocentiview/api/column/add/modulo?_flt_0_offerta_id={{ID}}",
+            datamodel = datamodel,
+            validators = [validators.DataRequired()],
+            col_name = "modulo",
+            widget = Select2SlaveAJAXWidget(
+                master_id = "offerta",
+                endpoint = "/logisticadocentiview/api/column/add/modulo?_flt_0_offerta_id={{ID}}",
             )
         )
     }
@@ -308,25 +308,25 @@ class UtilitaView(BaseView):
 
     @expose("/srv_home/")
     @has_access
-    def srv_home(self, name=None):
-        return render_template("utility.html", base_template=appbuilder.base_template, appbuilder=appbuilder)
+    def srv_home(self):
+        return render_template("utility.html", base_template = appbuilder.base_template, appbuilder = appbuilder)
 
-    @expose("/srv_initdb", methods=["GET","POST"])
+    @expose("/srv_initdb", methods = ["GET","POST"])
     @has_access
     def srv_util(self):
         target=request.form.get("target")
-        if target=="svuotaDb":
+        if target == "svuotaDb":
             svuotaDb()
-        elif target=="caricaDatiBase":
+        elif target == "caricaDatiBase":
             caricaDatiBase()
-        elif target=="carica7Cds1Mod":
+        elif target == "carica7Cds1Mod":
             caricaDati7Cds("1")
-        elif target=="carica7CdsNMod":
+        elif target == "carica7CdsNMod":
             caricaDati7Cds("N")
-        elif target=="carica13Cds1Mod":
+        elif target == "carica13Cds1Mod":
             caricaDati13Cds("1")
 
-        return render_template("utility.html", base_template=appbuilder.base_template, appbuilder=appbuilder)
+        return render_template("utility.html", base_template = appbuilder.base_template, appbuilder = appbuilder)
 
 
 class UtilitaEsse3View(BaseView):
@@ -335,7 +335,7 @@ class UtilitaEsse3View(BaseView):
     @expose("/srv_esse3_home/")
     @has_access
     def srv_esse3_home(self, name=None):
-        return render_template("utility_esse3.html", base_template=appbuilder.base_template, appbuilder=appbuilder)
+        return render_template("utility_esse3.html", base_template = appbuilder.base_template, appbuilder = appbuilder)
 
     @expose("/srv_esse3_util", methods=["GET","POST"])
     @has_access
@@ -343,23 +343,23 @@ class UtilitaEsse3View(BaseView):
         target=request.form.get("target")
 
         if target == "caricaAnniAccademici":
-            session["anniAccademici"]=getAnniAccademici()
+            session["anniAccademici"] = getAnniAccademici()
             return render_template("utility_esse3.html",
-                                   base_template=appbuilder.base_template,
-                                   appbuilder=appbuilder,
-                                   annoAccademicoSelezionato=1000,
-                                   anniAccademici=session["anniAccademici"])
+                                   base_template = appbuilder.base_template,
+                                   appbuilder = appbuilder,
+                                   annoAccademicoSelezionato = 1000,
+                                   anniAccademici = session["anniAccademici"])
 
         elif target == "caricaCorsiOffertaFormativa":
             try:
-                anniAccademici=session["anniAccademici"]
-                session["corsiInOfferta"]=getCorsiInOfferta(request.form.get("anniAccademici"))
+                anniAccademici = session["anniAccademici"]
+                session["corsiInOfferta"] = getCorsiInOfferta(request.form.get("anniAccademici"))
                 return render_template("utility_esse3.html",
-                                       base_template=appbuilder.base_template,
-                                       appbuilder=appbuilder,
-                                       anniAccademici=anniAccademici,
-                                       annoAccademicoSelezionato=request.form.get("anniAccademici"),
-                                       corsiInOfferta=session["corsiInOfferta"])
+                                       base_template = appbuilder.base_template,
+                                       appbuilder = appbuilder,
+                                       anniAccademici = anniAccademici,
+                                       annoAccademicoSelezionato = request.form.get("anniAccademici"),
+                                       corsiInOfferta = session["corsiInOfferta"])
             except:
                 flash("Non sono stati caricati gli anni accademici per cui è disponibile un'offerta didattica!","danger")
 
@@ -520,11 +520,11 @@ class CalendarioView(BaseView):
                                                        ocr["docente_id"] == eventoOld["extendedProps"]["docente_id"],
                                                        orarioCorrente))
 
-        if (tipo_variazione=="slot" and len(conflittiAula) > 0) :
+        if (tipo_variazione == "slot" and len(conflittiAula) > 0) :
             tipo_conflitto = "A"
             descrizione_conflitto = conflittiAula[0]["codice_corso"] + " - " + conflittiAula[0]["descrizione_corso"] + \
                                     " - (Anno di corso: " + str(conflittiAula[0]["anno_corso"]) + ")"
-        elif (tipo_variazione=="slot" and len(conflittiDocente) > 0) :
+        elif (tipo_variazione == "slot" and len(conflittiDocente) > 0) :
             tipo_conflitto = "D"
             descrizione_conflitto =  conflittiDocente[0]["codice_corso"] + " - " + conflittiDocente[0]["descrizione_corso"] + \
                                      " - (Anno di corso: " + str(conflittiDocente[0]["anno_corso"]) + ")"
@@ -590,14 +590,14 @@ class CalendarioView(BaseView):
                        "selMaxOre": int(session["selMaxOre"]),
                        "chkPreferenzeDocenti": int(session["chkPreferenzeDocenti"]),
                        "posizioniFisse": orarioCorrente}
-            algoritmo=AlgoritmoCalcolo()
+            algoritmo = AlgoritmoCalcolo()
             if dati["tipoVerifica"] == -1:
-                ris=algoritmo.genera_orario(session["annoAccademico"], session["semestre"], "Verifica Orario",
+                ris = algoritmo.genera_orario(session["annoAccademico"], session["semestre"], "Verifica Orario",
                                             False, vincoli, -1)
             else:
                 ris = algoritmo.genera_orario(session["annoAccademico"], session["semestre"], "Verifica Orario",
                                               False, vincoli, dati["tipoVerifica"])
-            data={"status": ris}
+            data = {"status": ris}
             return data, 200
         except:
             data = {"status": "Verifica fallita"}
@@ -611,12 +611,12 @@ class CalendarioView(BaseView):
             db.session.query(OrarioDettaglio).filter(OrarioDettaglio.testata_id == orarioCorrente[0]["testata_id"]).delete()
             for o in orarioCorrente:
                 row = OrarioDettaglio(
-                    testata_id=o["testata_id"],
-                    corso_di_studio_id=o["corso_id"],
-                    modulo_id=o["modulo_id"],
-                    slot_id=o["slot_id"],
-                    giorno_id=o["giorno_id"],
-                    aula_id=o["aula_id"])
+                    testata_id = o["testata_id"],
+                    corso_di_studio_id = o["corso_id"],
+                    modulo_id = o["modulo_id"],
+                    slot_id = o["slot_id"],
+                    giorno_id = o["giorno_id"],
+                    aula_id = o["aula_id"])
                 db.session.add(row)
             db.session.commit()
             flash("Orario salvato correttamente!", "success")
@@ -628,40 +628,40 @@ class CalendarioView(BaseView):
 
 db.create_all()
 
-appbuilder.add_view(SlotView, "Slot", icon="fa-clock-o", category="Tabelle di base")
+appbuilder.add_view(SlotView, "Slot", icon = "fa-clock-o", category = "Tabelle di base")
 
-appbuilder.add_view(GiorniView, "Giorni", icon="fa-calendar-check-o", category="Tabelle di base")
+appbuilder.add_view(GiorniView, "Giorni", icon = "fa-calendar-check-o", category = "Tabelle di base")
 
 appbuilder.add_separator("Tabelle di base")
 
-appbuilder.add_view(AnniAccademiciView, "Anni Accademici", icon="fa-font", category="Tabelle di base")
+appbuilder.add_view(AnniAccademiciView, "Anni Accademici", icon = "fa-font", category = "Tabelle di base")
 
-appbuilder.add_view(AuleView, "Aule", icon="fa-th", category="Tabelle di base")
+appbuilder.add_view(AuleView, "Aule", icon = "fa-th", category = "Tabelle di base")
 
-appbuilder.add_view(CorsiDiStudioView, "Corsi di Studio", icon="fa-pencil", category="Didattica")
+appbuilder.add_view(CorsiDiStudioView, "Corsi di Studio", icon = "fa-pencil", category = "Didattica")
 
-appbuilder.add_view(NumerositaAnniCorsoView, "Numerosità anni corso", icon="fa-users", category="Didattica")
+appbuilder.add_view(NumerositaAnniCorsoView, "Numerosità anni corso", icon = "fa-users", category = "Didattica")
 
-appbuilder.add_view(DocentiView, "Docenti", icon="fa-user-circle", category="Didattica")
+appbuilder.add_view(DocentiView, "Docenti", icon = "fa-user-circle", category = "Didattica")
 
-appbuilder.add_view(AttivitaDidatticheView, "Attività didattiche", icon="fa-book", category="Didattica")
+appbuilder.add_view(AttivitaDidatticheView, "Attività didattiche", icon = "fa-book", category = "Didattica")
 
-appbuilder.add_view(OffertaView, "Offerta", icon="fa-university", category="Offerta didattica")
+appbuilder.add_view(OffertaView, "Offerta", icon = "fa-university", category = "Offerta didattica")
 
-appbuilder.add_view(ModuliView, "Moduli", icon="fa-puzzle-piece", category="Offerta didattica")
+appbuilder.add_view(ModuliView, "Moduli", icon = "fa-puzzle-piece", category = "Offerta didattica")
 
-appbuilder.add_view(LogisticaDocentiView, "Logistica docenti", icon="fa-hand-o-up", category="Offerta didattica")
+appbuilder.add_view(LogisticaDocentiView, "Logistica docenti", icon = "fa-hand-o-up", category = "Offerta didattica")
 
-appbuilder.add_view(UtilitaView, "Funzioni utilità",  icon="fa-briefcase", category="Utilità")
+appbuilder.add_view(UtilitaView, "Funzioni utilità",  icon = "fa-briefcase", category = "Utilità")
 
-appbuilder.add_view(UtilitaEsse3View, "Connettore Esse3",  icon="fa-share-square", category="Utilità")
+appbuilder.add_view(UtilitaEsse3View, "Connettore Esse3",  icon = "fa-share-square", category = "Utilità")
 
-appbuilder.add_view(GeneraOrarioView, "Elaborazione orario",  icon="fa-cogs", category="Orario")
+appbuilder.add_view(GeneraOrarioView, "Elaborazione orario",  icon = "fa-cogs", category = "Orario")
 
-appbuilder.add_view(OrariGeneratiView, "Orari generati",  icon="fa-table", category="Orario")
+appbuilder.add_view(OrariGeneratiView, "Orari generati",  icon = "fa-table", category = "Orario")
 
-appbuilder.add_view(ChiusuraView, "Imposta chiusure", icon="fa-home", category="Orario")
+appbuilder.add_view(ChiusuraView, "Imposta chiusure", icon = "fa-home", category = "Orario")
 
-appbuilder.add_view(SchemaSettimanaleView, "Schema settimanale",  icon="fa-calendar", category="Orario")
+appbuilder.add_view(SchemaSettimanaleView, "Schema settimanale",  icon = "fa-calendar", category = "Orario")
 
-appbuilder.add_view(CalendarioView, "Calendario orario",  icon="fa-clipboard", category="Orario")
+appbuilder.add_view(CalendarioView, "Calendario orario",  icon = "fa-clipboard", category = "Orario")

@@ -62,15 +62,15 @@ def __svuotaTabelle():
 
 
 def __impostaDatiBase():
-    giorni=[]
-    slot=[]
-    aule=[]
-    numerosita=[]
+    giorni = []
+    slot = []
+    aule = []
+    numerosita = []
 
-    giorni_i=["Lunedì", "Martedì", "Mercoledì", "Giovedì", "Venerdì"]
+    giorni_i = ["Lunedì", "Martedì", "Mercoledì", "Giovedì", "Venerdì"]
     giorni.extend(giorni_i)
 
-    slot_i=[
+    slot_i = [
         ["09:00-10:00", 9],
         ["10:00-11:00", 10],
         ["11:00-12:00", 11],
@@ -82,7 +82,7 @@ def __impostaDatiBase():
     ]
     slot.extend(slot_i)
 
-    aule_i=[
+    aule_i = [
         ["AN1", "Aula 1", 260, "N"],
         ["AN2", "Aula 2", 132, "N"],
         ["AN3", "Aula 3", 132, "N"],
@@ -108,7 +108,7 @@ def __impostaDatiBase():
     ]
     aule.extend(aule_i)
 
-    numerosita_i=[
+    numerosita_i = [
         ["0120", 1, 30],
         ["0120", 2, 15],
         ["0120", 3, 15],
@@ -160,12 +160,12 @@ def __impostaDati7Cds(tipoModuli):
 
     giorni, slot, aule, numerosita = __impostaDatiBase()
 
-    anni_accademici_i=[
+    anni_accademici_i = [
         [2021,"2021-2022"]
     ]
     anni_accademici.extend(anni_accademici_i)
 
-    corsi_di_studio_i=[
+    corsi_di_studio_i = [
         [1, "0120", "INFORMATICA APPLICATA (MACHINE LEARNING E BIG DATA) ", 120, 2],
         [2, "0121", "SCIENZE E TECNOLOGIE DELLA NAVIGAZIONE", 120, 2],
         [3, "0122", "SCIENZE NAUTICHE, AERONAUTICHE E METEO-OCEANOGRAFICHE", 180, 3],
@@ -176,7 +176,7 @@ def __impostaDati7Cds(tipoModuli):
     ]
     corsi_di_studio.extend(corsi_di_studio_i)
 
-    attivita_didattiche_i=[
+    attivita_didattiche_i = [
         [1, "A001018", "SCIENTIFIC COMPUTING", 12, "#990000"],
         [2, "A001019", "PHYSICS AND QUANTUM COMPUTING", 6, "#997A00"],
         [3, "A001020", "MACHINE LEARNING", 12, "#009900"],
@@ -222,7 +222,7 @@ def __impostaDati7Cds(tipoModuli):
     ]
     attivita_didattiche.extend(attivita_didattiche_i)
 
-    docenti_i=[
+    docenti_i = [
         [1, "CF001903", "001903", "MARCELLINO", "LIVIA"],
         [2, "CF002347", "002347", "FERONE", "ALESSIO"],
         [3, "CF001854", "001854", "CAMASTRA", "FRANCESCO"],
@@ -258,7 +258,7 @@ def __impostaDati7Cds(tipoModuli):
     ]
     docenti.extend(docenti_i)
 
-    offerta_i=[
+    offerta_i = [
         [1, 1, 1, 1, 4, 1, 1, 30],
         [2, 1, 1, 2, 6, 1, 1, 30],
         [3, 1, 1, 3, 3, 1, 1, 30],
@@ -306,7 +306,7 @@ def __impostaDati7Cds(tipoModuli):
     offerta.extend(offerta_i)
 
     if tipoModuli == "1":
-        modulo_i=[
+        modulo_i = [
             [1, "MOD-1", "MOD-1", 1, 4, "N", 2, 2, 0],
             [2, "MOD-1", "MOD-1", 2, 6, "N", 2, 2, 0],
             [3, "MOD-1", "MOD-1", 3, 3, "N", 2, 2, 0],
@@ -417,12 +417,12 @@ def __impostaDati13Cds(tipoModuli):
 
     giorni, slot, aule, numerosita = __impostaDatiBase()
 
-    anni_accademici_i=[
+    anni_accademici_i = [
         [2021,"2021-2022"]
     ]
     anni_accademici.extend(anni_accademici_i)
 
-    corsi_di_studio_i=[
+    corsi_di_studio_i = [
         [1, "0120", "INFORMATICA APPLICATA (MACHINE LEARNING E BIG DATA) ", 120, 2],
         [2, "0121", "SCIENZE E TECNOLOGIE DELLA NAVIGAZIONE", 120, 2],
         [3, "0122", "SCIENZE NAUTICHE, AERONAUTICHE E METEO-OCEANOGRAFICHE", 180, 3],
@@ -439,7 +439,7 @@ def __impostaDati13Cds(tipoModuli):
     ]
     corsi_di_studio.extend(corsi_di_studio_i)
 
-    attivita_didattiche_i=[
+    attivita_didattiche_i = [
         [1, "A001018", "SCIENTIFIC COMPUTING", 12, "#990000"],
         [2, "A001019", "PHYSICS AND QUANTUM COMPUTING", 6, "#997A00"],
         [3, "A001020", "MACHINE LEARNING", 12, "#009900"],
@@ -517,7 +517,7 @@ def __impostaDati13Cds(tipoModuli):
     ]
     attivita_didattiche.extend(attivita_didattiche_i)
 
-    docenti_i=[
+    docenti_i = [
         [1, "CF001903", "001903", "MARCELLINO", "LIVIA"],
         [2, "CF002347", "002347", "FERONE", "ALESSIO"],
         [3, "CF001854", "001854", "CAMASTRA", "FRANCESCO"],
@@ -586,7 +586,7 @@ def __impostaDati13Cds(tipoModuli):
     ]
     docenti.extend(docenti_i)
 
-    offerta_i=[
+    offerta_i = [
         [1, 1, 1, 1, 4, 1, 1, 30],
         [2, 1, 1, 2, 6, 1, 1, 30],
         [3, 1, 1, 3, 3, 1, 1, 30],
@@ -666,7 +666,7 @@ def __impostaDati13Cds(tipoModuli):
     offerta.extend(offerta_i)
 
     if tipoModuli == "1":
-        modulo_i=[
+        modulo_i = [
             [1, "MOD-1", "MOD-1", 1, 4, "N", 2, 2, 0],
             [2, "MOD-1", "MOD-1", 2, 6, "N", 2, 2, 0],
             [3, "MOD-1", "MOD-1", 3, 3, "N", 2, 2, 0],
@@ -755,7 +755,7 @@ def __registraDatiInDb(giorni, slot, anni_accademici, aule, corsi_di_studio, num
         if giorni is not None:
             try:
                 for g in giorni:
-                    row = Giorno(descrizione=g)
+                    row = Giorno(descrizione = g)
                     db.session.add(row)
                 db.session.flush()
             except:
@@ -764,8 +764,8 @@ def __registraDatiInDb(giorni, slot, anni_accademici, aule, corsi_di_studio, num
         if slot is not None:
             try:
                 for s in slot:
-                    row = Slot(descrizione=s[0],
-                               ora_slot_cal=s[1])
+                    row = Slot(descrizione = s[0],
+                               ora_slot_cal = s[1])
                     db.session.add(row)
                 db.session.flush()
             except:
@@ -774,8 +774,8 @@ def __registraDatiInDb(giorni, slot, anni_accademici, aule, corsi_di_studio, num
         if anni_accademici is not None:
             try:
                 for a in anni_accademici:
-                    row = AnnoAccademico(anno=a[0],
-                                         anno_esteso=a[1])
+                    row = AnnoAccademico(anno = a[0],
+                                         anno_esteso = a[1])
                     db.session.add(row)
                 db.session.flush()
             except:
@@ -784,10 +784,10 @@ def __registraDatiInDb(giorni, slot, anni_accademici, aule, corsi_di_studio, num
         if aule is not None:
             try:
                 for a in aule:
-                    row = Aula(codice=a[0],
-                               descrizione=a[1],
-                               capienza=a[2],
-                               tipo_aula=a[3])
+                    row = Aula(codice = a[0],
+                               descrizione = a[1],
+                               capienza = a[2],
+                               tipo_aula = a[3])
                     db.session.add(row)
                 db.session.flush()
             except:
@@ -796,9 +796,9 @@ def __registraDatiInDb(giorni, slot, anni_accademici, aule, corsi_di_studio, num
         if numerosita is not None:
             try:
                 for n in numerosita:
-                    row = NumerositaAnniCorso(codice_corso=n[0],
-                                              anno_di_corso=n[1],
-                                              numerosita=n[2])
+                    row = NumerositaAnniCorso(codice_corso = n[0],
+                                              anno_di_corso = n[1],
+                                              numerosita = n[2])
                     db.session.add(row)
                 db.session.flush()
             except:
@@ -807,11 +807,11 @@ def __registraDatiInDb(giorni, slot, anni_accademici, aule, corsi_di_studio, num
         if corsi_di_studio is not None:
             try:
                 for c in corsi_di_studio:
-                    row = CorsoDiStudio(id=c[0],
-                                        codice=c[1],
-                                        descrizione=c[2],
-                                        cfu=c[3],
-                                        durata_legale=c[4])
+                    row = CorsoDiStudio(id = c[0],
+                                        codice = c[1],
+                                        descrizione = c[2],
+                                        cfu = c[3],
+                                        durata_legale = c[4])
                     db.session.add(row)
                 db.session.flush()
             except:
@@ -820,11 +820,11 @@ def __registraDatiInDb(giorni, slot, anni_accademici, aule, corsi_di_studio, num
         if attivita_didattiche is not None:
             try:
                 for a in attivita_didattiche:
-                    row = AttivitaDidattica(id=a[0],
-                                            codice=a[1],
-                                            descrizione=a[2],
-                                            cfu=a[3],
-                                            colore=a[4])
+                    row = AttivitaDidattica(id = a[0],
+                                            codice = a[1],
+                                            descrizione = a[2],
+                                            cfu = a[3],
+                                            colore = a[4])
                     db.session.add(row)
                 db.session.flush()
             except:
@@ -833,11 +833,11 @@ def __registraDatiInDb(giorni, slot, anni_accademici, aule, corsi_di_studio, num
         if docenti is not None:
             try:
                 for d in docenti:
-                    row = Docente(id=d[0],
-                                  codice_fiscale=d[2],
-                                  matricola=d[2],
-                                  cognome=d[3],
-                                  nome=d[4])
+                    row = Docente(id = d[0],
+                                  codice_fiscale = d[2],
+                                  matricola = d[2],
+                                  cognome = d[3],
+                                  nome = d[4])
                     db.session.add(row)
                 db.session.flush()
             except:
@@ -846,14 +846,14 @@ def __registraDatiInDb(giorni, slot, anni_accademici, aule, corsi_di_studio, num
         if offerta is not None:
             try:
                 for o in offerta:
-                    row = Offerta(id=o[0],
-                                  anno_accademico_id=o[1],
-                                  corso_di_studio_id=o[2],
-                                  attivita_didattica_id=o[3],
-                                  docente_id=o[4],
-                                  anno_di_corso=o[5],
-                                  semestre=o[6],
-                                  max_studenti=o[7])
+                    row = Offerta(id = o[0],
+                                  anno_accademico_id = o[1],
+                                  corso_di_studio_id = o[2],
+                                  attivita_didattica_id = o[3],
+                                  docente_id = o[4],
+                                  anno_di_corso = o[5],
+                                  semestre = o[6],
+                                  max_studenti = o[7])
                     db.session.add(row)
                 db.session.flush()
             except:
@@ -862,15 +862,15 @@ def __registraDatiInDb(giorni, slot, anni_accademici, aule, corsi_di_studio, num
         if moduli is not None:
             try:
                 for m in moduli:
-                    row = Modulo(id=m[0],
-                                 codice=m[1],
-                                 descrizione=m[2],
-                                 offerta_id=m[3],
-                                 docente_id=m[4],
-                                 tipo_aula=m[5],
-                                 numero_sessioni=m[6],
-                                 durata_sessioni=m[7],
-                                 max_studenti=m[8])
+                    row = Modulo(id = m[0],
+                                 codice = m[1],
+                                 descrizione = m[2],
+                                 offerta_id = m[3],
+                                 docente_id = m[4],
+                                 tipo_aula = m[5],
+                                 numero_sessioni = m[6],
+                                 durata_sessioni = m[7],
+                                 max_studenti = m[8])
                     db.session.add(row)
                 db.session.flush()
             except:
@@ -915,7 +915,7 @@ def svuotaDb():
 
 def caricaDatiDalDb(aa, semestre, cod_cds):
     try:
-        corsi_tt=[]
+        corsi_tt = []
         if cod_cds == -1:
             corsi = db.session.query(CorsoDiStudio).all()
         else:
@@ -936,7 +936,7 @@ def caricaDatiDalDb(aa, semestre, cod_cds):
         return -1    
 
     try:
-        slot_tt=[]
+        slot_tt = []
         slot=db.session.query(Slot).all()    
         for s in slot:
             slot_tt.append(SlotTt(s.id, s.descrizione))
@@ -945,7 +945,7 @@ def caricaDatiDalDb(aa, semestre, cod_cds):
         return -1    
 
     try:
-        aule_tt=[]
+        aule_tt = []
         aule=db.session.query(Aula).all()
         for a in aule:
             aule_tt.append(AulaTt(a.id, a.codice, a.descrizione, a.capienza, a.tipo_aula))
@@ -954,10 +954,10 @@ def caricaDatiDalDb(aa, semestre, cod_cds):
         return -1    
         
     try:
-        moduli_tt=[]
+        moduli_tt = []
         # Recupero delle informazioni dal DB per la formazione degli oggetti Modulo da collocare nell"orario
         if cod_cds == -1:
-            moduli=db.session.query(Modulo, Offerta, AttivitaDidattica, AnnoAccademico, CorsoDiStudio, Docente)\
+            moduli = db.session.query(Modulo, Offerta, AttivitaDidattica, AnnoAccademico, CorsoDiStudio, Docente)\
             .join(Offerta, Modulo.offerta_id == Offerta.id)\
             .join(AttivitaDidattica, Offerta.attivita_didattica_id == AttivitaDidattica.id)\
             .join(CorsoDiStudio, Offerta.corso_di_studio_id == CorsoDiStudio.id)\
@@ -986,8 +986,8 @@ def caricaDatiDalDb(aa, semestre, cod_cds):
         return -1    
     
     try:
-        logistica_tt=[]
-        logistica=db.session.query(LogisticaDocente).all()
+        logistica_tt = []
+        logistica = db.session.query(LogisticaDocente).all()
         for l in logistica:
             logistica_tt.append([l.offerta_id,l.modulo_id,l.slot_id,l.giorno_id])
     except SQLAlchemyError:
@@ -1026,19 +1026,19 @@ def inizializza_db():
 
 def getAttributiLDap(uid):
     try:
-        ldap_server=Server(config.AUTH_LDAP_SERVER+":"+config.AUTH_LDAP_PORT, get_info=ALL)
-        ldap_connection=Connection(ldap_server, user="cn=admin,dc=uniparthenope,dc=it",password="wattpw01")
+        ldap_server=Server(config.AUTH_LDAP_SERVER+":"+config.AUTH_LDAP_PORT, get_info = ALL)
+        ldap_connection=Connection(ldap_server, user = "cn=admin,dc=uniparthenope,dc=it",password = "wattpw01")
 
-        if ldap_connection.bind()==True:
-            if ldap_connection.search(search_base=config.AUTH_LDAP_SEARCH, search_filter=f"(uid={uid})",search_scope=SUBTREE, attributes=["token","role"])==True:
-                ent=ldap_connection.entries[0]
+        if ldap_connection.bind() == True:
+            if ldap_connection.search(search_base=config.AUTH_LDAP_SEARCH, search_filter=f"(uid={uid})",search_scope=SUBTREE, attributes=["token","role"]) == True:
+                ent = ldap_connection.entries[0]
                 ldap_connection.unbind()
                 try:
-                    role=ent["role"][0]
-                    token=ent["token"][0]
+                    role = ent["role"][0]
+                    token = ent["token"][0]
                 except IndexError:
-                    role=None
-                    token=None
+                    role = None
+                    token = None
                 return token, role
             else:
                 return None, None
@@ -1051,7 +1051,7 @@ def getAttributiLDap(uid):
 def getOrarioCorrente():
 
     orarioCorrente = []
-    testata_id=session["testataId"]
+    testata_id = session["testataId"]
     rows = db.session.query(OrarioDettaglio, Modulo, Giorno, Offerta, AttivitaDidattica, CorsoDiStudio, Docente, Slot, Aula) \
         .join(CorsoDiStudio, OrarioDettaglio.corso_di_studio_id == CorsoDiStudio.id) \
         .join(Modulo, OrarioDettaglio.modulo_id == Modulo.id) \

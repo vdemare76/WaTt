@@ -140,19 +140,22 @@
             verifyObbButton: {
               text: "Verifica vincoli per il corso visualizzato",
               click: function() {
-                verificaOrario(idc);
+                if (modificaFlg) verificaOrario(idc);
+                else messaggioSoloModifica();
               }
             },
             verifyAllButton: {
               text: "Verifica vincoli per tutti i corsi",
               click: function() {
-                verificaOrario(-1);
+                if (modificaFlg) verificaOrario(-1);
+                else messaggioSoloModifica();
               }
             },
             applyButton: {
               text: "Applica modifiche orario",
               click: function() {
-                applicaModificaOrario(editabile);
+                if (modificaFlg) applicaModificaOrario(editabile);
+                else messaggioSoloModifica();
               }
             },
             jsonButton: {
@@ -455,13 +458,20 @@
         dataType: "json",
         url: "/calendarioview/cld_app/",
         success: function (ris) {
-            $("#loader").css({"display": "none"});
-            $("#info-title").html("Modifica orario");
-            $("#info-msg").html("L'orario è stato correttamente salvato secondo le modifiche effettuate in calendario");
-            $(document).on("click", "#modal-info-ok", function () {});
-            $("#modal-info-w").modal("show");
+          $("#loader").css({"display": "none"});
+          $("#info-title").html("Modifica orario");
+          $("#info-msg").html("L'orario è stato correttamente salvato secondo le modifiche effettuate in calendario");
+          $(document).on("click", "#modal-info-ok", function () {});
+          $("#modal-info-w").modal("show");
         }
       });
+    }
+
+    function messaggioSoloModifica() {
+      $("#info-title").html("Funzione non disponibile");
+      $("#info-msg").html("Funzione disponibile solo in modalità modifica");
+      $(document).on("click", "#modal-info-ok", function () {});
+      $("#modal-info-w").modal("show");
     }
 </script>
 	
