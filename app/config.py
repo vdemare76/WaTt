@@ -143,7 +143,9 @@ FAB_ROLES = {
         ["OrariGeneratiView", "genera_calendario"],
 
         ["Funzioni utilità", "menu_access"],
-        ["UtilitaView", "can_srv_home"], ["UtilitaView", "can_srv_util"],
+        ["UtilitaView", "can_srv_home"], ["UtilitaView", "can_srv_util"], ["UtilitaView", "can_srv_svuotadb"],
+        ["UtilitaView", "can_srv_carica_dati_base"], ["UtilitaView", "can_srv_carica_dati_7cds1"],
+        ["UtilitaView", "can_srv_carica_dati_7cdsn"], ["UtilitaView", "can_srv_carica_dati_13cds"],
 
         ["Connettore Esse3", "menu_access"],
         ["UtilitaEsse3View", "can_srv_esse3_home"], ["UtilitaEsse3View", "can_srv_esse3_util"],

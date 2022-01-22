@@ -306,27 +306,40 @@ class OrariGeneratiView(ModelView):
 class UtilitaView(BaseView):
     default_view = "srv_home"
 
-    @expose("/srv_home/")
+    @expose("/srv_home/", methods=["GET","POST"])
     @has_access
     def srv_home(self):
         return render_template("utility.html", base_template = appbuilder.base_template, appbuilder = appbuilder)
 
-    @expose("/srv_initdb", methods = ["GET","POST"])
+    @expose("/srv_svuotadb/", methods=["GET","POST"])
     @has_access
-    def srv_util(self):
-        target=request.form.get("target")
-        if target == "svuotaDb":
-            svuotaDb()
-        elif target == "caricaDatiBase":
-            caricaDatiBase()
-        elif target == "carica7Cds1Mod":
-            caricaDati7Cds("1")
-        elif target == "carica7CdsNMod":
-            caricaDati7Cds("N")
-        elif target == "carica13Cds1Mod":
-            caricaDati13Cds("1")
+    def srv_svuotadb(self):
+        svuotaDb()
+        return render_template("utility.html", base_template=appbuilder.base_template, appbuilder=appbuilder)
 
-        return render_template("utility.html", base_template = appbuilder.base_template, appbuilder = appbuilder)
+    @expose("/srv_carica_dati_base/", methods=["GET","POST"])
+    @has_access
+    def srv_carica_dati_base(self):
+        caricaDatiBase()
+        return render_template("utility.html", base_template=appbuilder.base_template, appbuilder=appbuilder)
+
+    @expose("/srv_carica_dati_7cds1/", methods=["GET","POST"])
+    @has_access
+    def srv_carica_dati_7cds1(self):
+        caricaDati7Cds("1")
+        return render_template("utility.html", base_template=appbuilder.base_template, appbuilder=appbuilder)
+
+    @expose("/srv_carica_dati_7cdsn/", methods=["GET","POST"])
+    @has_access
+    def srv_carica_dati_7cdsn(self):
+        caricaDati7Cds("N")
+        return render_template("utility.html", base_template=appbuilder.base_template, appbuilder=appbuilder)
+
+    @expose("/srv_carica_dati_13cds/", methods=["GET","POST"])
+    @has_access
+    def srv_carica_dati_13cds(self):
+        caricaDati13Cds("1")
+        return render_template("utility.html", base_template=appbuilder.base_template, appbuilder=appbuilder)
 
 
 class UtilitaEsse3View(BaseView):

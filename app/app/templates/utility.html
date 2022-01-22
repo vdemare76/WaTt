@@ -6,14 +6,15 @@
 
 {% extends "appbuilder/base.html" %}
 
-{% block content %}	
+{% block content %}
+    {% include "info_msg.html" %}
 	{% include "confirm_msg.html" %}
 
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.2/css/bootstrap-select.min.css">
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.2/js/bootstrap-select.min.js"></script>
 
     <div class="container">
-		<form method="post" id="form_post" method="post" action="{{url_for("UtilitaView.srv_util")}}">
+		<form method="post" id="form_post">
 			<div id="loader" class="loader" style="display:none"></div>
 			<p class="bg-primary" align="center">FUNZIONI DI UTILITA"</p><br>
 
@@ -44,10 +45,9 @@
         <div class="panel panel-primary">
           <div class="panel-heading">Carica dati di test - TIPO 3 - (13 Corsi di Studio e modulo unico per ogni Attività Didattica)</div>
           <div class="panel-body">
-			  <button type="button" class="btn btn-info" onclick="caricaDatiTest13Cds1Mod()">Carica</button>
+			  <button type="button" class="btn btn-info" onclick="caricaDatiTest13Cds()">Carica</button>
           </div>
         </div>
-		<input type="text" id="target" name="target" value="" style="display:none">
 		</form>
 	</div>
 	
@@ -56,8 +56,17 @@
 		$("#title").html("Richiesta di conferma");
 		$("#msg").html("Si intende realmente svuotare il database?");
 		$(document).on("click", "#modal-confirm-ok", function () {
-            $("#target").val("svuotaDb");
-			$("#form_post").submit();
+          $.ajax({
+            type: "POST",
+            contentType: "application/json",
+            url: "/utilitaview/srv_svuotadb/",
+            success: function(ris) {
+              funzioneConclusaConSuccesso();
+            },
+            error: function(ris) {
+                funzioneConclusaConErrori();
+            }
+          });
         });
 		$("#modal-confirm-w").modal("show");
 	}
@@ -66,9 +75,17 @@
 		$("#title").html("Richiesta di conferma");
 		$("#msg").html("Si intende realmente inizializzare il database con i dati di base per poi importare i dati da Esse3?");
 		$(document).on("click", "#modal-confirm-ok", function () {
-			$("#target").val("caricaDatiBase");
-			$("#loader").css({"display":"block"});
-			$("#form_post").submit();
+		  $.ajax({
+            type: "POST",
+            contentType: "application/json",
+            url: "/utilitaview/srv_carica_dati_base/",
+            success: function(ris) {
+              funzioneConclusaConSuccesso();
+            },
+            error: function(ris) {
+                funzioneConclusaConErrori();
+            }
+          });
         });
 		$("#modal-confirm-w").modal("show");
 	}
@@ -77,35 +94,71 @@
 		$("#title").html("Richiesta di conferma");
 		$("#msg").html("Si intende realmente inizializzare il database con i dati di test con 7 cds e modulo unico per attività didattica offerta?");
 		$(document).on("click", "#modal-confirm-ok", function () {
-			$("#target").val("carica7Cds1Mod");
-			$("#loader").css({"display":"block"});
-			$("#form_post").submit();
+		  $.ajax({
+            type: "POST",
+            contentType: "application/json",
+            url: "/utilitaview/srv_carica_dati_7cds1/",
+            success: function(ris) {
+              funzioneConclusaConSuccesso();
+            },
+            error: function(ris) {
+                funzioneConclusaConErrori();
+            }
+          });
         });
 		$("#modal-confirm-w").modal("show");
 	}
 
 	function caricaDatiTest7CdsNMod() {
 		$("#title").html("Richiesta di conferma");
-		$("#msg").html("Si intende realmente inizializzare il database con i dati di test con 7 cds e moduli multipli per attività didattica offerta?");
+		$("#msg").html("Si intende realmente inizializzare il database con i dati di test con 7 corsi di studio e moduli multipli per attività didattica offerta?");
 		$(document).on("click", "#modal-confirm-ok", function () {
-			$("#target").val("carica7CdsNMod");
-			$("#loader").css({"display":"block"});
-			$("#form_post").submit();
+		  $.ajax({
+            type: "POST",
+            contentType: "application/json",
+            url: "/utilitaview/srv_carica_dati_7cdsn/",
+            success: function(ris) {
+              funzioneConclusaConSuccesso();
+            },
+            error: function(ris) {
+                funzioneConclusaConErrori();
+            }
+          });
         });
 		$("#modal-confirm-w").modal("show");
 	}
 
-	function caricaDatiTest13Cds1Mod() {
+	function caricaDatiTest13Cds() {
 		$("#title").html("Richiesta di conferma");
-		$("#msg").html("Si intende realmente inizializzare il database con i dati di test con 13 cds e moduli unico per attività didattica offerta?");
+		$("#msg").html("Si intende realmente inizializzare il database con i dati di test con 13 corsi di studio e moduli unico per attività didattica offerta?");
 		$(document).on("click", "#modal-confirm-ok", function () {
-			$("#target").val("carica13Cds1Mod");
-			$("#loader").css({"display":"block"});
-			$("#form_post").submit();
+	   	  $.ajax({
+            type: "POST",
+            contentType: "application/json",
+            url: "/utilitaview/srv_carica_dati_13cds/",
+            success: function(ris) {
+              funzioneConclusaConSuccesso();
+            },
+            error: function(ris) {
+                funzioneConclusaConErrori();
+            }
+          });
         });
 		$("#modal-confirm-w").modal("show");
 	}
 
-	</script>
+	function funzioneConclusaConSuccesso() {
+      $("#info-title").html("Funzione di utilità");
+      $("#info-msg").html("Operazione completata con successo!");
+      $(document).on("click", "#modal-info-ok", function () {});
+      $("#modal-info-w").modal("show");
+    }
 
+    function funzioneConclusaConErrori() {
+      $("#info-title").html("Funzione di utilità");
+      $("#info-msg").html("L'operazione ha generato degli errori!");
+      $(document).on("click", "#modal-info-ok", function () {});
+      $("#modal-info-w").modal("show");
+    }
+	</script>
 {% endblock %}
