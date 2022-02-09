@@ -242,7 +242,7 @@ class BaseSecurityManager(AbstractSecurityManager):
             app.config.setdefault("AUTH_LDAP_FIRSTNAME_FIELD", "givenName")
             app.config.setdefault("AUTH_LDAP_LASTNAME_FIELD", "sn")
             app.config.setdefault("AUTH_LDAP_EMAIL_FIELD", "mail")
-            app.config.setdefault("AUTH_LDAP_ROLE_FIELD", "role")
+            app.config.setdefault("AUTH_LDAP_ROLE_FIELD", "wattRole")
 
         if self.auth_type == AUTH_OID:
             self.oid = OpenID(app)
