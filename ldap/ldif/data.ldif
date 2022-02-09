@@ -114,7 +114,7 @@ homeDirectory: /
 uid: adm101001
 uidNumber: 101001
 userPassword: pw101001
-role: wattAdmin
+wattRole: wattAdmin
 
 dn: uid=doc201001,cn=Docenti,ou=ScienzeTecnologie,dc=uniparthenope,dc=it
 changetype: add
@@ -129,7 +129,7 @@ homeDirectory: /
 uid: doc201001
 uidNumber: 201001
 userPassword: pw201001
-role: wattDoce
+wattRole: wattDoce
 
 dn: uid=doc201002,cn=Docenti,ou=ScienzeTecnologie,dc=uniparthenope,dc=it
 changetype: add
@@ -144,7 +144,7 @@ homeDirectory: /
 uid: doc201002
 uidNumber: 201002
 userPassword: pw201002
-role: wattDoce
+wattRole: wattDoce
 
 dn: uid=doc201003,cn=Docenti,ou=ScienzeTecnologie,dc=uniparthenope,dc=it
 changetype: add
@@ -159,7 +159,7 @@ homeDirectory: /
 uid: doc201003
 uidNumber: 201003
 userPassword: pw201003
-role: wattDoce
+wattRole: wattDoce
 
 dn: uid=tam202001,cn=PersonaleTA,ou=ScienzeTecnologie,dc=uniparthenope,dc=it
 changetype: add
@@ -174,7 +174,7 @@ homeDirectory: /
 uid: tam202001
 uidNumber: 202001
 userPassword: pw202001
-role: wattTamm
+wattRole: wattTamm
 token: daimpostare
 
 dn: uid=tam202002,cn=PersonaleTA,ou=ScienzeTecnologie,dc=uniparthenope,dc=it
@@ -190,7 +190,7 @@ homeDirectory: /
 uid: tam202002
 uidNumber: 202002
 userPassword: pw202002
-role: wattTamm
+wattRole: wattTamm
 
 dn: uid=stu203001,cn=Studenti,ou=ScienzeTecnologie,dc=uniparthenope,dc=it
 changetype: add
@@ -205,4 +205,4 @@ homeDirectory: /
 uid: stu203001
 uidNumber: 203001
 userPassword: pw203001
-role: wattStud
+wattRole: wattStud
