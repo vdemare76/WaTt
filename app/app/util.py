@@ -1030,11 +1030,11 @@ def getAttributiLDap(uid):
         ldap_connection=Connection(ldap_server, user = "cn=admin,dc=uniparthenope,dc=it",password = "wattpw01")
 
         if ldap_connection.bind() == True:
-            if ldap_connection.search(search_base=config.AUTH_LDAP_SEARCH, search_filter=f"(uid={uid})",search_scope=SUBTREE, attributes=["token","role"]) == True:
+            if ldap_connection.search(search_base=config.AUTH_LDAP_SEARCH, search_filter=f"(uid={uid})",search_scope=SUBTREE, attributes=["token","wattRole"]) == True:
                 ent = ldap_connection.entries[0]
                 ldap_connection.unbind()
                 try:
-                    role = ent["role"][0]
+                    role = ent["wattRole"][0]
                     token = ent["token"][0]
                 except IndexError:
                     role = None

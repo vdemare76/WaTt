@@ -2,7 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="4bd4ca69-5fab-4bca-9aae-55bf4e9525ff" name="Default Changelist" comment="Update">
-      <change beforePath="$PROJECT_DIR$/app/custom/manager.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/custom/manager.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/app/util.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/app/util.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/app/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/app/views.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -223,6 +225,9 @@
       <workItem from="1644444709588" duration="11000" />
       <workItem from="1644444740208" duration="84000" />
       <workItem from="1644444826117" duration="913000" />
+      <workItem from="1645395198285" duration="625000" />
+      <workItem from="1646683999224" duration="131000" />
+      <workItem from="1646684132992" duration="1512000" />
     </task>
     <task id="LOCAL-00092" summary="Update">
       <created>1634506703472</created>

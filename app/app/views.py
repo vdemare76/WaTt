@@ -559,7 +559,6 @@ class CalendarioView(BaseView):
                     row["capienza_aula"] = aulaNew.capienza
                     break;
 
-            flash("ci sono")
             session["orarioCorrente"] = orarioCorrente
 
         data = {"tipo_conflitto": tipo_conflitto,
